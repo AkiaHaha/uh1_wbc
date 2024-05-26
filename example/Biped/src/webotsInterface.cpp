@@ -88,9 +88,10 @@ void WebotsRobot::initWebots()
     // RFootGps = robot->getGPS("gps_RightFoot");
     
     Waist = robot->getFromDef("UnitreeH1");
+    
 
-    // SoleLeft = robot->getFromDef("left_ankle_link_visual");
-    // SoleRight = robot->getFromDef("right_ankle_link_visual");
+    SoleLeft = robot->getFromDef("LeftFootSole");
+    SoleRight = robot->getFromDef("RightFootSole");
 
     // enable
     for (int i = 0; i < 19; i++) {
@@ -176,6 +177,17 @@ bool WebotsRobot::readData(double simTime, webotState & robotStateSim)
 
     //External Force
     robotStateSim.footGrfAct = getFootForce2D();
+
+    //Foot xyz and rpy //Daniel 5.26
+    const double* a1 = SoleLeft->getPosition();
+    const double* a2 = SoleLeft->getOrientation();
+    const double* a3 = SoleRight->getPosition();
+    const double* a4 = SoleRight->getOrientation();
+
+    robotStateSim.LeftSoleXyzRpyAct.head(3) << a1[0], a1[1], a1[2];
+    robotStateSim.LeftSoleXyzRpyAct.tail(3) << a2[0], a2[1], a2[2];
+    robotStateSim.RightSoleXyzRpyAct.head(3) << a3[0], a3[1], a3[2];
+    robotStateSim.RightSoleXyzRpyAct.tail(3) << a4[0], a4[1], a4[2];
 
     return true;
 }

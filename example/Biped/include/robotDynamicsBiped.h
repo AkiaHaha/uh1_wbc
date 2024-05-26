@@ -83,6 +83,12 @@ public:
      */
     VectorNd estFootPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
 
+
+
+
+    VectorNd getRootXyzRpy(const Eigen::VectorXd & q);//Daniel
+
+
 private:
 
     bool isPosVelUpdated{false};
@@ -125,6 +131,7 @@ private:
     VectorNd rightLegSoleJDotQDot;
     VectorNd dualSoleJDotQDot;
     VectorNd quadSoleJDotQDot;
+
 
     bool updateKinematicsPosVel();
     bool updateKinematicsAcc();

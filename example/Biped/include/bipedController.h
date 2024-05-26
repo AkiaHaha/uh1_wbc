@@ -54,14 +54,16 @@ public:
 
     bool update(double timeCtrlSys, const Eigen::VectorXd & imuData,
                 const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
-                const Eigen::VectorXd & forceSensorData);
+                const Eigen::VectorXd & forceSensorData, const Eigen::VectorXd & LeftSoleXyzRpyAct,
+                const Eigen::VectorXd & RightSoleXyzRpyAct);
     bool getValueTauOpt(Eigen::VectorXd & jntTorOpt);
     bool getValuePosCurrent(Eigen::VectorXd & jntPosCur);
 
 private:
     bool stateEstimation(const Eigen::VectorXd & imuData,
                          const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
-                         const Eigen::VectorXd & forceSensorData);
+                         const Eigen::VectorXd & forceSensorData, const Eigen::VectorXd & LeftSoleXyzRpyAct,
+                         const Eigen::VectorXd & RightSoleXyzRpyAct);
     bool motionPlan();
     bool taskControl();
     Eigen::MatrixXd diag(const std::vector<double>& diagElement);
@@ -87,8 +89,13 @@ private:
     Eigen::VectorXd qDotGen = Eigen::VectorXd::Zero(nJg);
     Eigen::Vector3d xyzTorsoEst = Eigen::Vector3d::Zero(), xyzDotTorsoEst = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTorsoEst = Eigen::Vector3d::Zero(), rpyDotTorsoEst = Eigen::Vector3d::Zero();
-    Eigen::Vector3d xyzFootEst = Eigen::Vector3d::Zero(), xyzDotFootEst = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyFootEst = Eigen::Vector3d::Zero(), rpyDotFootEst = Eigen::Vector3d::Zero();
+    // Eigen::Vector3d xyzFootEst = Eigen::Vector3d::Zero(), xyzDotFootEst = Eigen::Vector3d::Zero();
+    // Eigen::Vector3d rpyFootEst = Eigen::Vector3d::Zero(), rpyDotFootEst = Eigen::Vector3d::Zero();
+
+    Eigen::Vector3d xyzFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d xyzDotFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d rpyFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d rpyDotFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     // ----------------------- robot state ---------------------------
 
     // ----------------------- plan desired --------------------------

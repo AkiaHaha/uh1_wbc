@@ -1,6 +1,7 @@
 cmake_minimum_required( VERSION 3.0 )
 
 # Setup the project
+set(CMAKE_BUILD_TYPE Debug)  # 添加这行确保生成调试信息 //Daniel
 get_filename_component(PROJECT ${CMAKE_SOURCE_DIR} NAME)
 project(${PROJECT})
 

@@ -290,6 +290,22 @@ VectorNd RobotDynamicsBiped::estFootPosVelInWorld(const VectorNd& jointPos, cons
     return posVelRes;
 }
 
+
+VectorNd RobotDynamicsBiped::getRootXyzRpy(const Eigen::VectorXd & q){//Daniel 5.26
+     Eigen::VectorXd rootPose(6);
+
+    // 获取根节点的位置
+    Vector3d position = CalcBodyToBaseCoordinates(*model, q, idPelvis, Vector3d(0.0, 0.0, 0.0), false);
+    rootPose.segment<3>(0) = position;
+
+    // 获取根节点的姿态
+    Matrix3d orientation = CalcBodyWorldOrientation(*model, q, idPelvis, false);
+    Eigen::Vector3d eulerAngles = orientation.eulerAngles(0, 1, 2); 
+    rootPose.segment<3>(3) = eulerAngles;
+
+    return rootPose;
+}
+
 // Update fuction
 bool RobotDynamicsBiped::updateKinematicsPosVel() {
     UpdateKinematicsCustom(*model, &jntPositions, &jntVelocities, NULL);

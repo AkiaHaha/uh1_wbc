@@ -8,8 +8,8 @@ WorldInfo {
   gravity 0
 }
 Viewpoint {
-  orientation -0.16073534147739368 0.05111696801461203 0.9856729709092863 2.534086940625837
-  position 2.263687739911082 -1.1963070982179078 1.692708706186787
+  orientation -0.2875284269373483 0.005147646639148164 0.9577582708789375 3.1073127208112257
+  position 4.872728982283953 0.1718528317987754 4.173024836256822
 }
 TexturedBackground {
 }
@@ -164,7 +164,7 @@ DEF UnitreeH1 Robot {
                                   name "left_ankle_joint_sensor"
                                 }
                               ]
-                              endPoint Solid {
+                              endPoint DEF LeftFootSole Solid {
                                 translation 0.07246026574094869 0 -0.3987712246946149
                                 rotation 4.3226625120307974e-18 -1 7.774522745247978e-18 0.4599999999999987
                                 children [
@@ -426,7 +426,7 @@ DEF UnitreeH1 Robot {
                                   name "right_ankle_joint_sensor"
                                 }
                               ]
-                              endPoint Solid {
+                              endPoint DEF RightFootSole Solid {
                                 translation 0.06608184206759206 5.551115123125783e-17 -0.42975214528321937
                                 rotation 3.53174925581956e-07 -0.999999999998999 -1.3701994812726389e-06 0.46000026041114306
                                 children [

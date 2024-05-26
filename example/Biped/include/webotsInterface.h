@@ -98,6 +98,9 @@ struct webotState
     // Eigen::Vector3d waistXyzVelAct = Eigen::Vector3d::Zero();
     // Eigen::Vector3d waistXyzAct = Eigen::Vector3d::Zero();
     Eigen::VectorXd waistXyzPosVelAct = Eigen::VectorXd::Zero(6);
+    Eigen::VectorXd LeftSoleXyzRpyAct = Eigen::VectorXd::Zero(6);
+    Eigen::VectorXd RightSoleXyzRpyAct = Eigen::VectorXd::Zero(6);
+
 };
 
 /**

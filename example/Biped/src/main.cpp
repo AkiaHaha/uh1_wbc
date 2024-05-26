@@ -166,8 +166,9 @@ std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         }else if (simCnt < simStopCnt){
             // your control loops
             bipedCtrl.update(simTime-goStandTime, robotStateSim.imu9DAct,
-                             robotStateSim.jointPosAct, robotStateSim.jointVelAct, robotStateSim.footGrfAct);
-            std::cout << "222222" << std::endl;
+                             robotStateSim.jointPosAct, robotStateSim.jointVelAct, robotStateSim.footGrfAct,
+                             robotStateSim.LeftSoleXyzRpyAct, robotStateSim.RightSoleXyzRpyAct);
+            std::cout << "222222" << std::endl << endl;
             bipedCtrl.getValueTauOpt(jointTorCmd);
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Daniel: State Data test at Stance Stage//
