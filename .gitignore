@@ -1,0 +1,32 @@
+build/
+local/
+doc/
+
+# Mac OS X
+.DS_Store
+
+*.m~
+*.dat
+*.csv
+*.png
+*.PNG
+
+# cmake config
+config.h
+
+# Webots wbproj
+*.wbproj
+
+# Qt-creator files
+*.user
+*.autosave
+
+# Clion files
+cmake-build-debug/
+.idea/
+
+# vscode files
+.vscode/
+
+# binary file
+#BipedController
