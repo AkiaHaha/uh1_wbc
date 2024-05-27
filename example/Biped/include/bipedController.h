@@ -139,7 +139,7 @@ private:
     std::vector<double> kdFootRpy{0., 0., 0.};
     // parameters
     double muStatic{0.6};
-    double jointTauLimit{100.0};
+    double jointTauLimit{200.0};
     double jointQddotLimit{1e4};
     double myInfinity{1e6};
     double CopFactor{0.9};  
