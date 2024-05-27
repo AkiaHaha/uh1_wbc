@@ -85,6 +85,8 @@ public:
 
     VectorNd getRootXyzRpy(const Eigen::VectorXd & q);//Daniel 5.26
 
+    VectorNd getRootXyzRpyDot(const Eigen::VectorXd &q, const Eigen::VectorXd &qDot);//Daniel 5.27
+
     VectorNd estBodyPosInWorldAkia(const VectorNd& jointPos, const VectorNd& jointVel, const unsigned int& bodyId);//Daniel 5.27
 
 private:

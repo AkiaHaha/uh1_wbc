@@ -119,7 +119,7 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     fixedSoleJoint = Joint(JointTypeFixed);
 
     //Pelvis relates the world coordinate system
-    idPelvis = model->AddBody(0, Xtrans(Vector3d(0., 0. ,1.1)), floatingWaistJoint, floatingWaistLink,"pelvis");
+    idPelvis = model->AddBody(0, Xtrans(Vector3d(0., 0. , 0.)), floatingWaistJoint, floatingWaistLink,"pelvis");
 
     idLeftLegLink[0] = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0875, -0.1742)), joint_Rz, leftLegLink[0], "lhy");
     idLeftLegLink[1] = model->AppendBody(Xtrans(Vector3d(0.039468, 0, 0)), joint_Rx, leftLegLink[1], "lhr");
@@ -337,6 +337,22 @@ VectorNd RobotDynamicsBiped::getRootXyzRpy(const Eigen::VectorXd & q){//Daniel 5
     rootPose.segment<3>(3) = eulerAngles;
 
     return rootPose;
+}
+
+VectorNd RobotDynamicsBiped::getRootXyzRpyDot(const Eigen::VectorXd &q, const Eigen::VectorXd &qDot) {//Daniel 5.27
+    Eigen::VectorXd rootPoseDot(6);
+
+    // 获取根节点的速度
+    VectorNd velocity = CalcPointVelocity6D(*model, q, qDot, idPelvis, Vector3d(0.0, 0.0, 0.0), false);
+
+    // 分离线速度和角速度
+    Vector3d linearVelocity = velocity.segment<3>(3);  // 后三个分量是线速度
+    Vector3d angularVelocity = velocity.segment<3>(0); // 前三个分量是角速度
+
+    rootPoseDot.segment<3>(0) = linearVelocity;
+    rootPoseDot.segment<3>(3) = angularVelocity;
+
+    return rootPoseDot;
 }
 
 // Update fuction

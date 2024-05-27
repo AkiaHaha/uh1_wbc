@@ -146,7 +146,6 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
     qGen.head(3) = xyzTorsoEst;
     qDotGen.head(3) = xyzDotTorsoEst;//>>> update q and qdot 
 
-
 //    //<<<torso xyz data calc from rbdl//
 //     Eigen::VectorXd trosoStateTemp = Eigen::VectorXd::Zero(6,1);
 //     trosoStateTemp = biped->estWaistPosVelInWorld(qGen, qDotGen, stanceLeg);
@@ -162,15 +161,14 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
 //     cout << "xyzDot: " << xyzDotTorsoTemp.transpose() << endl<<endl;
 
     //<<<est waist and foot pos by estBodyPosInWorldAkia//
-    
-    qGen.head(3) = biped->estBodyPosInWorldAkia(qGen, qDotGen, 0);
-    cout << "xyzTorso" << qGen.head(3).transpose() << endl;
-    cout << "**************************************************" << endl;
+    // qGen.head(3) = biped->estBodyPosInWorldAkia(qGen, qDotGen, 0);
+    // cout << "xyzTorso" << qGen.head(3).transpose() << endl;
+    // cout << "**************************************************" << endl;
 
-    Vector3d lfPos = biped->estBodyPosInWorldAkia(qGen, qDotGen, 3);
-    cout << "xyzFootL" << lfPos.transpose() << endl;
-    Vector3d rfPos = biped->estBodyPosInWorldAkia(qGen, qDotGen, 4);
-    cout << "xyzFootR" << rfPos.transpose() << endl;
+    // Vector3d lfPos = biped->estBodyPosInWorldAkia(qGen, qDotGen, 3);
+    // cout << "xyzFootL" << lfPos.transpose() << endl;
+    // Vector3d rfPos = biped->estBodyPosInWorldAkia(qGen, qDotGen, 4);
+    // cout << "xyzFootR" << rfPos.transpose() << endl;
 
     //<<<use supervisor to get waist xyz---Daniel 5.23//
     cout << "supervisor" << "-----------------------------------" << endl;
@@ -178,10 +176,15 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
     cout << "xyzDot: " << imuData.segment(6,3).transpose() << endl<<endl;
 
 
-    //<<<获取根节点的位置和姿态 Daniel 5.26
+    //<<<获取根节点的位置和姿态 Daniel 5.26 == here root is also floating base;
     Eigen::VectorXd rootPose = biped->getRootXyzRpy(qGen);//>>>
-    cout << "root node" << "-----------------------------------" << endl;
-    cout << rootPose.transpose() << endl<<endl;
+    cout << "rbdl" << "-----------------------------------" << endl;
+    cout << akiaPrint2(rootPose, 6, 2, 3, "xyz", 3, "rpy") << endl<<endl;
+
+    //<<<获取根节点的线速度和角速度 Daniel 5.27 == here root is also floating base;
+    Eigen::VectorXd rootVelocity = biped->getRootXyzRpyDot(qGen, qDotGen);//>>>
+    cout << akiaPrint2(rootPose, 6, 2, 3, "xyzDot", 3, "rpyDot") << endl<<endl;
+
 
     //FOOT<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
     //<<<estimate foot from rbdl//
@@ -211,11 +214,10 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
         << "Left: " << LeftSoleXyzRpyAct.head(3).transpose() << endl
         << "Right: " << RightSoleXyzRpyAct.head(3).transpose() << endl<<endl;           
 
-std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl << endl;
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 24.5.21//
+    std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl << endl;
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 24.5.21//
     return true;
 }
-
 
 
 bool BipedController::motionPlan(){//Daniel 5.23
