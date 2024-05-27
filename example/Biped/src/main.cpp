@@ -66,7 +66,7 @@ bool runWebots(){
 
         // control robot
         if (simCnt < goStandCnt){
-            go to desired position
+            //go to desired position
             standPosCmd << 0, 0, -0.3, 0.8, -0.9, //left leg--RYP
                            0, 0, -0.3, 0.8, -0.46,//right leg
                            0,                     //torso
