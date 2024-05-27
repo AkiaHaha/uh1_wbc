@@ -54,7 +54,7 @@ DEF UnitreeH1 Robot {
           maxVelocity 23
           minPosition -0.43
           maxPosition 0.43
-          maxTorque 200
+          maxTorque 220
         }
         PositionSensor {
           name "left_hip_yaw_joint_sensor"
@@ -79,7 +79,7 @@ DEF UnitreeH1 Robot {
                 maxVelocity 23
                 minPosition -0.43
                 maxPosition 0.43
-                maxTorque 200
+                maxTorque 220
               }
               PositionSensor {
                 name "left_hip_roll_joint_sensor"
@@ -106,7 +106,7 @@ DEF UnitreeH1 Robot {
                       maxVelocity 23
                       minPosition -3.14
                       maxPosition 2.53
-                      maxTorque 200
+                      maxTorque 220
                     }
                     PositionSensor {
                       name "left_hip_pitch_joint_sensor"
@@ -133,7 +133,7 @@ DEF UnitreeH1 Robot {
                             maxVelocity 14
                             minPosition -0.26
                             maxPosition 2.05
-                            maxTorque 300
+                            maxTorque 360
                           }
                           PositionSensor {
                             name "left_knee_joint_sensor"
@@ -160,7 +160,7 @@ DEF UnitreeH1 Robot {
                                   maxVelocity 9
                                   minPosition -0.9000211187369112
                                   maxPosition 0.52
-                                  maxTorque 200
+                                  maxTorque 45
                                 }
                                 PositionSensor {
                                   name "left_ankle_joint_sensor"
@@ -315,7 +315,7 @@ DEF UnitreeH1 Robot {
           maxVelocity 23
           minPosition -0.43
           maxPosition 0.43
-          maxTorque 200
+          maxTorque 220
         }
         PositionSensor {
           name "right_hip_yaw_joint_sensor"
@@ -341,7 +341,7 @@ DEF UnitreeH1 Robot {
                 maxVelocity 23
                 minPosition -0.43
                 maxPosition 0.43
-                maxTorque 200
+                maxTorque 220
               }
               PositionSensor {
                 name "right_hip_roll_joint_sensor"
@@ -368,7 +368,7 @@ DEF UnitreeH1 Robot {
                       maxVelocity 23
                       minPosition -3.14
                       maxPosition 2.53
-                      maxTorque 200
+                      maxTorque 220
                     }
                     PositionSensor {
                       name "right_hip_pitch_joint_sensor"
@@ -395,7 +395,7 @@ DEF UnitreeH1 Robot {
                             maxVelocity 14
                             minPosition -0.26
                             maxPosition 2.05
-                            maxTorque 300
+                            maxTorque 360
                           }
                           PositionSensor {
                             name "right_knee_joint_sensor"
@@ -422,7 +422,7 @@ DEF UnitreeH1 Robot {
                                   maxVelocity 9
                                   minPosition -0.87
                                   maxPosition 0.52
-                                  maxTorque 200
+                                  maxTorque 45
                                 }
                                 PositionSensor {
                                   name "right_ankle_joint_sensor"
@@ -603,7 +603,7 @@ DEF UnitreeH1 Robot {
                 maxVelocity 9
                 minPosition -2.87
                 maxPosition 2.87
-                maxTorque 200
+                maxTorque 75
               }
               PositionSensor {
                 name "left_shoulder_pitch_joint_sensor"
@@ -629,7 +629,7 @@ DEF UnitreeH1 Robot {
                       maxVelocity 9
                       minPosition -0.34
                       maxPosition 3.11
-                      maxTorque 200
+                      maxTorque 75
                     }
                     PositionSensor {
                       name "left_shoulder_roll_joint_sensor"
@@ -656,7 +656,7 @@ DEF UnitreeH1 Robot {
                             maxVelocity 20
                             minPosition -1.3
                             maxPosition 4.45
-                            maxTorque 200
+                            maxTorque 75
                           }
                           PositionSensor {
                             name "left_shoulder_yaw_joint_sensor"
@@ -682,7 +682,7 @@ DEF UnitreeH1 Robot {
                                   maxVelocity 20
                                   minPosition -1.25
                                   maxPosition 2.61
-                                  maxTorque 200
+                                  maxTorque 75
                                 }
                                 PositionSensor {
                                   name "left_elbow_joint_sensor"
@@ -785,7 +785,7 @@ DEF UnitreeH1 Robot {
                 maxVelocity 9
                 minPosition -2.87
                 maxPosition 2.87
-                maxTorque 200
+                maxTorque 75
               }
               PositionSensor {
                 name "right_shoulder_pitch_joint_sensor"
@@ -811,7 +811,7 @@ DEF UnitreeH1 Robot {
                       maxVelocity 9
                       minPosition -3.11
                       maxPosition 0.34
-                      maxTorque 200
+                      maxTorque 75
                     }
                     PositionSensor {
                       name "right_shoulder_roll_joint_sensor"
@@ -838,7 +838,7 @@ DEF UnitreeH1 Robot {
                             maxVelocity 20
                             minPosition -4.45
                             maxPosition 1.3
-                            maxTorque 200
+                            maxTorque 75
                           }
                           PositionSensor {
                             name "right_shoulder_yaw_joint_sensor"
@@ -864,7 +864,7 @@ DEF UnitreeH1 Robot {
                                   maxVelocity 20
                                   minPosition -1.25
                                   maxPosition 2.61
-                                  maxTorque 200
+                                  maxTorque 75
                                 }
                                 PositionSensor {
                                   name "right_elbow_joint_sensor"
