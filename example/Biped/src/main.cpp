@@ -66,18 +66,18 @@ bool runWebots(){
 
         // control robot
         if (simCnt < goStandCnt){
-            // go to desired position
-            // standPosCmd << 0, 0, -0.3, 0.8, -0.9, //left leg--RYP
-            //                0, 0, -0.3, 0.8, -0.46,//right leg
-            //                0,                     //torso
-            //                0, 0, 0, 0,  //left arm--PRY
-            //                0, 0, 0, 0; //right arm
-
-            standPosCmd << 0, 0, 0, 0, 0, //left leg--RYP
-                           0, 0, 0, 0, 0,//right leg
-                           20,                     //torso
+            go to desired position
+            standPosCmd << 0, 0, -0.3, 0.8, -0.9, //left leg--RYP
+                           0, 0, -0.3, 0.8, -0.46,//right leg
+                           0,                     //torso
                            0, 0, 0, 0,  //left arm--PRY
                            0, 0, 0, 0; //right arm
+
+            // standPosCmd << 0, 0, 0, 0, 0, //left leg--RYP
+            //                0, 0, 0, 0, 0,//right leg
+            //                20,                     //torso
+            //                0, 0, 0, 0,  //left arm--PRY
+            //                0, 0, 0, 0; //right arm
             bipedWebots.setMotorPos(standPosCmd);//设置初始位置曲腿
 
             if (simCnt % 10 == 0)
