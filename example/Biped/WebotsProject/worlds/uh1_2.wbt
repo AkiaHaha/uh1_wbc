@@ -5,7 +5,6 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
 
 WorldInfo {
-  gravity 0
 }
 Viewpoint {
   orientation -0.2875284269373483 0.005147646639148164 0.9577582708789375 3.1073127208112257

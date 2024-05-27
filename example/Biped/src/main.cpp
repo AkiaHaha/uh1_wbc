@@ -38,9 +38,9 @@ bool runWebots(){
     // timing
     int simCnt = 0;
     double simTime = 0;
-    const int goStandCnt = 1;
+    const int goStandCnt = 30;
     const double goStandTime = goStandCnt * SAMPLE_TIME;	//second机器人曲膝的时间
-    const int simStopCnt  = goStandCnt + 31000;
+    const int simStopCnt  = goStandCnt + 100000;
     const double simStopTime = simStopCnt * SAMPLE_TIME;    //second机器人停止仿真的时间
     
     // webots
@@ -57,7 +57,6 @@ bool runWebots(){
 
     // simulation loop
     std::cout << "Program started." << std::endl << endl;
-
     while (bipedWebots.robot->step(TIME_STEP) != -1)
     {
         // read data from Webots
@@ -68,19 +67,27 @@ bool runWebots(){
         if (simCnt < goStandCnt){
             //go to desired position
             standPosCmd << 0, 0, -0.3, 0.8, -0.9, //left leg--RYP
-                           0, 0, -0.3, 0.8, -0.46,//right leg
+                           0, 0, -0.3, 0.8, -0.52,//right leg
                            0,                     //torso
                            0, 0, 0, 0,  //left arm--PRY
                            0, 0, 0, 0; //right arm
 
             // standPosCmd << 0, 0, 0, 0, 0, //left leg--RYP
             //                0, 0, 0, 0, 0,//right leg
-            //                20,                     //torso
+            //                0,           //torso
             //                0, 0, 0, 0,  //left arm--PRY
             //                0, 0, 0, 0; //right arm
             bipedWebots.setMotorPos(standPosCmd);//设置初始位置曲腿
 
-            if (simCnt % 10 == 0)
+            // cout << "posCmd at count " << simCnt << " --------------------------------------" << endl
+            //     << akiaPrint2(standPosCmd, 19, 5, 5, "LL", 5, "RL", 1, "torso", 4, "LS", 4, "RS") << endl;
+            
+            // bipedWebots.readData(simTime, robotStateSim);
+            // cout << "posAct" << "------------------------" << endl
+            //     << akiaPrint2(robotStateSim.jointPosAct, 19, 5, 5, "LL", 5, "RL", 1, "torso", 4, "LS", 4, "RS") << endl<<endl;
+            
+
+            if (simCnt % 100 == 0)
             {
                 //Daniel: State Data test at Stance Stage<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
                 std::cout << "State Data test at Stance Stage <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl; 
@@ -121,12 +128,12 @@ bool runWebots(){
             cout << "Torque Cmd at simcnt of " << simCnt << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << endl
                 << akiaPrint2(jointTorCmd, 19, 5, 5, "LL", 5, "RL", 1, "torso", 4, "LS", 4, "RS" )
                 << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << endl<<endl;
-        }
-        else{
-            // keep current position
-            bipedCtrl.getValuePosCurrent(standPosCmd);
-            bipedWebots.setMotorPos(standPosCmd);
-        }
+            
+            }else{
+                // keep current position
+                bipedCtrl.getValuePosCurrent(standPosCmd);
+                bipedWebots.setMotorPos(standPosCmd);
+            }
 
         // stop simulation
         if (simTime > simStopTime){

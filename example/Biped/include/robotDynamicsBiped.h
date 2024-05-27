@@ -83,11 +83,9 @@ public:
      */
     VectorNd estFootPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
 
+    VectorNd getRootXyzRpy(const Eigen::VectorXd & q);//Daniel 5.26
 
-
-
-    VectorNd getRootXyzRpy(const Eigen::VectorXd & q);//Daniel
-
+    VectorNd estBodyPosInWorldAkia(const VectorNd& jointPos, const VectorNd& jointVel, const unsigned int& bodyId);//Daniel 5.27
 
 private:
 

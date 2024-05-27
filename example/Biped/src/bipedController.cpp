@@ -17,6 +17,10 @@
  */
 
 #include "bipedController.h"
+#include "robotDynamics.h"
+#include "robotDynamicsBiped.h"
+
+
 using namespace std;
 
 BipedController::BipedController(){
@@ -120,38 +124,69 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
                                       const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
                                       const Eigen::VectorXd & forceSensorData, const Eigen::VectorXd & LeftSoleXyzRpyAct,
                                       const Eigen::VectorXd & RightSoleXyzRpyAct){
-    // ------------------------------------- read sensors -------------------------------------
-    rpyTorsoEst = imuData.head(3);//robotStateSim.imu9DAct << robotStateSim.waistRpyAct, robotStateSim.waistXyzAccAct, robotStateSim.waistRpyVelAct; {not used of imu data, only supervisor of waist and accelerometer}
+    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Daniel cout test//
+    std::cout << "State Estimation Test at timeCs " << timeCs << " <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << endl<<endl;
+    cout << "TORSO <<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
+
+    //TORSO<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+    //<<<data from sensor//
+    rpyTorsoEst = imuData.head(3);
     rpyDotTorsoEst = imuData.tail(3);
+    xyzTorsoEst = imuData.segment(3,3);
+    xyzDotTorsoEst = imuData.segment(6,3);
     
     qActuated = jntPos;
     qDotActuated = jntVel;
     groundReactiveForce = forceSensorData;
 
-    qGen.segment(3,3) = rpyTorsoEst;
-    qGen.tail(nJa) = qActuated;//Daniel
-    qDotGen.segment(3,3) = rpyDotTorsoEst;
+    qGen.tail(nJa) = qActuated;
     qDotGen.tail(nJa) = qDotActuated;
-
-    // ------------------------------------- read sensors -------------------------------------
-    // ------------------------------------- update Kinematics --------------------------------
-    Eigen::VectorXd trosoStateTemp = Eigen::VectorXd::Zero(6,1);
-    trosoStateTemp = biped->estWaistPosVelInWorld(qGen, qDotGen, stanceLeg);
-    xyzTorsoEst = trosoStateTemp.head(3); 
-    xyzDotTorsoEst = trosoStateTemp.tail(3);
+    qGen.segment(3,3) = rpyTorsoEst;
+    qDotGen.segment(3,3) = rpyDotTorsoEst;
     qGen.head(3) = xyzTorsoEst;
-    qDotGen.head(3) = xyzDotTorsoEst;
+    qDotGen.head(3) = xyzDotTorsoEst;//>>> update q and qdot 
 
-    //<--------------use supervisor to get waist xyz---Daniel 5.23----------------------------//
-    xyzTorsoEst = imuData.segment(3,3);
-    xyzDotTorsoEst = imuData.segment(6,3);
-    qGen.head(3) = imuData.segment(3,3);
-    qDotGen.head(3) = imuData.segment(6,3);
 
-    // 获取根节点的位置和姿态 Daniel 5.26
-    Eigen::VectorXd rootPose = biped->getRootXyzRpy(qGen);//
+//    //<<<torso xyz data calc from rbdl//
+//     Eigen::VectorXd trosoStateTemp = Eigen::VectorXd::Zero(6,1);
+//     trosoStateTemp = biped->estWaistPosVelInWorld(qGen, qDotGen, stanceLeg);
+//     xyzTorsoEst = trosoStateTemp.head(3); 
+//     xyzDotTorsoEst = trosoStateTemp.tail(3);
+//     qGen.head(3) = xyzTorsoEst;
+//     qDotGen.head(3) = xyzDotTorsoEst;//>>>
 
-    //--------------------------------------------------------------------------------------->//
+//     Eigen::Vector3d xyzTorsoTemp = xyzTorsoEst;
+//     Eigen::Vector3d xyzDotTorsoTemp = xyzDotTorsoEst;
+//     cout << "rbdl" << "-----------------------------------" << endl;
+//     cout << "xyz: " << xyzTorsoTemp.transpose() << endl;
+//     cout << "xyzDot: " << xyzDotTorsoTemp.transpose() << endl<<endl;
+
+    //<<<est waist and foot pos by estBodyPosInWorldAkia//
+    
+    qGen.head(3) = biped->estBodyPosInWorldAkia(qGen, qDotGen, 0);
+    cout << "xyzTorso" << qGen.head(3).transpose() << endl;
+    cout << "**************************************************" << endl;
+
+    Vector3d lfPos = biped->estBodyPosInWorldAkia(qGen, qDotGen, 3);
+    cout << "xyzFootL" << lfPos.transpose() << endl;
+    Vector3d rfPos = biped->estBodyPosInWorldAkia(qGen, qDotGen, 4);
+    cout << "xyzFootR" << rfPos.transpose() << endl;
+
+    //<<<use supervisor to get waist xyz---Daniel 5.23//
+    cout << "supervisor" << "-----------------------------------" << endl;
+    cout << "xyz: " << imuData.segment(3,3).transpose() << endl;
+    cout << "xyzDot: " << imuData.segment(6,3).transpose() << endl<<endl;
+
+
+    //<<<获取根节点的位置和姿态 Daniel 5.26
+    Eigen::VectorXd rootPose = biped->getRootXyzRpy(qGen);//>>>
+    cout << "root node" << "-----------------------------------" << endl;
+    cout << rootPose.transpose() << endl<<endl;
+
+    //FOOT<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+    //<<<estimate foot from rbdl//
+
+    cout << "FOOT <<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
     Eigen::VectorXd footStateTemp0 = Eigen::VectorXd::Zero(12,1);
     Eigen::VectorXd footStateTemp1 = Eigen::VectorXd::Zero(12,1);
 
@@ -160,43 +195,24 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
     xyzFootEst[0] = footStateTemp0.segment(3,3);
     rpyDotFootEst[0] = footStateTemp0.segment(6,3);
     xyzDotFootEst[0] = footStateTemp0.tail(3);
-
+    cout << "Left foot" << "-------------------------------" << endl;
+    cout << akiaPrint2(footStateTemp0, 12, 4, 3, "rpy", 3, "***xyz", 3, "rpyDot", 3, "xyzDot") << endl;
 
     footStateTemp1 = biped->estFootPosVelInWorld(qGen, qDotGen, 1);
     rpyFootEst[1] = footStateTemp1.head(3);
     xyzFootEst[1] = footStateTemp1.segment(3,3);
     rpyDotFootEst[1] = footStateTemp1.segment(6,3);
-    xyzDotFootEst[1] = footStateTemp1.tail(3);
+    xyzDotFootEst[1] = footStateTemp1.tail(3);//>>>
+    cout << "Right foot" << "-------------------------------" << endl;
+    cout << akiaPrint2(footStateTemp1, 12, 4, 3, "rpy", 3, "***xyz", 3, "rpyDot", 3, "xyzDot") << endl;
 
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Daniel cout test//
-std::cout << "State Estimation Test<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
-    std::cout << "Root position and orientation: " << rootPose.transpose() << endl<<endl;
 
-    std::cout << "腰部xyz位置\t" << qGen[0] << "\t" << qGen[1] << "\t" << qGen[2] << "\t" << std::endl
-        << "腰部rpy姿态\t" << qGen[3] << "\t" << qGen[4] << "\t" << qGen[5] << "\t" << std::endl
-        << "LL joint\t" << qGen[6] << "\t" << qGen[7] << "\t" << qGen[8] << "\t" << qGen[9] << "\t" << qGen[10] << std::endl
-        << "RL joint\t" << qGen[11] << "\t" << qGen[12] << "\t" << qGen[13] << "\t" << qGen[14] << "\t" << qGen[15] << std::endl << std::endl;
-
-    std::cout << "xyzDotFootEst0---> " << xyzDotFootEst[0].transpose() << endl 
-         << "rpyDotFootEst0---> " << rpyDotFootEst[0].transpose() << endl
-         << "xyzFootEst0---> "    << xyzFootEst[0].transpose() << "-------------" << endl
-         << "rpyFootEst0---> "    << rpyFootEst[0].transpose() << endl<<endl;
-
-    std::cout << "xyzDotFootEst1---> " << xyzDotFootEst[1].transpose() << std::endl 
-         << "rpyDotFootEst1---> " << rpyDotFootEst[1].transpose() << endl
-         << "xyzFootEst1---> "    << xyzFootEst[1].transpose() << "-------------" << endl
-         << "rpyFootEst1---> "    << rpyFootEst[1].transpose() << endl<<endl;
-
-    std::cout << "FootXyzRpy from webots supervisor: " << endl
-                << "Left: " << LeftSoleXyzRpyAct.transpose() << endl
-                << "Right: " << RightSoleXyzRpyAct.transpose() << endl<<endl;           
+    cout << "supervisor" << "-----------------------------------" << endl
+        << "Left: " << LeftSoleXyzRpyAct.head(3).transpose() << endl
+        << "Right: " << RightSoleXyzRpyAct.head(3).transpose() << endl<<endl;           
 
 std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl << endl;
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 24.5.21//
-
-
-    // ------------------------------------- update Kinematics ---------------//
-
     return true;
 }
 
@@ -227,9 +243,15 @@ std::cout << "Motion Plan Test<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             time = 0.0;
             std::cout << "Tonight is Christmas Eve" << std::endl;
         }else { 
+            if (flagTimeSetZero == 0){
+                time = 0.0;
+                flagTimeSetZero = 1;
+                cout << "welcome to plan stage 2 ~" << endl;
+            }
+            
             // TORSO XYZ
-            xyzTorsoTgt << xyzTorsoInit(0), xyzTorsoInit(1), 0.1*cos(time/1*PI)+xyzTorsoInit(2);
-            xyzDotTorsoTgt << 0.0, 0.0, -0.1*PI*sin(time/1*PI);
+            xyzTorsoTgt << xyzTorsoInit(0), xyzTorsoInit(1), 0.1*sin(time/1*PI)+xyzTorsoInit(2);
+            xyzDotTorsoTgt << 0.0, 0.0, 0.1*PI*cos(time/1*PI);
             
             std::cout << "plan stage 2"  << std::endl;
 

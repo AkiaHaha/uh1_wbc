@@ -28,6 +28,7 @@
 #include "robotDynamicsBiped.h"
 #include "taskDefinitionBiped.h"
 #include "constraintDefinitionBiped.h"
+#include "operation.h"
 
 #ifndef PI
     #define PI 3.141592654
@@ -167,6 +168,7 @@ private:
 
     //<------------------------------------------Daniel 24.5.23-----//
     Eigen::Vector3d xyzTorsoInit = Eigen::Vector3d::Zero();
+    int flagTimeSetZero{};
     //------------------------------------------------------------->//
 };
 

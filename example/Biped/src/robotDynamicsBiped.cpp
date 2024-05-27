@@ -255,6 +255,39 @@ VectorNd RobotDynamicsBiped::estWaistPosVelInWorld(const VectorNd& jointPos, con
     return posVelRes;
 }
 
+VectorNd RobotDynamicsBiped::estBodyPosInWorldAkia(const VectorNd& jointPos, const VectorNd& jointVel, const unsigned int& bodyId) {//Daniel 5.27
+    VectorNd qTemp = VectorNd::Zero(NJG);                                                                                           //0: pelvis; 1:LS; 2:RS; 3:LF; 4:RF
+    VectorNd qDotTemp = VectorNd::Zero(NJG);
+    Vector3d bodyPos = Vector3d::Zero(3);
+
+    qTemp = jointPos;
+    qDotTemp = jointVel;
+    UpdateKinematicsCustom(*model, & qTemp, & qDotTemp, NULL);
+
+    switch (bodyId)
+    {
+        case 0:
+            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idPelvis, Math::Vector3d::Zero(), false);
+            break;
+        case 1:
+            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftArmLink[3], Math::Vector3d::Zero(), false);
+            break;
+        case 2:
+            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightArmLink[3], Math::Vector3d::Zero(), false);
+            break;
+        case 3:
+            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftLegLink[4], Math::Vector3d::Zero(), false);
+            break;
+        case 4:
+            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp,idRightLegLink[4], Math::Vector3d::Zero(), false);
+            break;
+        default:
+            break;
+    }
+    calcWbcDependenceDone = false;
+    return bodyPos;
+}
+
 VectorNd RobotDynamicsBiped::estFootPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
     VectorNd qTemp = VectorNd::Zero(NJG);
     VectorNd qDotTemp = VectorNd::Zero(NJG);
