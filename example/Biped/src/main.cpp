@@ -19,6 +19,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <stdexcept> 
 
 #include "webotsInterface.h"
 #include "bipedController.h"
@@ -126,10 +127,16 @@ bool runWebots(){
                              robotStateSim.LeftSoleXyzRpyAct, robotStateSim.RightSoleXyzRpyAct,
                              robotStateSim.LeftArmHandXyzRpyAct, robotStateSim.RightArmHandXyzRpyAct);
             bipedCtrl.getValueTauOpt(jointTorCmd);
+
             bipedWebots.setMotorTau(jointTorCmd);
             cout << "Torque Cmd at simcnt of " << simCnt << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << endl
                 << akiaPrint2(jointTorCmd, 19, 5, 5, "LL", 5, "RL", 1, "torso", 4, "LS", 4, "RS" )
                 << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << endl<<endl;
+            
+            // if (jointTorCmd(0) > 0){
+            //     cout << "*************" << endl;
+            //     throw std::runtime_error("Torque command greater than 0");
+            // }
             
             }else{
                 // keep current position

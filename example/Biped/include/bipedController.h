@@ -52,7 +52,7 @@ public:
 
     BipedController();
     ~BipedController();
-    
+
     bool update(double timeCtrlSys, const Eigen::VectorXd & imuData,
                 const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
                 const Eigen::VectorXd & forceSensorData, 
@@ -202,6 +202,7 @@ private:
     //<------------------------------------------Daniel 24.5.23-----//
     Eigen::Vector3d xyzTorsoInit = Eigen::Vector3d::Zero();
     int flagTimeSetZero{};
+    int flagEstFirst{};
     //------------------------------------------------------------->//
 };
 

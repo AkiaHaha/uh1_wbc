@@ -71,7 +71,7 @@ bool WqpWbc::displayResultInformation() const{
               << "number of (implicitly defined) equality constraints :     " << QP->getNEC() << std::endl
               << "number of active constraints :                            " << QP->getNAC() << std::endl
               << "number of inactive constraints :                          " << QP->getNIAC() << std::endl;
-
+              
     // If use the follow, set qpOption.printLevel not to be PL_NONE !
     std::cout << "Properties : " << qpOASES::MessageHandling::getErrorCodeMessage(QP->printProperties()) << std::endl;
     std::cout << "Options : " << qpOASES::MessageHandling::getErrorCodeMessage(QP->printOptions()) << std::endl;
