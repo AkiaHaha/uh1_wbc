@@ -100,7 +100,8 @@ struct webotState
     Eigen::VectorXd waistXyzPosVelAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd LeftSoleXyzRpyAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd RightSoleXyzRpyAct = Eigen::VectorXd::Zero(6);
-
+    Eigen::VectorXd LeftArmHandXyzRpyAct = Eigen::VectorXd::Zero(6);
+    Eigen::VectorXd RightArmHandXyzRpyAct = Eigen::VectorXd::Zero(6);
 };
 
 /**
@@ -139,6 +140,8 @@ private:
     Node* Waist;
     Node* SoleLeft;
     Node* SoleRight;
+    Node* ArmHandLeft;
+    Node* ArmHandRight;
 
     std::vector<Derivative> dRpy;
     std::vector<Derivative> dJnt;

@@ -688,7 +688,7 @@ DEF UnitreeH1 Robot {
                                   name "left_elbow_joint_sensor"
                                 }
                               ]
-                              endPoint Solid {
+                              endPoint DEF LeftArmSole Solid {
                                 translation 0.018500000000000065 2.775557561562893e-17 -0.19800000000000018
                                 rotation 0 -1 0 0.5000000000000004
                                 children [
@@ -870,7 +870,7 @@ DEF UnitreeH1 Robot {
                                   name "right_elbow_joint_sensor"
                                 }
                               ]
-                              endPoint Solid {
+                              endPoint DEF RightArmSole Solid {
                                 translation 0.018499999999999885 2.7755575615628898e-17 -0.19799999999999976
                                 rotation 0 -1 0 0.49999524664636086
                                 children [

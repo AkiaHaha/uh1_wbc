@@ -52,19 +52,21 @@ public:
 
     BipedController();
     ~BipedController();
-
+    
     bool update(double timeCtrlSys, const Eigen::VectorXd & imuData,
                 const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
-                const Eigen::VectorXd & forceSensorData, const Eigen::VectorXd & LeftSoleXyzRpyAct,
-                const Eigen::VectorXd & RightSoleXyzRpyAct);
+                const Eigen::VectorXd & forceSensorData, 
+                const Eigen::VectorXd & LeftSoleXyzRpyAct, const Eigen::VectorXd & RightSoleXyzRpyAct, 
+                const Eigen::VectorXd & LeftArmHandXyzRpyAct, const Eigen::VectorXd & RightArmHandXyzRpyAct);
     bool getValueTauOpt(Eigen::VectorXd & jntTorOpt);
     bool getValuePosCurrent(Eigen::VectorXd & jntPosCur);
 
 private:
     bool stateEstimation(const Eigen::VectorXd & imuData,
-                         const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
-                         const Eigen::VectorXd & forceSensorData, const Eigen::VectorXd & LeftSoleXyzRpyAct,
-                         const Eigen::VectorXd & RightSoleXyzRpyAct);
+                        const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
+                        const Eigen::VectorXd & forceSensorData, 
+                        const Eigen::VectorXd & LeftSoleXyzRpyAct, const Eigen::VectorXd & RightSoleXyzRpyAct,
+                        const Eigen::VectorXd & LeftArmHandXyzRpyAct, const Eigen::VectorXd & RightArmHandXyzRpyAct);                         
     bool motionPlan();
     bool taskControl();
     Eigen::MatrixXd diag(const std::vector<double>& diagElement);
@@ -98,6 +100,10 @@ private:
     Eigen::Vector3d xyzDotFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyDotFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d xyzArmEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d xyzDotArmEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d rpyArmEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d rpyDotArmEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     // ----------------------- robot state ---------------------------
 
     // ----------------------- plan desired --------------------------
@@ -105,15 +111,23 @@ private:
     Eigen::Vector3d xyzDotTorsoTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTorsoTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyDotTorsoTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d xyzFootTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d xyzDotFootTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyFootTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyDotFootTgt = Eigen::Vector3d::Zero();
+    // Eigen::Vector3d xyzFootTgt = Eigen::Vector3d::Zero();
+    // Eigen::Vector3d xyzDotFootTgt = Eigen::Vector3d::Zero();
+    // Eigen::Vector3d rpyFootTgt = Eigen::Vector3d::Zero();
+    // Eigen::Vector3d rpyDotFootTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d xyzDotFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d rpyFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d rpyDotFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
 
-    Eigen::Vector3d xyzArmTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d xyzDotArmTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyArmTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyDotArmTgt = Eigen::Vector3d::Zero();
+    // Eigen::Vector3d xyzArmTgt = Eigen::Vector3d::Zero();
+    // Eigen::Vector3d xyzDotArmTgt = Eigen::Vector3d::Zero();
+    // Eigen::Vector3d rpyArmTgt = Eigen::Vector3d::Zero();
+    // Eigen::Vector3d rpyDotArmTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d xyzDotArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d rpyArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d rpyDotArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     // ----------------------- plan desired --------------------------
 
     // ----------------------- task control --------------------------

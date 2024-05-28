@@ -88,10 +88,10 @@ void WebotsRobot::initWebots()
     // RFootGps = robot->getGPS("gps_RightFoot");
     
     Waist = robot->getFromDef("UnitreeH1");
-    
-
     SoleLeft = robot->getFromDef("LeftFootSole");
     SoleRight = robot->getFromDef("RightFootSole");
+    ArmHandLeft = robot->getFromDef("LeftArmSole");
+    ArmHandRight = robot->getFromDef("RightArmSole");
 
     // enable
     for (int i = 0; i < 19; i++) {
@@ -180,14 +180,45 @@ bool WebotsRobot::readData(double simTime, webotState & robotStateSim)
 
     //Foot xyz and rpy //Daniel 5.26
     const double* a1 = SoleLeft->getPosition();
-    const double* a2 = SoleLeft->getOrientation();
+    const double* a2Array = SoleLeft->getOrientation();
+    Eigen::Matrix3d a2;
+    a2 << a2Array[0], a2Array[1], a2Array[2],
+        a2Array[3], a2Array[4], a2Array[5],
+        a2Array[6], a2Array[7], a2Array[8];
+
     const double* a3 = SoleRight->getPosition();
-    const double* a4 = SoleRight->getOrientation();
+    const double* a4Array = SoleRight->getOrientation();
+    Eigen::Matrix3d a4;
+    a4 << a4Array[0], a4Array[1], a4Array[2],
+        a4Array[3], a4Array[4], a4Array[5],
+        a4Array[6], a4Array[7], a4Array[8];
 
     robotStateSim.LeftSoleXyzRpyAct.head(3) << a1[0], a1[1], a1[2];
-    robotStateSim.LeftSoleXyzRpyAct.tail(3) << a2[0], a2[1], a2[2];
+    robotStateSim.LeftSoleXyzRpyAct.tail(3) = rotm2Rpy(a2);
+
     robotStateSim.RightSoleXyzRpyAct.head(3) << a3[0], a3[1], a3[2];
-    robotStateSim.RightSoleXyzRpyAct.tail(3) << a4[0], a4[1], a4[2];
+    robotStateSim.RightSoleXyzRpyAct.tail(3) = rotm2Rpy(a4);
+
+    //Arm xyz and rpy //Daniel 5.26
+    const double* b1 = ArmHandLeft->getPosition();
+    const double* b2Array = ArmHandLeft->getOrientation();
+    Eigen::Matrix3d b2;
+    b2 << b2Array[0], b2Array[1], b2Array[2],
+        b2Array[3], b2Array[4], b2Array[5],
+        b2Array[6], b2Array[7], b2Array[8];
+
+    const double* b3 = ArmHandRight->getPosition();
+    const double* b4Array = ArmHandRight->getOrientation();
+    Eigen::Matrix3d b4;
+    b4 << b4Array[0], b4Array[1], b4Array[2],
+        b4Array[3], b4Array[4], b4Array[5],
+        b4Array[6], b4Array[7], b4Array[8];
+
+    robotStateSim.LeftArmHandXyzRpyAct.head(3) << b1[0], b1[1], b1[2];
+    robotStateSim.LeftArmHandXyzRpyAct.tail(3) = rotm2Rpy(b2);
+
+    robotStateSim.RightArmHandXyzRpyAct.head(3) << b3[0], b3[1], b3[2];
+    robotStateSim.RightArmHandXyzRpyAct.tail(3) = rotm2Rpy(b4);
 
     return true;
 }

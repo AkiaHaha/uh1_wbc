@@ -74,14 +74,14 @@ public:
     VectorNd estWaistPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
 
     /**
-     * @brief estFootPosVelInWorld
+     * @brief estFootArmPosVelInWorld
      *          estimate the swing foot state in world frame (origin at the stance sole)
      * @param jointPos  generalized joint position
      * @param jointVel  generalized joint velocity
      * @param footType  stance sole label
      * @return the [posRPY, posXYZ, velRPY, velXYZ] of swing foot in Vector(12,1)
      */
-    VectorNd estFootPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
+    VectorNd estFootArmPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
 
     VectorNd getRootXyzRpy(const Eigen::VectorXd & q);//Daniel 5.26
 

@@ -83,8 +83,9 @@ BipedController::~BipedController(){
 
 bool BipedController::update(double timeCtrlSys, const Eigen::VectorXd & imuData,
                 const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
-                const Eigen::VectorXd & forceSensorData, const Eigen::VectorXd & LeftSoleXyzRpyAct,
-                const Eigen::VectorXd & RightSoleXyzRpyAct){
+                const Eigen::VectorXd & forceSensorData, 
+                const Eigen::VectorXd & LeftSoleXyzRpyAct, const Eigen::VectorXd & RightSoleXyzRpyAct, 
+                const Eigen::VectorXd & LeftArmHandXyzRpyAct, const Eigen::VectorXd & RightArmHandXyzRpyAct){
     // update Time
     timeCs = timeCtrlSys;
     if ( tick > 0){
@@ -96,7 +97,7 @@ bool BipedController::update(double timeCtrlSys, const Eigen::VectorXd & imuData
     // std::cout << "imuData" <<imuData<< std::endl;
     // std::cout << "jntPos" <<jntPos<< std::endl;
     // estimate --> plan --> control
-    stateEstimation(imuData, jntPos, jntVel, forceSensorData, LeftSoleXyzRpyAct, RightSoleXyzRpyAct);
+    stateEstimation(imuData, jntPos, jntVel, forceSensorData, LeftSoleXyzRpyAct, RightSoleXyzRpyAct, LeftArmHandXyzRpyAct, RightArmHandXyzRpyAct);
     motionPlan();
     taskControl();
     // update tick-tack
@@ -123,8 +124,9 @@ bool BipedController::getValuePosCurrent(Eigen::VectorXd &jntPosCur){
 
 bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
                                       const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
-                                      const Eigen::VectorXd & forceSensorData, const Eigen::VectorXd & LeftSoleXyzRpyAct,
-                                      const Eigen::VectorXd & RightSoleXyzRpyAct){
+                                      const Eigen::VectorXd & forceSensorData, 
+                                      const Eigen::VectorXd & LeftSoleXyzRpyAct, const Eigen::VectorXd & RightSoleXyzRpyAct,
+                                      const Eigen::VectorXd & LeftArmHandXyzRpyAct, const Eigen::VectorXd & RightArmHandXyzRpyAct){
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Daniel cout test//
     std::cout << "State Estimation Test at timeCs " << timeCs << " <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << endl<<endl;
     cout << "TORSO <<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
@@ -194,7 +196,7 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
     Eigen::VectorXd footStateTemp0 = Eigen::VectorXd::Zero(12,1);
     Eigen::VectorXd footStateTemp1 = Eigen::VectorXd::Zero(12,1);
 
-    footStateTemp0 = biped->estFootPosVelInWorld(qGen, qDotGen, 0);
+    footStateTemp0 = biped->estFootArmPosVelInWorld(qGen, qDotGen, 1);
     rpyFootEst[0] = footStateTemp0.head(3);
     xyzFootEst[0] = footStateTemp0.segment(3,3);
     rpyDotFootEst[0] = footStateTemp0.segment(6,3);
@@ -202,7 +204,7 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
     cout << "Left foot" << "-------------------------------" << endl;
     cout << akiaPrint2(footStateTemp0, 12, 4, 3, "rpy", 3, "***xyz", 3, "rpyDot", 3, "xyzDot") << endl;
 
-    footStateTemp1 = biped->estFootPosVelInWorld(qGen, qDotGen, 1);
+    footStateTemp1 = biped->estFootArmPosVelInWorld(qGen, qDotGen, 2);
     rpyFootEst[1] = footStateTemp1.head(3);
     xyzFootEst[1] = footStateTemp1.segment(3,3);
     rpyDotFootEst[1] = footStateTemp1.segment(6,3);
@@ -212,8 +214,34 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
 
 
     cout << "supervisor" << "-----------------------------------" << endl
-        << "Left: " << LeftSoleXyzRpyAct.head(3).transpose() << endl
-        << "Right: " << RightSoleXyzRpyAct.head(3).transpose() << endl<<endl;           
+        << "Left: " << LeftSoleXyzRpyAct.transpose() << endl
+        << "Right: " << RightSoleXyzRpyAct.transpose() << endl<<endl;        
+
+    //ARM<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+    cout << "ARM <<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
+    Eigen::VectorXd armStateTemp0 = Eigen::VectorXd::Zero(12,1);
+    Eigen::VectorXd armStateTemp1 = Eigen::VectorXd::Zero(12,1);
+
+    armStateTemp0 = biped->estFootArmPosVelInWorld(qGen, qDotGen, 3);
+    xyzArmEst[0] = armStateTemp0.head(3);
+    xyzArmEst[0] = armStateTemp0.segment(3,3);
+    rpyDotArmEst[0] = armStateTemp0.segment(6,3);
+    xyzDotArmEst[0] = armStateTemp0.tail(3);
+    cout << "Left arm" << "-------------------------------" << endl;
+    cout << akiaPrint2(armStateTemp0, 12, 4, 3, "rpy", 3, "***xyz", 3, "rpyDot", 3, "xyzDot") << endl;
+
+    armStateTemp1 = biped->estFootArmPosVelInWorld(qGen, qDotGen, 4);
+    rpyArmEst[1] = armStateTemp1.head(3);
+    xyzArmEst[1] = armStateTemp1.segment(3,3);
+    rpyDotArmEst[1] = armStateTemp1.segment(6,3);
+    xyzDotArmEst[1] = armStateTemp1.tail(3);//>>>
+    cout << "Right arm" << "-------------------------------" << endl;
+    cout << akiaPrint2(armStateTemp1, 12, 4, 3, "rpy", 3, "***xyz", 3, "rpyDot", 3, "xyzDot") << endl;
+
+
+    cout << "supervisor" << "-----------------------------------" << endl
+        << "Left: " << LeftArmHandXyzRpyAct.transpose() << endl
+        << "Right: " << RightArmHandXyzRpyAct.transpose() << endl<<endl;   
 
     std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl << endl;
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 24.5.21//
@@ -224,7 +252,7 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
 bool BipedController::motionPlan(){//Daniel 5.23
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Daniel Motion Plan Test//
 std::cout << "Motion Plan Test<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
-    if (timeCs < 5.0 - 0.5*DT){
+    if (timeCs < 1.0 - 0.5*DT){
         //flag
         std::cout << "plan stage 1"  << std::endl;
         //torso
@@ -233,10 +261,10 @@ std::cout << "Motion Plan Test<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         rpyDotTorsoTgt << 0.0, 0.0, 0.0;
         xyzTorsoTgt = xyzTorsoEst;
         //foot
-        xyzFootTgt = xyzFootEst[0];
-        xyzDotFootTgt = xyzDotFootEst[0];
-        rpyFootTgt = rpyFootEst[0];
-        rpyDotFootTgt = rpyDotFootEst[0];
+        xyzFootTgt[0] = xyzFootEst[0];
+        xyzDotFootTgt[0] = xyzDotFootEst[0];
+        rpyFootTgt[0] = rpyFootEst[0];
+        rpyDotFootTgt[0] = rpyDotFootEst[0];
         //arm
         // xyzArmTgt = xyzArmEst
         // xyzDotArmTgt
@@ -248,7 +276,7 @@ std::cout << "Motion Plan Test<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
     }else {
-        if(timeCs < 5.0 + 0.5*DT){
+        if(timeCs < 1.0 + 0.5*DT){
             time = 0.0;
             std::cout << "Tonight is Christmas Eve" << std::endl;
         }else { 
@@ -344,8 +372,8 @@ bool BipedController::taskControl(){
     torsoRpyRef = diag(kpTorsoRpy)*(rpyTorsoTgt - rpyTorsoEst) + diag(kdTorsoRpy)*(rpyDotTorsoTgt - rpyDotTorsoEst);
     torsoXyzRef = diag(kpTorsoXyz)*(xyzTorsoTgt - xyzTorsoEst) + diag(kdTorsoXyz)*(xyzDotTorsoTgt - xyzDotTorsoEst);
 
-    footArmPosRef.head(3) = diag(kpFootArmRpy)*(rpyFootTgt - rpyFootEst[0]) + diag(kdFootArmRpy)*(rpyDotFootTgt - rpyDotFootEst[0]);
-    footArmPosRef.segment(3,3) = diag(kpFootArmXyz)*(xyzFootTgt - xyzFootEst[0]) + diag(kdFootArmXyz)*(xyzDotFootTgt - xyzDotFootEst[0]); 
+    footArmPosRef.head(3) = diag(kpFootArmRpy)*(rpyFootTgt[0] - rpyFootEst[0]) + diag(kdFootArmRpy)*(rpyDotFootTgt[0] - rpyDotFootEst[0]);
+    footArmPosRef.segment(3,3) = diag(kpFootArmXyz)*(xyzFootTgt[0] - xyzFootEst[0]) + diag(kdFootArmXyz)*(xyzDotFootTgt[0] - xyzDotFootEst[0]); 
     
     // footArmPosRef.segment(6,3) = 
     
@@ -369,7 +397,7 @@ bool BipedController::taskControl(){
     myWbc->updateTask("BipedTorsoPosRpy", torsoRpyRef, weightTorsoOrientation);
     myWbc->updateTask("BipedTorsoPosXyz", torsoXyzRef, weightTorsoPosition);
     // myWbc->updateTask("BipedFootPosition", footPosRef, weightFootPosition);
-    myWbc->updateTask("QaudSolePosition", footArmPosRef, weightFootArmPosition);
+    myWbc->updateTask("QuadSolePosition", footArmPosRef, weightFootArmPosition);
     // myWbc->updateTask("BipedFootForce", forceRef, weightFootForce);
     // myWbc->updateTask("BipedFootForceChange", forceChangeRef, weightFootForceChange);
     myWbc->updateTask("QuadSoleForce", footArmforceRef, weightFootArmForce);
@@ -380,7 +408,7 @@ bool BipedController::taskControl(){
     myWbc->updateConstraint("BipedJointTorqueSaturation");
 
     // ------------------------------ Update bounds -------------------------------------
-    if (timeCs < 5.0 - 0.5*DT){
+    if (timeCs < 1.0 - 0.5*DT){
         // lowerbounds(23) = 0.0;
         // upperbounds(23) = 3*20.0*GRAVITY;
         // lowerbounds(29) = 0.0;
@@ -390,7 +418,7 @@ bool BipedController::taskControl(){
         lowerbounds(25) = 0.0;
         upperbounds(26) = 10.0*GRAVITY;
     }else {
-        if(timeCs < 5.0 + 0.5*DT){
+        if(timeCs < 1.0 + 0.5*DT){//Modify from 5 to 1;
             time = 0.0;
         }
         // lowerbounds.segment(18,6) = Eigen::VectorXd::Zero(6);

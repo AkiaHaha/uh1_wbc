@@ -123,7 +123,8 @@ bool runWebots(){
             }else if (simCnt < simStopCnt){
             bipedCtrl.update(simTime-goStandTime, robotStateSim.imu9DAct,
                              robotStateSim.jointPosAct, robotStateSim.jointVelAct, robotStateSim.footGrfAct,
-                             robotStateSim.LeftSoleXyzRpyAct, robotStateSim.RightSoleXyzRpyAct);
+                             robotStateSim.LeftSoleXyzRpyAct, robotStateSim.RightSoleXyzRpyAct,
+                             robotStateSim.LeftArmHandXyzRpyAct, robotStateSim.RightArmHandXyzRpyAct);
             bipedCtrl.getValueTauOpt(jointTorCmd);
             bipedWebots.setMotorTau(jointTorCmd);
             cout << "Torque Cmd at simcnt of " << simCnt << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << endl

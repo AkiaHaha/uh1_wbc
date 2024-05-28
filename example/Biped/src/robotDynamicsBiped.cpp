@@ -290,7 +290,7 @@ VectorNd RobotDynamicsBiped::estBodyPosInWorldAkia(const VectorNd& jointPos, con
     return bodyPos;
 }
 
-VectorNd RobotDynamicsBiped::estFootPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
+VectorNd RobotDynamicsBiped::estFootArmPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
     VectorNd qTemp = VectorNd::Zero(NJG);
     VectorNd qDotTemp = VectorNd::Zero(NJG);
     Vector3d sole2WorldPos = Vector3d::Zero();
@@ -303,16 +303,26 @@ VectorNd RobotDynamicsBiped::estFootPosVelInWorld(const VectorNd& jointPos, cons
     UpdateKinematicsCustom(*model, & qTemp, & qDotTemp, NULL);
     switch (footType)
     {
-        case TYPERIGHTSOLE: // Right Sole 
+        case 1: // Left Sole
+            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftLegLink[4], Math::Vector3d::Zero(), false);
+            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idLeftLegLink[4], false);
+            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idLeftLegLink[4], Math::Vector3d::Zero(), false);
+            break;   
+        case 2: // Right Sole 
             sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightLegLink[4], Math::Vector3d::Zero(), false);
             sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idRightLegLink[4], false);
             sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idRightLegLink[4], Math::Vector3d::Zero(), false);
             break;
-        case TYPELEFTSOLE: // Left Sole
-            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftLegLink[4], Math::Vector3d::Zero(), false);
-            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idLeftLegLink[4], false);
-            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idLeftLegLink[4], Math::Vector3d::Zero(), false);
-            break;    
+        case 3: // Left Arm
+            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftArmLink[3], Math::Vector3d::Zero(), false);
+            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idLeftArmLink[3], false);
+            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idLeftArmLink[3], Math::Vector3d::Zero(), false);
+            break;
+        case 4: // Right Arm
+            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightArmLink[3], Math::Vector3d::Zero(), false);
+            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idRightArmLink[3], false);
+            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idRightArmLink[3], Math::Vector3d::Zero(), false);
+            break;
         default:
             break;
     }
