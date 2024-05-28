@@ -153,4 +153,17 @@ public:
     bool update(const TAICHI::RobotDynamics &robot) override;
 };
 
+class BipedArmPosition : public TAICHI::Task{//Daniel 24.5.28
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     */
+    BipedArmPosition(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedArmPosition() = default;
+    bool update(const TAICHI::RobotDynamics &robot) override;
+};
+
 #endif // TAICHI_EXAMPLE_TASKDEFINITION_BIPED_H

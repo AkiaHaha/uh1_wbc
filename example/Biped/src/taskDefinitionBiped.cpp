@@ -20,7 +20,7 @@
 
 bool BipedFloatingBaseDynamics::update(const TAICHI::RobotDynamics &robot){
     taskMatA << robot.selMatFloatingBase * robot.inertiaMat,
-                -robot.selMatFloatingBase * robot.contactJacoTc.J.transpose();
+                -robot.selMatFloatingBase * robot.footContactJacoTc.J.transpose();
     taskVecB = - robot.selMatFloatingBase * robot.nonlinearBias;
 }
 
@@ -60,8 +60,14 @@ bool BipedTorsoPosXyz::update(const TAICHI::RobotDynamics &robot){
 }
 
 bool BipedFootPosition::update(const TAICHI::RobotDynamics &robot){
-    taskMatA.leftCols(robot.NJG) = robot.contactJacoTc.J;
-    taskVecB = ref - robot.contactJacoTc.JdotQdot;
+    taskMatA.leftCols(robot.NJG) = robot.footContactJacoTc.J;
+    taskVecB = ref - robot.footContactJacoTc.JdotQdot;
+    return true;
+}
+
+bool BipedArmPosition::update(const TAICHI::RobotDynamics &robot){//Daniel 24.5.28
+    taskMatA.leftCols(robot.NJG) = robot.footContactJacoTc.J;
+    taskVecB = ref - robot.footContactJacoTc.JdotQdot;
     return true;
 }
 

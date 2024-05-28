@@ -60,8 +60,8 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     floatBaseJacoTc.J = MatrixNd :: Zero(NJF, NJG);///< JacobianTc of floating-base.
     floatBaseJacoTc.JdotQdot = VectorNd :: Zero(NJF);
 
-    contactJacoTc.J = MatrixNd :: Zero(NFC, NJG);///< JacobianTc of contact point(s)
-    contactJacoTc.JdotQdot = VectorNd :: Zero(NFC); 
+    footContactJacoTc.J = MatrixNd :: Zero(NFC, NJG);///< JacobianTc of contact point(s)
+    footContactJacoTc.JdotQdot = VectorNd :: Zero(NFC); 
 
     eqCstrMatTau = MatrixNd :: Zero(NJA, NJG+NFC);///< NJA*?, equality constraints : TauActuated = eqCstrMatTau * x^T + eqCstrMatTauBias, x is the generalized variables, e.g. NJA*(NJG+NFC), x = [Qddot, f_c]'
     eqCstrMatTauBias = VectorNd :: Zero(NJA);///< NJA*1, equality constraints : TauActuated = eqCstrMatTau * x^T + eqCstrMatTauBias
@@ -210,8 +210,8 @@ bool RobotDynamicsBiped::calcWbcDependence(){
     calcWaistTask();
     calcWbcDependenceDone = true;
     // ------------------------- public members of Base class -------------------
-    contactJacoTc.J = dualSoleJacob;
-    contactJacoTc.JdotQdot = dualSoleJDotQDot;
+    footContactJacoTc.J = dualSoleJacob;
+    footContactJacoTc.JdotQdot = dualSoleJDotQDot;
     floatBaseJacoTc.J = waistJacob;
     floatBaseJacoTc.JdotQdot = waistJDotQDot;
     eqCstrMatTau << selMatActuated * inertiaMat, //A*G * G*G
