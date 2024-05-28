@@ -9,5 +9,6 @@
 
 void akiaPrint1(const Eigen::VectorXd &vector, int length, int numRows, ...);
 std::string akiaPrint2(const Eigen::VectorXd &vector, int length, int numRows, ...);
+void akiaPrint3(const Eigen::VectorXd &vector, int length, int numRows, ...);
 
 #endif//OPERATION_H_

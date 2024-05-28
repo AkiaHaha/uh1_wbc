@@ -62,7 +62,7 @@ bool runWebots(){
         // read data from Webots
         simTime = bipedWebots.robot->getTime();
         bipedWebots.readData(simTime, robotStateSim);
-        akiaPrint1(robotStateSim.jointPosAct, 19, 5, 5, 5, 1, 4, 4);
+        // akiaPrint1(robotStateSim.jointPosAct, 19, 5, 5, 5, 1, 4, 4);
 
         // control robot
         if (simCnt < goStandCnt){
