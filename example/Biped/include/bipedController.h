@@ -82,7 +82,8 @@ private:
     double time{0.0};                       // run time (sec) for current behavior
     int nJg{25};
     int nJa{19};
-    int nFc{12};//Daniel 24.5.21
+    int nFc{24};//Daniel 24.5.21
+    
     Eigen::VectorXd qActuated = Eigen::VectorXd::Zero(nJa); ;
     Eigen::VectorXd qDotActuated = Eigen::VectorXd::Zero(nJa);
     Eigen::VectorXd groundReactiveForce = Eigen::VectorXd::Zero(2);//Daniel nFc->2
@@ -108,6 +109,11 @@ private:
     Eigen::Vector3d xyzDotFootTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyFootTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyDotFootTgt = Eigen::Vector3d::Zero();
+
+    Eigen::Vector3d xyzArmTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzDotArmTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyArmTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyDotArmTgt = Eigen::Vector3d::Zero();
     // ----------------------- plan desired --------------------------
 
     // ----------------------- task control --------------------------
@@ -115,9 +121,13 @@ private:
     Eigen::Vector3d torsoXyzRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d torsoRpyRef = Eigen::Vector3d::Zero();
     // Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(nFc);//Daniel 24.5.21
-    Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(12);//Daniel
-    Eigen::VectorXd forceRef = Eigen::VectorXd::Zero(nFc);
-    Eigen::VectorXd forceChangeRef = Eigen::VectorXd::Zero(nFc);
+    // Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(12);//Daniel
+    // Eigen::VectorXd forceRef = Eigen::VectorXd::Zero(nFc);
+    // Eigen::VectorXd forceChangeRef = Eigen::VectorXd::Zero(nFc);
+    Eigen::VectorXd footArmPosRef = Eigen::VectorXd::Zero(nFc);//Daniel
+    Eigen::VectorXd footArmforceRef = Eigen::VectorXd::Zero(nFc);
+    Eigen::VectorXd footArmforceChangeRef = Eigen::VectorXd::Zero(nFc);
+
     // result of QP-WBC
     int nV{nJg + nFc};
     Eigen::VectorXd varOpt = Eigen::VectorXd::Zero(nV);
@@ -133,10 +143,15 @@ private:
     std::vector<double> kdTorsoXyz{0., 0., 0.};
     std::vector<double> kpTorsoRpy = {0., 0., 0.};
     std::vector<double> kdTorsoRpy = {0., 0., 0.};
-    std::vector<double> kpFootXyz{0., 0., 0.};
-    std::vector<double> kdFootXyz{0., 0., 0.};
-    std::vector<double> kpFootRpy{0., 0., 0.};
-    std::vector<double> kdFootRpy{0., 0., 0.};
+    // std::vector<double> kpFootXyz{0., 0., 0.};
+    // std::vector<double> kdFootXyz{0., 0., 0.};
+    // std::vector<double> kpFootRpy{0., 0., 0.};
+    // std::vector<double> kdFootRpy{0., 0., 0.};
+     std::vector<double> kpFootArmXyz{0., 0., 0.};
+    std::vector<double> kdFootArmXyz{0., 0., 0.};
+    std::vector<double> kpFootArmRpy{0., 0., 0.};
+    std::vector<double> kdFootArmRpy{0., 0., 0.};
+
     // parameters
     double muStatic{0.6};
     double jointTauLimit{200.0};
@@ -155,9 +170,13 @@ private:
     Eigen::Vector3d weightTorsoPosition = Eigen::Vector3d::Zero();
     Eigen::Vector3d weightTorsoOrientation = Eigen::Vector3d::Zero();
     // Eigen::VectorXd weightFootPosition = Eigen::VectorXd::Zero(nFc);
-    Eigen::VectorXd weightFootPosition = Eigen::VectorXd::Zero(12);//Daniel 24.5.21
-    Eigen::VectorXd weightFootForce = Eigen::VectorXd::Zero(nFc);
-    Eigen::VectorXd weightFootForceChange = Eigen::VectorXd::Zero(nFc);
+    // Eigen::VectorXd weightFootPosition = Eigen::VectorXd::Zero(nFc);//Daniel 24.5.21
+    // Eigen::VectorXd weightFootForce = Eigen::VectorXd::Zero(nFc);
+    // Eigen::VectorXd weightFootForceChange = Eigen::VectorXd::Zero(nFc);
+    Eigen::VectorXd weightFootArmPosition = Eigen::VectorXd::Zero(nFc);//Daniel 24.5.21
+    Eigen::VectorXd weightFootArmForce = Eigen::VectorXd::Zero(nFc);
+    Eigen::VectorXd weightFootArmForceChange = Eigen::VectorXd::Zero(nFc);
+
     // bounds
     Eigen::VectorXd lowerbounds = -jointQddotLimit * Eigen::VectorXd::Ones(nV);
     Eigen::VectorXd upperbounds = jointQddotLimit * Eigen::VectorXd::Ones(nV);

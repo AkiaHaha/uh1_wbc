@@ -32,11 +32,12 @@ BipedController::BipedController(){
     // Instantiate task & constraint (Create Task Library )
     TAICHI::Task * ptrBipedTorsoPosRpy = new BipedTorsoPosRpy("BipedTorsoPosRpy", 3, nV);
     TAICHI::Task * ptrBipedTorsoPosXyz = new BipedTorsoPosXyz("BipedTorsoPosXyz", 3, nV);
-    // TAICHI::Task * ptrBipedFootForce = new BipedFootForce("BipedFootForce", 12, nV);//Daniel 5.22
-    TAICHI::Task * ptrBipedFootForce = new BipedFootForce("BipedFootForce", nFc, nV);
-    // TAICHI::Task * ptrBipedFootForceChange = new BipedFootForceChange("BipedFootForceChange", 12, nV);
-    TAICHI::Task * ptrBipedFootForceChange = new BipedFootForceChange("BipedFootForceChange", nFc, nV);
-    TAICHI::Task * ptrBipedFootPosition = new BipedFootPosition("BipedFootPosition", 12, nV);
+    // TAICHI::Task * ptrBipedFootForce = new BipedFootForce("BipedFootForce", nFc, nV);
+    TAICHI::Task * ptrQuadSoleForce = new QuadSoleForce("QuadSoleForce", nFc, nV);
+    // TAICHI::Task * ptrBipedFootForceChange = new BipedFootForceChange("BipedFootForceChange", nFc, nV);
+    TAICHI::Task * ptrQuadSoleForceChange = new QuadSoleForceChange("QuadSoleForceChange", nFc, nV);
+    // TAICHI::Task * ptrBipedFootPosition = new BipedFootPosition("BipedFootPosition", 12, nV);
+    TAICHI::Task * ptrQuadSolePosition = new QuadSolePosition("QuadSolePosition", nFc, nV);
 
     TAICHI::Constraint * ptrBipedDynamicConsistency = new BipedDynamicConsistency("BipedDynamicConsistency", 6, nV);
     TAICHI::Constraint * ptrBipedFrictionCone = new BipedFrictionCone("BipedFrictionCone", 8, nV);
@@ -55,9 +56,9 @@ BipedController::BipedController(){
     // Add task & constraint to the instance
     myWbc->addTask(ptrBipedTorsoPosRpy, 0);
     myWbc->addTask(ptrBipedTorsoPosXyz, 0);
-    myWbc->addTask(ptrBipedFootForce, 0);
-    myWbc->addTask(ptrBipedFootForceChange, 0);
-    myWbc->addTask(ptrBipedFootPosition, 0);
+    myWbc->addTask(ptrQuadSoleForce, 0);
+    myWbc->addTask(ptrQuadSoleForceChange, 0);
+    myWbc->addTask(ptrQuadSolePosition, 0);
     myWbc->addConstraint(ptrBipedDynamicConsistency, 0);
     myWbc->addConstraint(ptrBipedFrictionCone, 0);
     myWbc->addConstraint(ptrBipedCenterOfPressure, 0);
@@ -236,6 +237,12 @@ std::cout << "Motion Plan Test<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         xyzDotFootTgt = xyzDotFootEst[0];
         rpyFootTgt = rpyFootEst[0];
         rpyDotFootTgt = rpyDotFootEst[0];
+        //arm
+        // xyzArmTgt = xyzArmEst
+        // xyzDotArmTgt
+        // rpyArmTgt
+        // rpyDotArmTgt
+
         //init
         xyzTorsoInit = xyzTorsoEst;
 
@@ -327,36 +334,46 @@ bool BipedController::taskControl(){
     kdTorsoRpy = {6., 6., 6.};
     kpTorsoXyz = {400., 400., 400.};
     kdTorsoXyz = {30., 30., 30.};
-    kpFootXyz = {200., 200., 200.};
-    kdFootXyz = {15., 15., 15.};
-    kpFootRpy = {100., 100., 100.};
-    kdFootRpy = {6., 6., 6.};
+    kpFootArmXyz = {200., 200., 200.};
+    kdFootArmXyz = {15., 15., 15.};
+    kpFootArmRpy = {100., 100., 100.};
+    kdFootArmRpy = {6., 6., 6.};
 
     // ------------------------------ Calculate Reference ------------------------------
     // workspace
     torsoRpyRef = diag(kpTorsoRpy)*(rpyTorsoTgt - rpyTorsoEst) + diag(kdTorsoRpy)*(rpyDotTorsoTgt - rpyDotTorsoEst);
     torsoXyzRef = diag(kpTorsoXyz)*(xyzTorsoTgt - xyzTorsoEst) + diag(kdTorsoXyz)*(xyzDotTorsoTgt - xyzDotTorsoEst);
-    footPosRef.head(3) = diag(kpFootRpy)*(rpyFootTgt - rpyFootEst[0]) + diag(kdFootRpy)*(rpyDotFootTgt - rpyDotFootEst[0]);
-    footPosRef.segment(3,3) = diag(kpFootXyz)*(xyzFootTgt - xyzFootEst[0]) + diag(kdFootXyz)*(xyzDotFootTgt - xyzDotFootEst[0]); 
+
+    footArmPosRef.head(3) = diag(kpFootArmRpy)*(rpyFootTgt - rpyFootEst[0]) + diag(kdFootArmRpy)*(rpyDotFootTgt - rpyDotFootEst[0]);
+    footArmPosRef.segment(3,3) = diag(kpFootArmXyz)*(xyzFootTgt - xyzFootEst[0]) + diag(kdFootArmXyz)*(xyzDotFootTgt - xyzDotFootEst[0]); 
+    
+    // footArmPosRef.segment(6,3) = 
+    
     // force
-    forceRef = Eigen::VectorXd::Zero(nFc);
-    forceChangeRef = forceOpt;
+    footArmforceRef = Eigen::VectorXd::Zero(nFc);
+    footArmforceChangeRef = forceOpt;
 
     // ------------------------------ set weights --------------------------------------
     weightTorsoPosition << 100., 100., 100.;
     weightTorsoOrientation << 100., 100., 100.;
-    weightFootPosition << 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000.;
-    weightFootForce << 4., 4., 1., 3., 3., 0.03, 4., 4., 1., 3., 3., 0.03;
-    weightFootForceChange << 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.;
+    weightFootArmPosition << 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000.,
+                        1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000.;
+    weightFootArmForce << 4., 4., 1., 3., 3., 0.03, 4., 4., 1., 3., 3., 0.03,
+                        4., 4., 1., 3., 3., 0.03, 4., 4., 1., 3., 3., 0.03;
+    weightFootArmForceChange << 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.,
+                        1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.;
     // weightFootForce << 4., 4.;
     // weightFootForceChange << 1., 1.;//Daniel 24.5.21
 
     // ------------------------------ Update task & constraint -------------------------
     myWbc->updateTask("BipedTorsoPosRpy", torsoRpyRef, weightTorsoOrientation);
     myWbc->updateTask("BipedTorsoPosXyz", torsoXyzRef, weightTorsoPosition);
-    myWbc->updateTask("BipedFootPosition", footPosRef, weightFootPosition);//error from here;   ```In [Task::check], vector dimensions do not match!``` >Done, change the dimension in head file<
-    myWbc->updateTask("BipedFootForce", forceRef, weightFootForce);
-    myWbc->updateTask("BipedFootForceChange", forceChangeRef, weightFootForceChange);
+    // myWbc->updateTask("BipedFootPosition", footPosRef, weightFootPosition);
+    myWbc->updateTask("QaudSolePosition", footArmPosRef, weightFootArmPosition);
+    // myWbc->updateTask("BipedFootForce", forceRef, weightFootForce);
+    // myWbc->updateTask("BipedFootForceChange", forceChangeRef, weightFootForceChange);
+    myWbc->updateTask("QuadSoleForce", footArmforceRef, weightFootArmForce);
+    myWbc->updateTask("QuadSoleForceChange", footArmforceChangeRef, weightFootArmForceChange);
     myWbc->updateConstraint("BipedDynamicConsistency");
     myWbc->updateConstraint("BipedFrictionCone");
     myWbc->updateConstraint("BipedCenterOfPressure");

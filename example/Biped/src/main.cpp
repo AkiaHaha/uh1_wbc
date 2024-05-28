@@ -70,8 +70,8 @@ bool runWebots(){
             standPosCmd << 0, 0, -0.3, 0.8, -0.9, //left leg--RYP
                            0, 0, -0.3, 0.8, -0.47,//right leg
                            0,                     //torso
-                           0, 0, 0, 0.2,  //left arm--PRY
-                           0, 0, 0, -0.5; //right arm
+                           0, 0, 0, -1.8,  //left arm--PRY
+                           0, 0, 0, -2.5; //right arm
 
             // standPosCmd << 0, 0, 0, 0, 0, //left leg--RYP
             //                0, 0, 0, 0, 0,//right leg

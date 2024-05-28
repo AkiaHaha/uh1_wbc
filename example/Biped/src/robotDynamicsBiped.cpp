@@ -30,7 +30,7 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     NJJ = 19;  ///< Number of non-floating-base Joints, including actuated & underactuated(paissive) joints. NJJ = NJA + NJP
     NJA = 19;   ///< Number of Joints Actuated (torque_actuated)
     NJP = 0;  ///< Number of Passive joints that do not contain the DoFs of floating base
-    NFC = 12;  ///< Number of Forces describing Contact
+    NFC = 24;  ///< Number of Forces describing Contact
  
     jntPositions = VectorNd :: Zero(NJG);
     jntVelocities = VectorNd :: Zero(NJG);
@@ -60,8 +60,8 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     floatBaseJacoTc.J = MatrixNd :: Zero(NJF, NJG);///< JacobianTc of floating-base.
     floatBaseJacoTc.JdotQdot = VectorNd :: Zero(NJF);
 
-    footContactJacoTc.J = MatrixNd :: Zero(NFC, NJG);///< JacobianTc of contact point(s)
-    footContactJacoTc.JdotQdot = VectorNd :: Zero(NFC); 
+    contactJacoTc.J = MatrixNd :: Zero(NFC, NJG);///< JacobianTc of contact point(s)
+    contactJacoTc.JdotQdot = VectorNd :: Zero(NFC); 
 
     eqCstrMatTau = MatrixNd :: Zero(NJA, NJG+NFC);///< NJA*?, equality constraints : TauActuated = eqCstrMatTau * x^T + eqCstrMatTauBias, x is the generalized variables, e.g. NJA*(NJG+NFC), x = [Qddot, f_c]'
     eqCstrMatTauBias = VectorNd :: Zero(NJA);///< NJA*1, equality constraints : TauActuated = eqCstrMatTau * x^T + eqCstrMatTauBias
@@ -210,13 +210,15 @@ bool RobotDynamicsBiped::calcWbcDependence(){
     calcWaistTask();
     calcWbcDependenceDone = true;
     // ------------------------- public members of Base class -------------------
-    footContactJacoTc.J = dualSoleJacob;
-    footContactJacoTc.JdotQdot = dualSoleJDotQDot;
+    contactJacoTc.J = quadSoleJacob;
+    contactJacoTc.JdotQdot = quadSoleJDotQDot;
     floatBaseJacoTc.J = waistJacob;
     floatBaseJacoTc.JdotQdot = waistJDotQDot;
     eqCstrMatTau << selMatActuated * inertiaMat, //A*G * G*G
                 -selMatActuated * leftLegSoleJacob.transpose(),//A*F * G*F()
-                -selMatActuated * rightLegSoleJacob.transpose();//A*F * G*F   ====>A*(G+2F)   {TauActuated = eqCstrMatTau * x^T + eqCstrMatTauBias}  ===> X = (G+2F) * 1  = (g+fc)*1=nv*1
+                -selMatActuated * rightLegSoleJacob.transpose(),//A*F * G*F   ====>A*(G+2F)   {TauActuated = eqCstrMatTau * x^T + eqCstrMatTauBias}  ===> X = (G+2F) * 1  = (g+fc)*1=nv*1
+                -selMatActuated * leftArmSoleJacob.transpose(),
+                -selMatActuated * rightArmSoleJacob.transpose();
     eqCstrMatTauBias = selMatActuated * nonlinearBias;//A*G * G*1 = A*1
     // ------------------------- public members of Base class -------------------
     return true;
@@ -382,10 +384,13 @@ bool RobotDynamicsBiped::calcSoleJacob() {
     CalcPointJacobian6D(*model, jntPositions, idRightLegLink[4], Vector3d::Zero(), rightLegSoleJacob, false);
     CalcPointJacobian6D(*model, jntPositions, idLeftArmLink[3], Vector3d::Zero(), leftArmSoleJacob, false);
     CalcPointJacobian6D(*model, jntPositions, idRightArmLink[3], Vector3d::Zero(), rightArmSoleJacob, false);
-    dualSoleJacob.block(0, 0, NJF, NJG) = leftLegSoleJacob;
-    dualSoleJacob.block(NJF, 0, NJF, NJG) = rightLegSoleJacob;
-    // dualSoleJacob.block(0, 0, 6, 6) = leftLegSoleJacob;
-    // dualSoleJacob.block(6, 0, 6, NJG) = rightLegSoleJacob;//Daniel 5.22
+    dualSoleJacob.block(0, 0, 6, NJG) = leftLegSoleJacob;
+    dualSoleJacob.block(6, 0, 6, NJG) = rightLegSoleJacob;
+
+    quadSoleJacob.block(0, 0, 6, NJG) = leftLegSoleJacob;
+    quadSoleJacob.block(6, 0, 6, NJG) = rightLegSoleJacob;
+    quadSoleJacob.block(12, 0, 6, NJG) = leftArmSoleJacob;
+    quadSoleJacob.block(18, 0, 6, NJG) = rightArmSoleJacob;
     return true;
 }
 
@@ -394,10 +399,13 @@ bool RobotDynamicsBiped::calcSoleJDotQDot() {
     rightLegSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idRightLegLink[4], Vector3d::Zero(), false);
     leftArmSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idLeftArmLink[3], Vector3d::Zero(), false);
     rightArmSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idRightArmLink[3], Vector3d::Zero(), false);
-    dualSoleJDotQDot.head(NJF) = leftLegSoleJDotQDot;//D 24.5.22
-    dualSoleJDotQDot.tail(NJF) = rightLegSoleJDotQDot;
-    // dualSoleJDotQDot.head(6) = leftLegSoleJDotQDot;//Daniel 24.5.22
-    // dualSoleJDotQDot.tail(6) = rightLegSoleJDotQDot;
+    dualSoleJDotQDot.head(6) = leftLegSoleJDotQDot;//D 24.5.22
+    dualSoleJDotQDot.tail(6) = rightLegSoleJDotQDot;
+
+    quadSoleJDotQDot.head(6) = leftLegSoleJDotQDot;
+    quadSoleJDotQDot.segment(6,6) = rightLegSoleJDotQDot;
+    quadSoleJDotQDot.segment(12,6) = leftArmSoleJDotQDot;
+    quadSoleJDotQDot.tail(6) = rightArmSoleJDotQDot;
     return true;
 }
 

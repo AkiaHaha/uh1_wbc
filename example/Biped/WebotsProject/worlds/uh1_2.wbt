@@ -10,8 +10,8 @@ WorldInfo {
   basicTimeStep 1
 }
 Viewpoint {
-  orientation -0.1333380542731407 0.07808603835608152 0.9879896426058857 2.0925573738189525
-  position 1.2977676344059983 -1.7858205950558301 1.5375542052092257
+  orientation -0.12869176297856633 0.039074532893353636 0.9909145326518501 2.557105827430413
+  position 2.3160076943698353 -1.0995419884634139 1.530301654181566
 }
 TexturedBackground {
 }
@@ -672,7 +672,7 @@ DEF UnitreeH1 Robot {
                             }
                             HingeJoint {
                               jointParameters HingeJointParameters {
-                                position 0.2
+                                position -1.8
                                 axis 0 1 0
                                 anchor 0.0185 0 -0.198
                               }
@@ -680,7 +680,7 @@ DEF UnitreeH1 Robot {
                                 RotationalMotor {
                                   name "left_elbow_joint"
                                   maxVelocity 20
-                                  minPosition -1.25
+                                  minPosition -1.8
                                   maxPosition 3
                                   maxTorque 75
                                 }
@@ -689,8 +689,8 @@ DEF UnitreeH1 Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation 0.018499999999999826 2.775557561562893e-17 -0.198
-                                rotation 0 1 0 1.4999999999999996
+                                translation 0.018500000000000065 2.775557561562893e-17 -0.19800000000000018
+                                rotation 0 -1 0 0.5000000000000004
                                 children [
                                   DEF left_elbow_link_visual CadShape {
                                     url [
@@ -854,7 +854,7 @@ DEF UnitreeH1 Robot {
                             }
                             HingeJoint {
                               jointParameters HingeJointParameters {
-                                position -0.5
+                                position -2.5
                                 axis 0 1 0
                                 anchor 0.0185 0 -0.198
                               }
@@ -862,7 +862,7 @@ DEF UnitreeH1 Robot {
                                 RotationalMotor {
                                   name "right_elbow_joint"
                                   maxVelocity 20
-                                  minPosition -2
+                                  minPosition -2.5
                                   maxPosition 2.61
                                   maxTorque 75
                                 }
@@ -871,8 +871,8 @@ DEF UnitreeH1 Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation 0.01850000000000028 2.7755575615628907e-17 -0.198
-                                rotation 0 1 0 1.500004753353639
+                                translation 0.018499999999999885 2.7755575615628898e-17 -0.19799999999999976
+                                rotation 0 -1 0 0.49999524664636086
                                 children [
                                   DEF right_elbow_link_visual CadShape {
                                     url [
