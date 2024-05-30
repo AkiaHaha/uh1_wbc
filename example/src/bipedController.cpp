@@ -135,8 +135,8 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
     //<<<data from sensor//
     rpyTorsoEst = imuData.head(3);
     rpyDotTorsoEst = imuData.tail(3);
-    xyzTorsoEst = imuData.segment(3,3);
-    xyzDotTorsoEst = imuData.segment(6,3);
+    // xyzTorsoEst = imuData.segment(3,3);
+    // xyzDotTorsoEst = imuData.segment(6,3);
     
     qActuated = jntPos;
     qDotActuated = jntVel;
@@ -210,21 +210,21 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
     xyzFootEst[0] = footStateTemp0.segment(3,3);
     rpyDotFootEst[0] = footStateTemp0.segment(6,3);
     xyzDotFootEst[0] = footStateTemp0.tail(3);
-    // cout << "Left foot" << "-------------------------------" << endl;
-    // cout << akiaPrint2(footStateTemp0, 12, 4, 3, "rpy", 3, "***xyz", 3, "rpyDot", 3, "xyzDot") << endl;
+    cout << "Left foot" << "-------------------------------" << endl;
+    cout << akiaPrint2(footStateTemp0, 12, 4, 3, "rpy", 3, "***xyz", 3, "rpyDot", 3, "xyzDot") << endl;
 
     footStateTemp1 = biped->estFootArmPosVelInWorld(qGen, qDotGen, 2);
     rpyFootEst[1] = footStateTemp1.head(3);
     xyzFootEst[1] = footStateTemp1.segment(3,3);
     rpyDotFootEst[1] = footStateTemp1.segment(6,3);
     xyzDotFootEst[1] = footStateTemp1.tail(3);//>>>
-    // cout << "Right foot" << "-------------------------------" << endl;
-    // cout << akiaPrint2(footStateTemp1, 12, 4, 3, "rpy", 3, "***xyz", 3, "rpyDot", 3, "xyzDot") << endl;
+    cout << "Right foot" << "-------------------------------" << endl;
+    cout << akiaPrint2(footStateTemp1, 12, 4, 3, "rpy", 3, "***xyz", 3, "rpyDot", 3, "xyzDot") << endl;
 
 
-    // cout << "supervisor" << "-----------------------------------" << endl
-    //     << "Left: " << LeftSoleXyzRpyAct.transpose() << endl
-    //     << "Right: " << RightSoleXyzRpyAct.transpose() << endl<<endl;        
+    cout << "supervisor" << "-----------------------------------" << endl
+        << "Left: " << LeftSoleXyzRpyAct.transpose() << endl
+        << "Right: " << RightSoleXyzRpyAct.transpose() << endl<<endl;        
 
     //ARM<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
     cout << "ARM <<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
@@ -236,21 +236,21 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
     xyzArmEst[0] = armStateTemp0.segment(3,3);
     rpyDotArmEst[0] = armStateTemp0.segment(6,3);
     xyzDotArmEst[0] = armStateTemp0.tail(3);
-    // cout << "Left arm" << "-------------------------------" << endl;
-    // cout << akiaPrint2(armStateTemp0, 12, 4, 3, "rpy", 3, "***xyz", 3, "rpyDot", 3, "xyzDot") << endl;
+    cout << "Left arm" << "-------------------------------" << endl;
+    cout << akiaPrint2(armStateTemp0, 12, 4, 3, "rpy", 3, "***xyz", 3, "rpyDot", 3, "xyzDot") << endl;
 
     armStateTemp1 = biped->estFootArmPosVelInWorld(qGen, qDotGen, 4);
     rpyArmEst[1] = armStateTemp1.head(3);
     xyzArmEst[1] = armStateTemp1.segment(3,3);
     rpyDotArmEst[1] = armStateTemp1.segment(6,3);
     xyzDotArmEst[1] = armStateTemp1.tail(3);//>>>
-    // cout << "Right arm" << "-------------------------------" << endl;
-    // cout << akiaPrint2(armStateTemp1, 12, 4, 3, "rpy", 3, "***xyz", 3, "rpyDot", 3, "xyzDot") << endl;
+    cout << "Right arm" << "-------------------------------" << endl;
+    cout << akiaPrint2(armStateTemp1, 12, 4, 3, "rpy", 3, "***xyz", 3, "rpyDot", 3, "xyzDot") << endl;
 
 
-    // cout << "supervisor" << "-----------------------------------" << endl
-    //     << "Left: " << LeftArmHandXyzRpyAct.transpose() << endl
-    //     << "Right: " << RightArmHandXyzRpyAct.transpose() << endl<<endl;   
+    cout << "supervisor" << "-----------------------------------" << endl
+        << "Left: " << LeftArmHandXyzRpyAct.transpose() << endl
+        << "Right: " << RightArmHandXyzRpyAct.transpose() << endl<<endl;   
 
     std::cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << std::endl << endl;
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 24.5.21//
