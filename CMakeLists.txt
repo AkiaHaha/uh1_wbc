@@ -1,7 +1,7 @@
 cmake_minimum_required( VERSION 3.0 )
 
 # Setup the project
-set(CMAKE_BUILD_TYPE Debug)  # 添加这行确保生成调试信息 //Daniel
+set(CMAKE_BUILD_TYPE Debug)  # make sure to generate debug infos //Daniel
 get_filename_component(PROJECT ${CMAKE_SOURCE_DIR} NAME)
 project(${PROJECT})
 
@@ -110,17 +110,17 @@ if(COMPILE_EXAMPLE)
 
 
     # Compile examples
-    include_directories(${PROJECT_SOURCE_DIR}/example/Biped/include)
-    aux_source_directory(${PROJECT_SOURCE_DIR}/example/Biped/src Biped_DIR)
+    include_directories(${PROJECT_SOURCE_DIR}/example/include)
+    aux_source_directory(${PROJECT_SOURCE_DIR}/example/src Biped_DIR)
 
     # Setup the target executable
-    add_executable("BipedController" ${Biped_DIR})
-    target_link_libraries("BipedController" ${LIBRARIES} taichi rbdl qpOASES)
-    add_custom_command(TARGET "BipedController" POST_BUILD COMMAND ${CMAKE_COMMAND} -E
-                        make_directory "${CMAKE_SOURCE_DIR}/example/Biped/WebotsProject/controllers/BipedController/")
-    add_custom_command(TARGET "BipedController" POST_BUILD COMMAND ${CMAKE_COMMAND} -E
-                        copy ${CMAKE_BINARY_DIR}/"BipedController"
-                        ${CMAKE_SOURCE_DIR}/example/Biped/WebotsProject/controllers/BipedController/"BipedController")
+    add_executable("uh1Controller" ${Biped_DIR})
+    target_link_libraries("uh1Controller" ${LIBRARIES} taichi rbdl qpOASES)
+    add_custom_command(TARGET "uh1Controller" POST_BUILD COMMAND ${CMAKE_COMMAND} -E
+                        make_directory "${CMAKE_SOURCE_DIR}/example/webotsProject/controllers/uh1Controller/")
+    add_custom_command(TARGET "uh1Controller" POST_BUILD COMMAND ${CMAKE_COMMAND} -E
+                        copy ${CMAKE_BINARY_DIR}/"uh1Controller"
+                        ${CMAKE_SOURCE_DIR}/example/webotsProject/controllers/uh1Controller/"uh1Controller")
 
 
 endif(COMPILE_EXAMPLE)

@@ -1,0 +1,1067 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
+
+WorldInfo {
+  CFM 1e-07
+  ERP 0.8
+  basicTimeStep 1
+  contactProperties [
+    ContactProperties {
+      coulombFriction [
+        0.9
+      ]
+      bounce 0.3
+      bounceVelocity 0.003
+      softERP 0.42
+      softCFM 0.000208
+    }
+  ]
+}
+Viewpoint {
+  orientation -0.12869176297856633 0.039074532893353636 0.9909145326518501 2.557105827430413
+  position 4.569791054741574 -2.607079636345108 2.246680320086024
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  translation 0.001038 -0.629261 4.44089e-16
+  rotation 0 0 -1 0.181623
+  floorSize 10 10
+}
+DEF UnitreeH1 Robot {
+  translation 0 0 0.98
+  children [
+    GPS {
+      name "gps_upperBody"
+    }
+    InertialUnit {
+      name "inertial_unit_upperBody"
+    }
+    Gyro {
+      name "gyro_upperBody"
+    }
+    Accelerometer {
+      name "accelerometer_upperBody"
+    }
+    DEF pelvis_visual CadShape {
+      url [
+        "../meshes/pelvis.dae"
+      ]
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position -2.1905672163336853e-20
+        axis 0 0 1
+        anchor 0 0.0875 -0.1742
+      }
+      device [
+        RotationalMotor {
+          name "left_hip_yaw_joint"
+          maxVelocity 23
+          minPosition -0.43
+          maxPosition 0.43
+          maxTorque 220
+        }
+        PositionSensor {
+          name "left_hip_yaw_joint_sensor"
+        }
+      ]
+      endPoint Solid {
+        translation -2.605473345754228e-18 0.0875 -0.17419999999999947
+        children [
+          DEF left_hip_yaw_link_visual CadShape {
+            url [
+              "../meshes/left_hip_yaw_link.dae"
+            ]
+          }
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              position -3.345712379018706e-16
+              anchor 0.039468 0 0
+            }
+            device [
+              RotationalMotor {
+                name "left_hip_roll_joint"
+                maxVelocity 23
+                minPosition -0.43
+                maxPosition 0.43
+                maxTorque 220
+              }
+              PositionSensor {
+                name "left_hip_roll_joint_sensor"
+              }
+            ]
+            endPoint Solid {
+              translation 0.039467999999999975 5.5511151231256496e-17 -6.661338147750939e-16
+              rotation 1 0 0 0
+              children [
+                DEF left_hip_roll_link_visual CadShape {
+                  url [
+                    "../meshes/left_hip_roll_link.dae"
+                  ]
+                }
+                HingeJoint {
+                  jointParameters HingeJointParameters {
+                    position -0.3
+                    axis 0 1 0
+                    anchor 0 0.11536 0
+                  }
+                  device [
+                    RotationalMotor {
+                      name "left_hip_pitch_joint"
+                      maxVelocity 23
+                      minPosition -3.14
+                      maxPosition 2.53
+                      maxTorque 220
+                    }
+                    PositionSensor {
+                      name "left_hip_pitch_joint_sensor"
+                    }
+                  ]
+                  endPoint Solid {
+                    translation 3.4694469519536043e-17 0.11535999999999996 2.220446049250306e-16
+                    rotation 0 -0.9999999999999999 0 0.3000000000000006
+                    children [
+                      DEF left_hip_pitch_link_visual CadShape {
+                        url [
+                          "../meshes/left_hip_pitch_link.dae"
+                        ]
+                      }
+                      HingeJoint {
+                        jointParameters HingeJointParameters {
+                          position 0.7999999999999998
+                          axis 0 1 0
+                          anchor 0 0 -0.4
+                        }
+                        device [
+                          RotationalMotor {
+                            name "left_knee_joint"
+                            maxVelocity 14
+                            minPosition -0.26
+                            maxPosition 2.05
+                            maxTorque 360
+                          }
+                          PositionSensor {
+                            name "left_knee_joint_sensor"
+                          }
+                        ]
+                        endPoint Solid {
+                          translation 6.081668964601016e-17 2.7755575615628914e-17 -0.40000000000000024
+                          rotation 0 1 0 0.7999999999999999
+                          children [
+                            DEF left_knee_link_visual CadShape {
+                              url [
+                                "../meshes/left_knee_link.dae"
+                              ]
+                            }
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                position -0.9
+                                axis 0 1 0
+                                anchor 0 0 -0.4
+                              }
+                              device [
+                                RotationalMotor {
+                                  name "left_ankle_joint"
+                                  maxVelocity 9
+                                  minPosition -0.9000211187369112
+                                  maxPosition 0.52
+                                  maxTorque 45
+                                }
+                                PositionSensor {
+                                  name "left_ankle_joint_sensor"
+                                }
+                              ]
+                              endPoint DEF LeftFootSole Solid {
+                                translation 0.0724602657409487 0 -0.3987712246946149
+                                rotation 4.322662512030829e-18 -1 7.774522745248035e-18 0.4599999999999986
+                                children [
+                                  DEF left_ankle_torque_sensor HingeJoint {
+                                    jointParameters HingeJointParameters {
+                                      axis 0 1 0
+                                    }
+                                    device [
+                                      RotationalMotor {
+                                        name "left_ankle_torque_sensor_pitch"
+                                      }
+                                    ]
+                                    endPoint Solid {
+                                      rotation 0 1 0 0
+                                      children [
+                                        Solid {
+                                          children [
+                                            Shape {
+                                              appearance Appearance {
+                                                material Material {
+                                                  diffuseColor 0.8 0.129412 0.6
+                                                }
+                                              }
+                                              geometry Box {
+                                                size 0.001 0.001 0.001
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  }
+                                  Pose {
+                                    translation -0.046 0 0.056
+                                    children [
+                                      DEF left_ankle_link_visual CadShape {
+                                        url [
+                                          "../meshes/left_ankle_link.dae"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                                name "left_ankle_link"
+                                boundingObject Box {
+                                  size 0.28 0.03 0.024
+                                }
+                                physics Physics {
+                                  density -1
+                                  mass 0.474
+                                  centerOfMass [
+                                    0.042575 -1e-06 -0.044672
+                                  ]
+                                  inertiaMatrix [
+                                    0.000159668 0.002900286 0.002805438
+                                    -5e-09 0.000141063 1.4e-08
+                                  ]
+                                }
+                              }
+                            }
+                          ]
+                          name "left_knee_link"
+                          boundingObject Cylinder {
+                            height 0.2
+                            radius 0.05
+                          }
+                          physics Physics {
+                            density -1
+                            mass 1.721
+                            centerOfMass [
+                              -0.00136 -0.00512 -0.1384
+                            ]
+                            inertiaMatrix [
+                              0.012205 0.012509 0.0020629
+                              -6.8431e-05 0.0010862 0.00022549
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                    name "left_hip_pitch_link"
+                    boundingObject Cylinder {
+                      height 0.2
+                      radius 0.05
+                    }
+                    physics Physics {
+                      density -1
+                      mass 4.152
+                      centerOfMass [
+                        0.00746 -0.02346 -0.08193
+                      ]
+                      inertiaMatrix [
+                        0.082618 0.081579 0.0060081
+                        -0.00066654 0.0040725 0.0072024
+                      ]
+                    }
+                  }
+                }
+              ]
+              name "left_hip_roll_link"
+              boundingObject Cylinder {
+                height 0.01
+                radius 0.02
+              }
+              physics Physics {
+                density -1
+                mass 2.232
+                centerOfMass [
+                  -0.0058 -0.00319 -9e-05
+                ]
+                inertiaMatrix [
+                  0.0020603 0.0022482 0.0024323
+                  3.2115e-05 2.878e-06 -7.813e-06
+                ]
+              }
+            }
+          }
+        ]
+        name "left_hip_yaw_link"
+        boundingObject Cylinder {
+          height 0.02
+          radius 0.01
+        }
+        physics Physics {
+          density -1
+          mass 2.244
+          centerOfMass [
+            -0.04923 0.0001 0.0072
+          ]
+          inertiaMatrix [
+            0.0025731 0.0030444 0.0022883
+            9.159e-06 -0.00051948 1.949e-06
+          ]
+        }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position 1.8424630890014238e-20
+        axis 0 0 1
+        anchor 0 -0.0875 -0.1742
+      }
+      device [
+        RotationalMotor {
+          name "right_hip_yaw_joint"
+          maxVelocity 23
+          minPosition -0.43
+          maxPosition 0.43
+          maxTorque 220
+        }
+        PositionSensor {
+          name "right_hip_yaw_joint_sensor"
+        }
+      ]
+      endPoint Solid {
+        translation -1.3484764520288461e-18 -0.08750000000000002 -0.17419999999999947
+        children [
+          DEF right_hip_yaw_link_visual CadShape {
+            url [
+              "../meshes/right_hip_yaw_link.dae"
+            ]
+          }
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              position 2.4336642750527004e-20
+              anchor 0.039468 0 0
+            }
+            device [
+              RotationalMotor {
+                name "right_hip_roll_joint"
+                maxVelocity 23
+                minPosition -0.43
+                maxPosition 0.43
+                maxTorque 220
+              }
+              PositionSensor {
+                name "right_hip_roll_joint_sensor"
+              }
+            ]
+            endPoint Solid {
+              translation 0.03946800000000001 2.7755575615628914e-17 -6.661338147750939e-16
+              rotation 1 0 0 0
+              children [
+                DEF right_hip_roll_link_visual CadShape {
+                  url [
+                    "../meshes/right_hip_roll_link.dae"
+                  ]
+                }
+                HingeJoint {
+                  jointParameters HingeJointParameters {
+                    position -0.3
+                    axis 0 1 0
+                    anchor 0 -0.11536 0
+                  }
+                  device [
+                    RotationalMotor {
+                      name "right_hip_pitch_joint"
+                      maxVelocity 23
+                      minPosition -3.14
+                      maxPosition 2.53
+                      maxTorque 220
+                    }
+                    PositionSensor {
+                      name "right_hip_pitch_joint_sensor"
+                    }
+                  ]
+                  endPoint Solid {
+                    translation 1.3877787807814457e-17 -0.11536000000000002 2.2204460492503054e-16
+                    rotation 0 -0.9999999999999999 0 0.3000000000000006
+                    children [
+                      DEF right_hip_pitch_link_visual CadShape {
+                        url [
+                          "../meshes/right_hip_pitch_link.dae"
+                        ]
+                      }
+                      HingeJoint {
+                        jointParameters HingeJointParameters {
+                          position 0.7999999999999998
+                          axis 0 1 0
+                          anchor 0 0 -0.4
+                        }
+                        device [
+                          RotationalMotor {
+                            name "right_knee_joint"
+                            maxVelocity 14
+                            minPosition -0.26
+                            maxPosition 2.05
+                            maxTorque 360
+                          }
+                          PositionSensor {
+                            name "right_knee_joint_sensor"
+                          }
+                        ]
+                        endPoint Solid {
+                          translation -7.709690053168868e-17 -2.7755575615628914e-17 -0.4
+                          rotation 0 1 0 0.7999999999999999
+                          children [
+                            DEF right_knee_link_visual CadShape {
+                              url [
+                                "../meshes/right_knee_link.dae"
+                              ]
+                            }
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                position -0.4600000000000008
+                                axis 0 1 0
+                                anchor 0 0 -0.4
+                              }
+                              device [
+                                RotationalMotor {
+                                  name "right_ankle_joint"
+                                  maxVelocity 9
+                                  minPosition -0.87
+                                  maxPosition 0.52
+                                  maxTorque 45
+                                }
+                                PositionSensor {
+                                  name "right_ankle_joint_sensor"
+                                }
+                              ]
+                              endPoint DEF RightFootSole Solid {
+                                translation 0.06608184206759221 5.551115123125797e-17 -0.4297521452832195
+                                rotation 3.5317492582898517e-07 -0.9999999999989989 -1.3701994822310285e-06 0.4600002604111433
+                                children [
+                                  DEF right_ankle_torque_sensor HingeJoint {
+                                    jointParameters HingeJointParameters {
+                                      axis 0 1 0
+                                    }
+                                    device [
+                                      RotationalMotor {
+                                        name "right_ankle_torque_sensor_pitch"
+                                      }
+                                    ]
+                                    endPoint Solid {
+                                      rotation 0 1 0 0
+                                      children [
+                                        Solid {
+                                          children [
+                                            Shape {
+                                              appearance Appearance {
+                                                material Material {
+                                                  diffuseColor 0.8 0.129412 0.6
+                                                }
+                                              }
+                                              geometry Box {
+                                                size 0.001 0.001 0.001
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  }
+                                  Pose {
+                                    translation -0.046 0 0.056
+                                    children [
+                                      DEF right_ankle_link_visual CadShape {
+                                        url [
+                                          "../meshes/right_ankle_link.dae"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                                name "right_ankle_link"
+                                boundingObject Box {
+                                  size 0.28 0.03 0.024
+                                }
+                                physics Physics {
+                                  density -1
+                                  mass 0.474
+                                  centerOfMass [
+                                    0.042575 1e-06 -0.044672
+                                  ]
+                                  inertiaMatrix [
+                                    0.000159668 0.002900286 0.002805438
+                                    5e-09 0.000141063 -1.4e-08
+                                  ]
+                                }
+                              }
+                            }
+                          ]
+                          name "right_knee_link"
+                          boundingObject Cylinder {
+                            height 0.2
+                            radius 0.05
+                          }
+                          physics Physics {
+                            density -1
+                            mass 1.721
+                            centerOfMass [
+                              -0.00136 0.00512 -0.1384
+                            ]
+                            inertiaMatrix [
+                              0.012205 0.012509 0.0020629
+                              6.8431e-05 0.0010862 -0.00022549
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                    name "right_hip_pitch_link"
+                    boundingObject Cylinder {
+                      height 0.2
+                      radius 0.05
+                    }
+                    physics Physics {
+                      density -1
+                      mass 4.152
+                      centerOfMass [
+                        0.00746 0.02346 -0.08193
+                      ]
+                      inertiaMatrix [
+                        0.082618 0.081579 0.0060081
+                        0.00066654 0.0040725 -0.0072024
+                      ]
+                    }
+                  }
+                }
+              ]
+              name "right_hip_roll_link"
+              boundingObject Cylinder {
+                height 0.01
+                radius 0.02
+              }
+              physics Physics {
+                density -1
+                mass 2.232
+                centerOfMass [
+                  -0.0058 0.00319 -9e-05
+                ]
+                inertiaMatrix [
+                  0.0020603 0.0022482 0.0024323
+                  -3.2115e-05 2.878e-06 7.813e-06
+                ]
+              }
+            }
+          }
+        ]
+        name "right_hip_yaw_link"
+        boundingObject Cylinder {
+          height 0.02
+          radius 0.01
+        }
+        physics Physics {
+          density -1
+          mass 2.244
+          centerOfMass [
+            -0.04923 -0.0001 0.0072
+          ]
+          inertiaMatrix [
+            0.0025731 0.0030444 0.0022883
+            -9.159e-06 -0.00051948 -1.949e-06
+          ]
+        }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position 7.932636052855507e-21
+        axis 0 0 1
+      }
+      device [
+        RotationalMotor {
+          name "torso_joint"
+          maxVelocity 23
+          minPosition -2.35
+          maxPosition 2.35
+          maxTorque 200
+        }
+        PositionSensor {
+          name "torso_joint_sensor"
+        }
+      ]
+      endPoint Solid {
+        translation -4.6663808852400054e-05 6.134767616413527e-05 -0.0011463259148001281
+        rotation -0.9183027853700783 0.38652828991699895 0.08553289119044391 0.00012244596337226033
+        children [
+          DEF torso_link_visual CadShape {
+            url [
+              "../meshes/torso_link.dae"
+            ]
+          }
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              position 7.175548653990075e-21
+              axis 0 0.906309 0.422616
+              anchor 0.0055 0.15535 0.42999
+            }
+            device [
+              RotationalMotor {
+                name "left_shoulder_pitch_joint"
+                maxVelocity 9
+                minPosition -2.87
+                maxPosition 2.87
+                maxTorque 75
+              }
+              PositionSensor {
+                name "left_shoulder_pitch_joint_sensor"
+              }
+            ]
+            endPoint Solid {
+              translation 0.005499999999999993 0.15535 0.4299900000000003
+              rotation 1 -2.9428905615645083e-16 -6.524398505933211e-17 0.43632999999992306
+              children [
+                DEF left_shoulder_pitch_link_visual CadShape {
+                  url [
+                    "../meshes/left_shoulder_pitch_link.dae"
+                  ]
+                }
+                HingeJoint {
+                  jointParameters HingeJointParameters {
+                    position -4.1535638656006197e-22
+                    anchor -0.0055 0.0565 -0.0165
+                  }
+                  device [
+                    RotationalMotor {
+                      name "left_shoulder_roll_joint"
+                      maxVelocity 9
+                      minPosition -0.34
+                      maxPosition 3.11
+                      maxTorque 75
+                    }
+                    PositionSensor {
+                      name "left_shoulder_roll_joint_sensor"
+                    }
+                  ]
+                  endPoint Solid {
+                    translation -0.005499999999999988 0.056500000000000106 -0.01649999999999996
+                    rotation -0.9999999999999999 -1.2425376241974618e-18 -9.16757688873326e-18 0.4363299999999066
+                    children [
+                      DEF left_shoulder_roll_link_visual CadShape {
+                        url [
+                          "../meshes/left_shoulder_roll_link.dae"
+                        ]
+                      }
+                      HingeJoint {
+                        jointParameters HingeJointParameters {
+                          position 3.5309096077963147e-22
+                          axis 0 0 1
+                          anchor 0 0 -0.1343
+                        }
+                        device [
+                          RotationalMotor {
+                            name "left_shoulder_yaw_joint"
+                            maxVelocity 20
+                            minPosition -1.3
+                            maxPosition 4.45
+                            maxTorque 75
+                          }
+                          PositionSensor {
+                            name "left_shoulder_yaw_joint_sensor"
+                          }
+                        ]
+                        endPoint Solid {
+                          translation 4.9737774662772516e-18 -8.326672684688674e-17 -0.13429999999999964
+                          children [
+                            DEF left_shoulder_yaw_link_visual CadShape {
+                              url [
+                                "../meshes/left_shoulder_yaw_link.dae"
+                              ]
+                            }
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                position -1.8
+                                axis 0 1 0
+                                anchor 0.0185 0 -0.198
+                              }
+                              device [
+                                RotationalMotor {
+                                  name "left_elbow_joint"
+                                  maxVelocity 20
+                                  minPosition -1.8
+                                  maxPosition 3
+                                  maxTorque 75
+                                }
+                                PositionSensor {
+                                  name "left_elbow_joint_sensor"
+                                }
+                              ]
+                              endPoint DEF LeftArmSole Solid {
+                                translation 0.018500000000000065 2.7755575615628886e-17 -0.19800000000000018
+                                rotation 0 -0.9999999999999999 0 0.4999999999999995
+                                children [
+                                  DEF left_elbow_link_visual CadShape {
+                                    url [
+                                      "../meshes/left_elbow_link.dae"
+                                    ]
+                                  }
+                                ]
+                                name "left_elbow_link"
+                                boundingObject Cylinder {
+                                  height 0.09
+                                  radius 0.03
+                                }
+                                physics Physics {
+                                  density -1
+                                  mass 0.723
+                                  centerOfMass [
+                                    0.164862 0.000118 -0.015734
+                                  ]
+                                  inertiaMatrix [
+                                    0.00042388 0.0060062 0.0060023
+                                    -3.6086e-05 0.00029293 4.664e-06
+                                  ]
+                                }
+                              }
+                            }
+                          ]
+                          name "left_shoulder_yaw_link"
+                          boundingObject Cylinder {
+                            height 0.01
+                            radius 0.04
+                          }
+                          physics Physics {
+                            density -1
+                            mass 0.839
+                            centerOfMass [
+                              0.01365 0.002767 -0.16266
+                            ]
+                            inertiaMatrix [
+                              0.003664 0.0040789 0.00066383
+                              -1.0671e-05 0.00034733 7.0213e-05
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                    name "left_shoulder_roll_link"
+                    boundingObject Cylinder {
+                      height 0.01
+                      radius 0.04
+                    }
+                    physics Physics {
+                      density -1
+                      mass 0.793
+                      centerOfMass [
+                        0.000679 0.00115 -0.094076
+                      ]
+                      inertiaMatrix [
+                        0.0015742 0.0016973 0.0010183
+                        2.298e-06 -7.2265e-05 -6.3691e-05
+                      ]
+                    }
+                  }
+                }
+              ]
+              name "left_shoulder_pitch_link"
+              boundingObject Cylinder {
+                height 0.04
+                radius 0.03
+              }
+              physics Physics {
+                density -1
+                mass 1.033
+                centerOfMass [
+                  0.005045 0.053657 -0.015715
+                ]
+                inertiaMatrix [
+                  0.0012985 0.00087279 0.00097338
+                  -1.7333e-05 8.683e-06 3.9656e-05
+                ]
+              }
+            }
+          }
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              position 1.2735309768557856e-16
+              axis 0 0.906309 -0.422616
+              anchor 0.0055 -0.15535 0.42999
+            }
+            device [
+              RotationalMotor {
+                name "right_shoulder_pitch_joint"
+                maxVelocity 9
+                minPosition -2.87
+                maxPosition 2.87
+                maxTorque 75
+              }
+              PositionSensor {
+                name "right_shoulder_pitch_joint_sensor"
+              }
+            ]
+            endPoint Solid {
+              translation 0.00549999999999999 -0.15534999999999996 0.4299900000000003
+              rotation -1 7.464164189780772e-16 -1.6503156713109721e-16 0.43632999999991995
+              children [
+                DEF right_shoulder_pitch_link_visual CadShape {
+                  url [
+                    "../meshes/right_shoulder_pitch_link.dae"
+                  ]
+                }
+                HingeJoint {
+                  jointParameters HingeJointParameters {
+                    position 1.3988903304455593e-21
+                    anchor -0.0055 -0.0565 -0.0165
+                  }
+                  device [
+                    RotationalMotor {
+                      name "right_shoulder_roll_joint"
+                      maxVelocity 9
+                      minPosition -3.11
+                      maxPosition 0.34
+                      maxTorque 75
+                    }
+                    PositionSensor {
+                      name "right_shoulder_roll_joint_sensor"
+                    }
+                  ]
+                  endPoint Solid {
+                    translation -0.005499999999999983 -0.05650000000000033 -0.016499999999999293
+                    rotation 1 -2.640637045440021e-18 8.877469271498665e-18 0.436329999999922
+                    children [
+                      DEF right_shoulder_roll_link_visual CadShape {
+                        url [
+                          "../meshes/right_shoulder_roll_link.dae"
+                        ]
+                      }
+                      HingeJoint {
+                        jointParameters HingeJointParameters {
+                          position 7.724335155286256e-22
+                          axis 0 0 1
+                          anchor 0 0 -0.1343
+                        }
+                        device [
+                          RotationalMotor {
+                            name "right_shoulder_yaw_joint"
+                            maxVelocity 20
+                            minPosition -4.45
+                            maxPosition 1.3
+                            maxTorque 75
+                          }
+                          PositionSensor {
+                            name "right_shoulder_yaw_joint_sensor"
+                          }
+                        ]
+                        endPoint Solid {
+                          translation 2.8189256484623115e-18 -5.551115123125783e-17 -0.1343000000000003
+                          children [
+                            DEF right_shoulder_yaw_link_visual CadShape {
+                              url [
+                                "../meshes/right_shoulder_yaw_link.dae"
+                              ]
+                            }
+                            HingeJoint {
+                              jointParameters HingeJointParameters {
+                                position -2.5
+                                axis 0 1 0
+                                anchor 0.0185 0 -0.198
+                              }
+                              device [
+                                RotationalMotor {
+                                  name "right_elbow_joint"
+                                  maxVelocity 20
+                                  minPosition -2.5
+                                  maxPosition 2.61
+                                  maxTorque 75
+                                }
+                                PositionSensor {
+                                  name "right_elbow_joint_sensor"
+                                }
+                              ]
+                              endPoint DEF RightArmSole Solid {
+                                translation 0.01849999999999989 2.775557561562886e-17 -0.19799999999999976
+                                rotation 0 -1 0 0.49999524664635997
+                                children [
+                                  DEF right_elbow_link_visual CadShape {
+                                    url [
+                                      "../meshes/right_elbow_link.dae"
+                                    ]
+                                  }
+                                ]
+                                name "right_elbow_link"
+                                boundingObject Cylinder {
+                                  height 0.09
+                                  radius 0.03
+                                }
+                                physics Physics {
+                                  density -1
+                                  mass 0.723
+                                  centerOfMass [
+                                    0.164862 -0.000118 -0.015734
+                                  ]
+                                  inertiaMatrix [
+                                    0.00042388 0.0060062 0.0060023
+                                    3.6086e-05 0.00029293 -4.664e-06
+                                  ]
+                                }
+                              }
+                            }
+                          ]
+                          name "right_shoulder_yaw_link"
+                          boundingObject Cylinder {
+                            height 0.01
+                            radius 0.04
+                          }
+                          physics Physics {
+                            density -1
+                            mass 0.839
+                            centerOfMass [
+                              0.01365 -0.002767 -0.16266
+                            ]
+                            inertiaMatrix [
+                              0.003664 0.0040789 0.00066383
+                              1.0671e-05 0.00034733 -7.0213e-05
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                    name "right_shoulder_roll_link"
+                    boundingObject Cylinder {
+                      height 0.01
+                      radius 0.04
+                    }
+                    physics Physics {
+                      density -1
+                      mass 0.793
+                      centerOfMass [
+                        0.000679 -0.00115 -0.094076
+                      ]
+                      inertiaMatrix [
+                        0.0015742 0.0016973 0.0010183
+                        -2.298e-06 -7.2265e-05 6.3691e-05
+                      ]
+                    }
+                  }
+                }
+              ]
+              name "right_shoulder_pitch_link"
+              boundingObject Cylinder {
+                height 0.04
+                radius 0.03
+              }
+              physics Physics {
+                density -1
+                mass 1.033
+                centerOfMass [
+                  0.005045 -0.053657 -0.015715
+                ]
+                inertiaMatrix [
+                  0.0012985 0.00087279 0.00097338
+                  1.7333e-05 8.683e-06 -3.9656e-05
+                ]
+              }
+            }
+          }
+          Solid {
+            translation 0.108485 0.0175 0.693171
+            rotation -0.6856987715190361 0.6857007715183697 -0.2441959186317357 2.662578
+            children [
+              Shape {
+                appearance DEF d435_left_imager_link_material PBRAppearance {
+                  roughness 1
+                  metalness 0
+                }
+                geometry Sphere {
+                  radius 0.001
+                }
+              }
+            ]
+            name "d435_left_imager_link"
+            boundingObject Sphere {
+              radius 0.001
+            }
+            physics Physics {
+            }
+          }
+          Solid {
+            translation 0.108485 0.0325 0.693171
+            rotation -0.6856987715190361 0.6857007715183697 -0.2441959186317357 2.662578
+            children [
+              Shape {
+                appearance DEF d435_rgb_module_link_material PBRAppearance {
+                  roughness 1
+                  metalness 0
+                }
+                geometry Sphere {
+                  radius 0.001
+                }
+              }
+            ]
+            name "d435_rgb_module_link"
+            boundingObject Sphere {
+              radius 0.001
+            }
+            physics Physics {
+            }
+          }
+          Solid {
+            translation 0.0473 0 0.674929
+            rotation 0 1 0 0.243124
+            children [
+              Shape {
+                appearance DEF mid360_link_material PBRAppearance {
+                  roughness 1
+                  metalness 0
+                }
+                geometry Sphere {
+                  radius 0.001
+                }
+              }
+            ]
+            name "mid360_link"
+            boundingObject Sphere {
+              radius 0.001
+            }
+            physics Physics {
+            }
+          }
+        ]
+        name "torso_link"
+        boundingObject Box {
+          size 0.08 0.16 0.1
+        }
+        physics Physics {
+          density -1
+          mass 17.789
+          centerOfMass [
+            0.000489 0.002797 0.20484
+          ]
+          inertiaMatrix [
+            0.4873 0.40963 0.12785
+            -0.00053763 0.0020276 -0.00074582
+          ]
+        }
+      }
+    }
+  ]
+  name "UnitreeH1"
+  boundingObject Sphere {
+    radius 0.05
+  }
+  physics Physics {
+    density -1
+    mass 5.39
+    centerOfMass [
+      -0.0002 4e-05 -0.04522
+    ]
+    inertiaMatrix [
+      0.044582 0.0082464 0.049021
+      8.7034e-05 -1.9893e-05 4.021e-06
+    ]
+  }
+  controller "<none>"
+  supervisor TRUE
+}
