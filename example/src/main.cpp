@@ -39,7 +39,7 @@ bool runWebots(){
     // timing
     int simCnt = 0;
     double simTime = 0;
-    const int goStandCnt = 100;
+    const int goStandCnt = 1000;
     const double goStandTime = goStandCnt * SAMPLE_TIME;	//second机器人曲膝的时间
     const int simStopCnt  = goStandCnt + 100000;
     const double simStopTime = simStopCnt * SAMPLE_TIME;    //second机器人停止仿真的时间
@@ -63,16 +63,17 @@ bool runWebots(){
         // read data from Webots
         simTime = bipedWebots.robot->getTime();
         bipedWebots.readData(simTime, robotStateSim);
-        // akiaPrint1(robotStateSim.jointPosAct, 19, 5, 5, 5, 1, 4, 4);
+        akiaPrint1(robotStateSim.jointPosAct, 19, 5, 5, 5, 1, 4, 4);
 
         // control robot
         if (simCnt < goStandCnt){
             //go to desired position
-            standPosCmd << 0, 0, -0.3, 0.8, -0.9, //left leg--RYP
-                           0, 0, -0.3, 0.8, -0.47,//right leg
+
+            standPosCmd << 0, 0, -0.3, 0.8, -0.46, //left leg--RYP
+                           0, 0, -0.3, 0.8, -0.46,//right leg
                            0,                     //torso
-                           0, 0, 0, -1.8,  //left arm--PRY
-                           0, 0, 0, -2.5; //right arm
+                           0, 0, 0, 0.5 ,  //left arm--PRY
+                           0, 0, 0, 0.5 ; //right arm
 
             // standPosCmd << 0, 0, 0, 0, 0, //left leg--RYP
             //                0, 0, 0, 0, 0,//right leg
@@ -122,6 +123,7 @@ bool runWebots(){
             }
             
             }else if (simCnt < simStopCnt){
+
             bipedCtrl.update(simTime-goStandTime, robotStateSim.imu9DAct,
                              robotStateSim.jointPosAct, robotStateSim.jointVelAct, robotStateSim.footGrfAct,
                              robotStateSim.LeftSoleXyzRpyAct, robotStateSim.RightSoleXyzRpyAct,

@@ -146,16 +146,18 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
     qDotGen.tail(nJa) = qDotActuated;
     qGen.segment(3,3) = rpyTorsoEst;
     qDotGen.segment(3,3) = rpyDotTorsoEst;
-    qGen.head(3) = xyzTorsoEst;
-    qDotGen.head(3) = xyzDotTorsoEst;//>>> update q and qdot 
+    // qGen.head(3) = xyzTorsoEst;
+    // qDotGen.head(3) = xyzDotTorsoEst;
 
 //    //<<<torso xyz data calc from rbdl//
-//     Eigen::VectorXd trosoStateTemp = Eigen::VectorXd::Zero(6,1);
-//     trosoStateTemp = biped->estWaistPosVelInWorld(qGen, qDotGen, stanceLeg);
-//     xyzTorsoEst = trosoStateTemp.head(3); 
-//     xyzDotTorsoEst = trosoStateTemp.tail(3);
-//     qGen.head(3) = xyzTorsoEst;
-//     qDotGen.head(3) = xyzDotTorsoEst;//>>>
+    Eigen::VectorXd trosoStateTemp = Eigen::VectorXd::Zero(6,1);
+    trosoStateTemp = biped->estWaistPosVelInWorld(qGen, qDotGen, 0);
+    xyzTorsoEst = trosoStateTemp.head(3); 
+    xyzDotTorsoEst = trosoStateTemp.tail(3);
+    qGen.head(3) = xyzTorsoEst;
+    qDotGen.head(3) = xyzDotTorsoEst;//>>>
+    cout << "torso pose*****************" << endl   
+        << trosoStateTemp.transpose() << endl;
 
 //     Eigen::Vector3d xyzTorsoTemp = xyzTorsoEst;
 //     Eigen::Vector3d xyzDotTorsoTemp = xyzDotTorsoEst;
@@ -181,8 +183,8 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
 
     //<<<获取根节点的位置和姿态 Daniel 5.26 == here root is also floating base;
     Eigen::VectorXd rootPose = biped->getRootXyzRpy(qGen);//>>>
-    // cout << "rbdl" << "-----------------------------------" << endl;
-    // cout << akiaPrint2(rootPose, 6, 2, 3, "xyz", 3, "rpy") << endl<<endl;
+    cout << "rbdl" << "-----------------------------------" << endl;
+    cout << akiaPrint2(rootPose, 6, 2, 3, "xyz", 3, "rpy") << endl<<endl;
 
     if (flagEstFirst == 0){
         flagEstFirst = 1;
@@ -488,8 +490,8 @@ bool BipedController::taskControl(){
         myWbc->getResultOpt(varOpt);
         qDDotOpt = varOpt.head(nJg);
         forceOpt = varOpt.tail(nFc);
-        // tauOpt = biped->eqCstrMatTau * varOpt + biped->eqCstrMatTauBias;
-        tauOpt = biped->eqCstrMatTauBias;
+        tauOpt = biped->eqCstrMatTau * varOpt + biped->eqCstrMatTauBias;
+        // tauOpt = biped->eqCstrMatTauBias;
 
     }
 
