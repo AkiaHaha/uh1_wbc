@@ -93,7 +93,11 @@ private:
 
     bool isPosVelUpdated{false};
 
-    unsigned int idPelvis, idTorso, idLeftSole, idRightSole, idLeftFixedAnkle, idRightFixedAnkle, idLeftSoleGround, idRightSoleGround;
+    unsigned int idPelvis, idTorso;
+    unsigned int idLeftSole, idRightSole;
+    unsigned int idLeftFixedAnkle, idRightFixedAnkle;
+    unsigned int idRightSoleGround, idLeftSoleGround;
+    unsigned int idLeftArmEnd, idRightArmEnd;
     unsigned int idLeftLegLink[5],idLeftArmLink[5];
     unsigned int idRightLegLink[5],idRightArmLink[5];
     double massAll;

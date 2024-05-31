@@ -19,7 +19,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <stdexcept> 
+#include <stdexcept>
 
 #include "webotsInterface.h"
 #include "bipedController.h"

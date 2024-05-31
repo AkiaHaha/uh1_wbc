@@ -271,7 +271,7 @@ std::cout << "Motion Plan Test<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         // cout << "***********************" << endl;
         cout << xyzTorsoTgt.transpose();
 
-        xyzDotTorsoTgt << 0.0, 0.0, 0.1*PI*cos(time/1*PI);
+        xyzDotTorsoTgt << 0.0, 0.0, 0.0;
         rpyTorsoTgt << 0.0, 0.0, 0.0;
         rpyDotTorsoTgt << 0.0, 0.0, 0.0;
         //foot
