@@ -71,10 +71,10 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     // ------------------------- public members of Base class -------------------
 
     // ------------------------- private members of Derived class -------------------
-    Body floatingWaistLink, torsoLink;
+    Body floatingWaistLink, torsoLink, fixedAnkleLink, fixedSoleLink;
     Body leftLegLink[5], leftArmLink[5];
     Body rightLegLink[5], rightArmLink[5];
-    Joint floatingWaistJoint, fixedSoleJoint;
+    Joint floatingWaistJoint, fixedSoleJoint, fixedAnkleJoint;
 
     // ------------------------------------------------------ Biped parameters------------------------------------------------------
     floatingWaistLink = Body(5.39, Vector3d(-0.0002, 0.0, -0.04522), Vector3d(0.0490211, 0.0445821, 0.00824619));
@@ -104,6 +104,10 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     //rightArmLink[4] = Body(0.1 , Vector3d(0.0, 0.0, 0.0), Vector3d(0.0, 0.0, 0.0));//
 
     torsoLink = Body(17.789, Vector3d(0.000489, 0.002797, 0.20484), Vector3d(0.000489, 0.002797, 0.20484));
+
+    fixedAnkleLink = Body(0.0, Vector3d (0., 0., 0.), Vector3d (0., 0., 0.));
+    fixedSoleLink = Body(0.0, Vector3d (0., 0., 0.), Vector3d (0., 0., 0.));
+
     // ------------------------------------------------------Biped parameters------------------------------------------------------
 
     // ------------------------------------------------------Biped RBDL Model------------------------------------------------------
@@ -125,13 +129,17 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     idLeftLegLink[1] = model->AppendBody(Xtrans(Vector3d(0.039468, 0, 0)), joint_Rx, leftLegLink[1], "lhr");
     idLeftLegLink[2] = model->AppendBody(Xtrans(Vector3d(0, 0.11536, 0)), joint_Ry, leftLegLink[2], "lhp");
     idLeftLegLink[3] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, leftLegLink[3], "lk");
-    idLeftLegLink[4] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, leftLegLink[4], "la");
+    idLeftLegLink[4] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, fixedAnkleLink, "la");
+    idLeftSole = model->AppendBody(Xtrans(Vector3d(0.0556, 0, -0.05)), fixedSoleJoint, leftLegLink[4], "lsole");//Daniel 5.1
+    idLeftSoleGround = model->AppendBody(Xtrans(Vector3d(0, 0, -0.012)), fixedSoleJoint, fixedSoleLink, "lsoleg");
 
     idRightLegLink[0] = model->AddBody(idPelvis, Xtrans(Vector3d(0, -0.0875, -0.1742)), joint_Rz, rightLegLink[0], "rhy");
     idRightLegLink[1] = model->AppendBody(Xtrans(Vector3d(0.039468, 0, 0)), joint_Rx, rightLegLink[1], "rhr");
     idRightLegLink[2] = model->AppendBody(Xtrans(Vector3d(0, -0.11536, 0)), joint_Ry, rightLegLink[2], "rhp");
     idRightLegLink[3] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, rightLegLink[3], "rk");
-    idRightLegLink[4] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, rightLegLink[4], "ra");
+    idRightLegLink[4] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, fixedAnkleLink, "ra");
+    idRightSole = model->AppendBody(Xtrans(Vector3d(0.0556, 0, -0.05)), fixedSoleJoint, rightLegLink[4], "rsole");//5.31
+    idRightSoleGround = model->AppendBody(Xtrans(Vector3d(0, 0, -0.012)), fixedSoleJoint, fixedSoleLink, "rsoleg");
 
     //Torso, relates the world coordinate system by pelvis
     idTorso = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0, 0.0)), joint_Rz, torsoLink, "torso");
@@ -241,12 +249,12 @@ VectorNd RobotDynamicsBiped::estWaistPosVelInWorld(const VectorNd& jointPos, con
     switch (footType)
     {
         case TYPELEFTSOLE: // Left Sole
-            sole2WaistPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftLegLink[4], Math::Vector3d::Zero(), false);
-            sole2WaistVel = CalcPointVelocity(*model, qTemp, qDotTemp, idLeftLegLink[4], Math::Vector3d::Zero(), false);
+            sole2WaistPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
+            sole2WaistVel = CalcPointVelocity(*model, qTemp, qDotTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
             break;
         case TYPERIGHTSOLE: // Right Sole
-            sole2WaistPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightLegLink[4], Math::Vector3d::Zero(), false);
-            sole2WaistVel = CalcPointVelocity(*model, qTemp, qDotTemp, idRightLegLink[4], Math::Vector3d::Zero(), false);
+            sole2WaistPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
+            sole2WaistVel = CalcPointVelocity(*model, qTemp, qDotTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
             break;    
         default:
             break;
@@ -278,10 +286,10 @@ VectorNd RobotDynamicsBiped::estBodyPosInWorldAkia(const VectorNd& jointPos, con
             bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightArmLink[3], Math::Vector3d::Zero(), false);
             break;
         case 3:
-            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftLegLink[4], Math::Vector3d::Zero(), false);
+            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
             break;
         case 4:
-            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp,idRightLegLink[4], Math::Vector3d::Zero(), false);
+            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp,idRightSoleGround, Math::Vector3d::Zero(), false);
             break;
         default:
             break;
@@ -304,14 +312,14 @@ VectorNd RobotDynamicsBiped::estFootArmPosVelInWorld(const VectorNd& jointPos, c
     switch (footType)
     {
         case 1: // Left Sole
-            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftLegLink[4], Math::Vector3d::Zero(), false);
-            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idLeftLegLink[4], false);
-            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idLeftLegLink[4], Math::Vector3d::Zero(), false);
+            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
+            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idLeftSoleGround, false);
+            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
             break;   
         case 2: // Right Sole 
-            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightLegLink[4], Math::Vector3d::Zero(), false);
-            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idRightLegLink[4], false);
-            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idRightLegLink[4], Math::Vector3d::Zero(), false);
+            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
+            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idRightSoleGround, false);
+            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
             break;
         case 3: // Left Arm
             sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftArmLink[3], Math::Vector3d::Zero(), false);
@@ -390,8 +398,8 @@ bool RobotDynamicsBiped::calcWaistJDotQDot() {
 }
 
 bool RobotDynamicsBiped::calcSoleJacob() {
-    CalcPointJacobian6D(*model, jntPositions, idLeftLegLink[4], Vector3d::Zero(), leftLegSoleJacob, false);
-    CalcPointJacobian6D(*model, jntPositions, idRightLegLink[4], Vector3d::Zero(), rightLegSoleJacob, false);
+    CalcPointJacobian6D(*model, jntPositions, idLeftSoleGround, Vector3d::Zero(), leftLegSoleJacob, false);
+    CalcPointJacobian6D(*model, jntPositions, idRightSoleGround, Vector3d::Zero(), rightLegSoleJacob, false);
     CalcPointJacobian6D(*model, jntPositions, idLeftArmLink[3], Vector3d::Zero(), leftArmSoleJacob, false);
     CalcPointJacobian6D(*model, jntPositions, idRightArmLink[3], Vector3d::Zero(), rightArmSoleJacob, false);
     dualSoleJacob.block(0, 0, 6, NJG) = leftLegSoleJacob;
@@ -405,8 +413,8 @@ bool RobotDynamicsBiped::calcSoleJacob() {
 }
 
 bool RobotDynamicsBiped::calcSoleJDotQDot() {
-    leftLegSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idLeftLegLink[4], Vector3d::Zero(), false);
-    rightLegSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idRightLegLink[4], Vector3d::Zero(), false);
+    leftLegSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idLeftSoleGround, Vector3d::Zero(), false);
+    rightLegSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idRightSoleGround, Vector3d::Zero(), false);
     leftArmSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idLeftArmLink[3], Vector3d::Zero(), false);
     rightArmSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idRightArmLink[3], Vector3d::Zero(), false);
     dualSoleJDotQDot.head(6) = leftLegSoleJDotQDot;//D 24.5.22

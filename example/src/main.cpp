@@ -39,7 +39,7 @@ bool runWebots(){
     // timing
     int simCnt = 0;
     double simTime = 0;
-    const int goStandCnt = 1000;
+    const int goStandCnt = 500;
     const double goStandTime = goStandCnt * SAMPLE_TIME;	//second机器人曲膝的时间
     const int simStopCnt  = goStandCnt + 100000;
     const double simStopTime = simStopCnt * SAMPLE_TIME;    //second机器人停止仿真的时间
