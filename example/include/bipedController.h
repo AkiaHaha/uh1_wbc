@@ -61,6 +61,8 @@ public:
                 const Eigen::VectorXd & LeftArmHandXyzRpyAct, const Eigen::VectorXd & RightArmHandXyzRpyAct);
     bool getValueTauOpt(Eigen::VectorXd & jntTorOpt);
     bool getValuePosCurrent(Eigen::VectorXd & jntPosCur);
+    bool getValueQdd(Eigen::VectorXd & Qdd);
+
 
 private:
     bool stateEstimation(const Eigen::VectorXd & imuData,

@@ -56,6 +56,14 @@ bool runWebots(){
     Eigen::VectorXd standPosCmd = Eigen::VectorXd::Zero(19);
     Eigen::VectorXd jointTorCmd = Eigen::VectorXd::Zero(19);
 
+    Eigen::VectorXd jointPosInteg = Eigen::VectorXd::Zero(19);
+    Eigen::VectorXd jointPosAcc = Eigen::VectorXd::Zero(19);
+    Eigen::VectorXd jointPosAtStartCtrl = Eigen::VectorXd::Zero(19);
+    
+    // integrator
+    Integrator integrator;
+    double flagStartCtrl{}; 
+
     // simulation loop
     std::cout << "Program started." << std::endl << endl;
     while (bipedWebots.robot->step(TIME_STEP) != -1)
@@ -63,7 +71,6 @@ bool runWebots(){
         // read data from Webots
         simTime = bipedWebots.robot->getTime();
         bipedWebots.readData(simTime, robotStateSim);
-        // akiaPrint1(robotStateSim.jointPosAct, 19, 5, 5, 5, 1, 4, 4);
 
         // control robot
         if (simCnt < goStandCnt){
@@ -87,15 +94,27 @@ bool runWebots(){
                              robotStateSim.LeftSoleXyzRpyAct, robotStateSim.RightSoleXyzRpyAct,
                              robotStateSim.LeftArmHandXyzRpyAct, robotStateSim.RightArmHandXyzRpyAct);
             bipedCtrl.getValueTauOpt(jointTorCmd);
-            bipedWebots.setMotorTau(jointTorCmd);
-            cout << "Torque Cmd at simcnt of " << simCnt << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << endl
-                << akiaPrint2(jointTorCmd, 19, 5, 5, "LL", 5, "RL", 1, "torso", 4, "LS", 4, "RS" )
-                << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << endl<<endl;
-            
+            // bipedWebots.setMotorTau(jointTorCmd);
             // if (jointTorCmd(0) > 0){
             //     cout << "*************" << endl;
             //     throw std::runtime_error("Torque command greater than 0");
             // }
+            if (flagStartCtrl == 0){
+                jointPosAtStartCtrl = robotStateSim.jointPosAct;
+                flagStartCtrl = 1;
+            }
+
+            bipedCtrl.getValueQdd(jointPosAcc);
+            for (size_t i = 0; i < 19; i++){
+                jointPosInteg[i] = integrator.Integrate(jointPosAcc[i]);
+            }
+            jointPosInteg += jointPosAtStartCtrl;
+            bipedWebots.setMotorPos(jointPosInteg);
+            cout << "*** cnt " << simCnt << " ***" << endl;
+            akiaPrint1(robotStateSim.jointPosAct, 19, 5, 5, 5, 1, 4, 4);
+            cout << "------------------------------------" << endl;
+            akiaPrint1(jointTorCmd, 19, 5, 5, 5, 1, 4, 4);
+            cout << endl;
             
         }else{
             // keep current position

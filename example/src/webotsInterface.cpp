@@ -178,7 +178,7 @@ bool WebotsRobot::readData(double simTime, webotState & robotStateSim)
     //External Force
     robotStateSim.footGrfAct = getFootForce2D();
 
-    //Foot xyz and rpy //Daniel 5.26
+    //Foot xyz and rpy // Daniel 5.26
     const double* a1 = SoleLeft->getPosition();
     const double* a2Array = SoleLeft->getOrientation();
     Eigen::Matrix3d a2;

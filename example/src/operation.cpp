@@ -146,3 +146,15 @@ RigidBodyDynamics::Body BodyAkia(double mass,
 
     return RigidBodyDynamics::Body(mass, com, inertia_C);
 }
+
+
+Integrator::Integrator() : Qd_prev(0), Q_prev(0), dt(0.001) {}
+
+double Integrator::Integrate(double Qdd) {
+    double Qd = Qd_prev + Qdd * dt;
+    double Q = Q_prev + Qd * dt;
+    Qd_prev = Qd;
+    Q_prev = Q;
+
+    return Q;
+}

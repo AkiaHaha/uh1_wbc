@@ -109,6 +109,14 @@ bool BipedController::getValueTauOpt(Eigen::VectorXd &jntTorOpt){
     return true;
 }
 
+
+bool BipedController::getValueQdd(Eigen::VectorXd &Qdd){
+    for (int i = 0; i < nJa; i++){
+        Qdd(i) = qDDotOpt(i);
+    }
+    return true;
+}
+
 bool BipedController::getValuePosCurrent(Eigen::VectorXd &jntPosCur){
     for (int i = 0; i < nJa; i++){
         jntPosCur(i) = qActuated(i);
@@ -194,9 +202,20 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
 
 bool BipedController::motionPlan(){//Daniel 5.23
     if (timeCs < 5.0 - 0.5*DT){
-        //flag
-        std::cout << "plan stage 1"  << std::endl;
         
+        // if (flagTimeSetZero == 0){
+        //     time = 0.0;
+        //     flagTimeSetZero = 1;
+        //     cout << "welcome to plan stage 2 " << endl<<endl;
+        // }
+        // // TORSO XYZ
+        // xyzTorsoTgt << xyzTorsoInit(0), xyzTorsoInit(1), 0.1*sin(time/1*PI)+xyzTorsoInit(2);
+        // xyzDotTorsoTgt << 0.0, 0.0, 0.1*PI*cos(time/1*PI);
+        // std::cout << "plan stage 2"  << std::endl;
+
+
+        //flag
+        cout << "plan stage 1"  << endl<<endl;
         //torso
         xyzTorsoTgt = xyzTorsoEst;
         xyzDotTorsoTgt << 0.0, 0.0, 0.0;
@@ -249,15 +268,24 @@ bool BipedController::taskControl(){
     myWbc->updateRobotDynamics(qGen, qDotGen);
 
     // ------------------------------ Set PD gains ------------------------------------
-    kpTorsoRpy = {100., 100., 100.};
-    kdTorsoRpy = {6., 6., 6.};
-    kpTorsoXyz = {400., 400., 400.};
-    kdTorsoXyz = {30., 30., 30.};
-    kpFootArmXyz = {200., 200., 200.};
-    kdFootArmXyz = {15., 15., 15.};
-    kpFootArmRpy = {100., 100., 100.};
-    kdFootArmRpy = {6., 6., 6.};
+    kpTorsoRpy = {10., 10., 10.};
+    kdTorsoRpy = {0., 0., 0.};
+    kpTorsoXyz = {10., 1., 10.};
+    kdTorsoXyz = {0., 0., 0.};
+    kpFootArmXyz = {20., 20., 20.};
+    kdFootArmXyz = {0., 0., 0.};
+    kpFootArmRpy = {10., 10., 10.};
+    kdFootArmRpy = {0., 0., 0.};
 
+
+    // kpTorsoRpy = {100., 100., 100.};
+    // kdTorsoRpy = {6., 6., 6.};
+    // kpTorsoXyz = {400., 400., 400.};
+    // kdTorsoXyz = {30., 30., 30.};
+    // kpFootArmXyz = {200., 200., 200.};
+    // kdFootArmXyz = {15., 15., 15.};
+    // kpFootArmRpy = {100., 100., 100.};
+    // kdFootArmRpy = {6., 6., 6.};
     // ------------------------------ Calculate Reference ------------------------------
     // torso
     torsoRpyRef = diag(kpTorsoRpy)*(rpyTorsoTgt - rpyTorsoEst) + diag(kdTorsoRpy)*(rpyDotTorsoTgt - rpyDotTorsoEst);
@@ -338,8 +366,8 @@ bool BipedController::taskControl(){
         myWbc->getResultOpt(varOpt);
         qDDotOpt = varOpt.head(nJg);
         forceOpt = varOpt.tail(nFc);
-        // tauOpt = biped->eqCstrMatTau * varOpt + biped->eqCstrMatTauBias;
-        tauOpt = biped->eqCstrMatTauBias;
+        tauOpt = biped->eqCstrMatTau * varOpt + biped->eqCstrMatTauBias;
+        // tauOpt = biped->eqCstrMatTauBias;
     }
 
     return true;
