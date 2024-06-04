@@ -134,6 +134,7 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
     //TORSO<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
     //<<<data from sensor//
     rpyTorsoEst = imuData.head(3);
+    cout << rpyTorsoEst.transpose() << endl;
     rpyDotTorsoEst = imuData.tail(3);
     // xyzTorsoEst = imuData.segment(3,3);
     // xyzDotTorsoEst = imuData.segment(6,3);
@@ -424,22 +425,23 @@ bool BipedController::taskControl(){
     weightTorsoPosition << 100., 100., 100.;
     weightTorsoOrientation << 100., 100., 100.;
     weightFootArmPosition << 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000.,
-                        1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000.;
+                        // 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000.;
+                        100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100.;
     weightFootArmForce << 4., 4., 1., 3., 3., 0.03, 4., 4., 1., 3., 3., 0.03,
                         4., 4., 1., 3., 3., 0.03, 4., 4., 1., 3., 3., 0.03;
     weightFootArmForceChange << 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.,
-                        1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.;
+                        0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5;
     // weightFootForce << 4., 4.;
     // weightFootForceChange << 1., 1.;//Daniel 24.5.21
 
     // ------------------------------ Update task & constraint -------------------------
-    myWbc->updateTask("BipedTorsoPosRpy", torsoRpyRef, weightTorsoOrientation);
-    myWbc->updateTask("BipedTorsoPosXyz", torsoXyzRef, weightTorsoPosition);
     // myWbc->updateTask("BipedFootPosition", footPosRef, weightFootPosition);
-    myWbc->updateTask("QuadSolePosition", footArmPosRef, weightFootArmPosition);
     // myWbc->updateTask("BipedFootForce", forceRef, weightFootForce);
     // myWbc->updateTask("BipedFootForceChange", forceChangeRef, weightFootForceChange);
-    myWbc->updateTask("QuadSoleForce", footArmforceRef, weightFootArmForce);
+    myWbc->updateTask("BipedTorsoPosRpy", torsoRpyRef, weightTorsoOrientation);
+    myWbc->updateTask("BipedTorsoPosXyz", torsoXyzRef, weightTorsoPosition);
+    myWbc->updateTask("QuadSolePosition", footArmPosRef, weightFootArmPosition);
+    // myWbc->updateTask("QuadSoleForce", footArmforceRef, weightFootArmForce);
     myWbc->updateTask("QuadSoleForceChange", footArmforceChangeRef, weightFootArmForceChange);
     myWbc->updateConstraint("BipedDynamicConsistency");
     myWbc->updateConstraint("BipedFrictionCone");
@@ -490,9 +492,8 @@ bool BipedController::taskControl(){
         myWbc->getResultOpt(varOpt);
         qDDotOpt = varOpt.head(nJg);
         forceOpt = varOpt.tail(nFc);
-        tauOpt = biped->eqCstrMatTau * varOpt + biped->eqCstrMatTauBias;
-        // tauOpt = biped->eqCstrMatTauBias;
-
+        // tauOpt = biped->eqCstrMatTau * varOpt + biped->eqCstrMatTauBias;
+        tauOpt = biped->eqCstrMatTauBias;
     }
 
     return true;
