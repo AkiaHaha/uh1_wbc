@@ -123,20 +123,37 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     fixedSoleJoint = Joint(JointTypeFixed);
     fixedArmEndJoint = Joint(JointTypeFixed);
 
+    SpatialTransform rotation_lsp = Xrotx(0.43633);
+    SpatialTransform translatin_lsp = Xtrans(Vector3d(0.0055, 0.15535, 0.42999));
+    SpatialTransform transform_lsp = rotation_lsp * translatin_lsp;
+    
+    SpatialTransform rotation_lsr = Xrotx(-0.43633);
+    SpatialTransform translatin_lsr = Xtrans(Vector3d(-0.0055, 0.0565, -0.0165));
+    SpatialTransform transform_lsr = rotation_lsr * translatin_lsr;
+
+    SpatialTransform rotation_rsp = Xrotx(-0.43633);
+    SpatialTransform translatin_rsp = Xtrans(Vector3d(0.0055, -0.15535, 0.42999));
+    SpatialTransform transform_rsp = rotation_rsp * translatin_rsp;
+
+    SpatialTransform rotation_rsr = Xrotx(0.43633);
+    SpatialTransform translatin_rsr = Xtrans(Vector3d(-0.0055, -0.0565, -0.0165));
+    SpatialTransform transform_rsr = rotation_rsr * translatin_rsr;
+
+
     //Pelvis relates the world coordinate system
     idPelvis = model->AddBody(0, Xtrans(Vector3d(0., 0. , 0.)), floatingWaistJoint, floatingWaistLink,"pelvis");
 
-    idLeftLegLink[0] = model->AddBody(idPelvis, Xtrans(Vector3d(0, -0.0875, -0.1742)), joint_Rz, leftLegLink[0], "lhy");
+    idLeftLegLink[0] = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0875, -0.1742)), joint_Rz, leftLegLink[0], "lhy");
     idLeftLegLink[1] = model->AppendBody(Xtrans(Vector3d(0.039468, 0, 0)), joint_Rx, leftLegLink[1], "lhr");
-    idLeftLegLink[2] = model->AppendBody(Xtrans(Vector3d(0, -0.11536, 0)), joint_Ry, leftLegLink[2], "lhp");
+    idLeftLegLink[2] = model->AppendBody(Xtrans(Vector3d(0, 0.11536, 0)), joint_Ry, leftLegLink[2], "lhp");
     idLeftLegLink[3] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, leftLegLink[3], "lk");
     idLeftLegLink[4] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, fixedAnkleLink, "la");
-    idLeftSole = model->AppendBody(Xtrans(Vector3d(0.0556, 0, -0.05)), fixedSoleJoint, leftLegLink[4], "lsole");//Daniel 5.1
+    idLeftSole = model->AppendBody(Xtrans(Vector3d(0.0556, 0, -0.05)), fixedSoleJoint, leftLegLink[4], "lsole");//Daniel5.1
     idLeftSoleGround = model->AppendBody(Xtrans(Vector3d(0, 0, -0.012)), fixedSoleJoint, fixedSoleLink, "lsoleg");
 
-    idRightLegLink[0] = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0875, -0.1742)), joint_Rz, rightLegLink[0], "rhy");
+    idRightLegLink[0] = model->AddBody(idPelvis, Xtrans(Vector3d(0, -0.0875, -0.1742)), joint_Rz, rightLegLink[0], "rhy");
     idRightLegLink[1] = model->AppendBody(Xtrans(Vector3d(0.039468, 0, 0)), joint_Rx, rightLegLink[1], "rhr");
-    idRightLegLink[2] = model->AppendBody(Xtrans(Vector3d(0, 0.11536, 0)), joint_Ry, rightLegLink[2], "rhp");
+    idRightLegLink[2] = model->AppendBody(Xtrans(Vector3d(0, -0.11536, 0)), joint_Ry, rightLegLink[2], "rhp");
     idRightLegLink[3] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, rightLegLink[3], "rk");
     idRightLegLink[4] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, fixedAnkleLink, "ra");
     idRightSole = model->AppendBody(Xtrans(Vector3d(0.0556, 0, -0.05)), fixedSoleJoint, rightLegLink[4], "rsole");//5.31
@@ -145,22 +162,23 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     //Torso, relates the world coordinate system by pelvis
     idTorso = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0, 0.0)), joint_Rz, torsoLink, "torso");
 
-    idLeftArmLink[0] = model->AddBody(idTorso, Xtrans(Vector3d(0.0055, -0.15535, 0.42999)), joint_Ry, leftArmLink[0], "lsp");
-    idLeftArmLink[1] = model->AppendBody(Xtrans(Vector3d(-0.0055, -0.0565, -0.0165)), joint_Rx, leftArmLink[1], "lsr");
+    idLeftArmLink[0] = model->AddBody(idTorso, transform_lsp, joint_Ry, leftArmLink[0], "lsp");
+    idLeftArmLink[1] = model->AppendBody(transform_lsr, joint_Rx, leftArmLink[1], "lsr");
     idLeftArmLink[2] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.1343)), joint_Rz, leftArmLink[2], "lsy");
     idLeftArmLink[3] = model->AppendBody(Xtrans(Vector3d(0.0185, 0, -0.198)), joint_Ry, leftArmLink[3], "ls");
     idLeftArmEnd = model->AppendBody(Xtrans(Vector3d(0.0, 0.0, 0.0)), fixedArmEndJoint, fixedArmEndLink, "left_arm_end");
 
-    idRightArmLink[0] = model->AddBody(idTorso, Xtrans(Vector3d(0.0055, 0.15535, 0.42999)), joint_Ry, rightLegLink[0], "rsp");
-    idRightArmLink[1] = model->AppendBody(Xtrans(Vector3d(-0.0055, 0.0565, -0.0165)), joint_Rx, rightLegLink[1], "rsr");
+    idRightArmLink[0] = model->AddBody(idTorso, transform_rsp, joint_Ry, rightLegLink[0], "rsp");
+    idRightArmLink[1] = model->AppendBody(transform_rsr, joint_Rx, rightLegLink[1], "rsr");
     idRightArmLink[2] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.1343)), joint_Rz, rightLegLink[2], "rsy");
     idRightArmLink[3] = model->AppendBody(Xtrans(Vector3d(0.0185, 0, -0.198)), joint_Ry, rightLegLink[3], "rs");
-    idRightArmEnd = model->AppendBody(Xtrans(Vector3d(0.0, 0.0, 0.0)), fixedArmEndJoint, fixedArmEndLink, "right_arm_link");
+    idRightArmEnd = model->AppendBody(Xtrans(Vector3d(0.0, 0.0, 0.0)), fixedArmEndJoint, fixedArmEndLink, "right_arm_end");
 
     massAll = floatingWaistLink.mMass + torsoLink.mMass;
     for (int i = 0; i < 5; i++){massAll += leftLegLink[i].mMass + rightLegLink[i].mMass;}
     for (int i = 0; i < 4; i++){massAll += leftArmLink[i].mMass + rightArmLink[i].mMass;}
-    // -------- for Centroidal Dynamics -------
+
+    // -------- for Centroidal Dynamics ------- //
     centroidAG  = MatrixNd::Zero(NJF,NJG);
     centroidAICS = MatrixNd::Zero(NJF, NJG);
     compositeInertia = SpatialMatrix::Zero(NJF,NJF);
@@ -169,7 +187,7 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     centroidMomentum = SpatialVector::Zero(NJF);
     centroidMomentumICS = SpatialVector::Zero(NJF);
     spatialTransformG2ICS = SpatialMatrix::Zero(6,6);
-    // -------- for Centroidal Dynamics -------
+    // -------- for Centroidal Dynamics ------- //
 
     comPos2Waist = Vector3d::Zero();
     comPos2World = Vector3d::Zero();
