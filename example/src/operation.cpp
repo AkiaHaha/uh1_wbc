@@ -40,8 +40,6 @@ void akiaPrint1(const Eigen::VectorXd &vector, int length, int numRows, ...) {
     }
 }
 
-
-
 std::string akiaPrint2(const Eigen::VectorXd &vector, int length, int numRows, ...) {
     std::ostringstream oss;
     std::vector<int> elementsPerRow(numRows);
@@ -91,7 +89,6 @@ std::string akiaPrint2(const Eigen::VectorXd &vector, int length, int numRows, .
     return oss.str();
 }
 
-
 void akiaPrint3(const Eigen::VectorXd &vector, int length, int numRows, ...) {
     std::vector<int> elementsPerRow(numRows);
     std::vector<std::string> rowRemarks(numRows);
@@ -138,4 +135,14 @@ void akiaPrint3(const Eigen::VectorXd &vector, int length, int numRows, ...) {
     }
 }
 
+RigidBodyDynamics::Body BodyAkia(double mass,
+                                                    const RigidBodyDynamics::Math::Vector3d& com,
+                                                    double Ixx, double Iyy, double Izz,
+                                                    double Ixy, double Ixz, double Iyz) {
+    RigidBodyDynamics::Math::Matrix3d inertia_C;
+    inertia_C << Ixx, Ixy, Ixz,
+                 Ixy, Iyy, Iyz,
+                 Ixz, Iyz, Izz;
 
+    return RigidBodyDynamics::Body(mass, com, inertia_C);
+}

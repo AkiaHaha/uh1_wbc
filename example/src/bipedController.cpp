@@ -32,11 +32,8 @@ BipedController::BipedController(){
     // Instantiate task & constraint (Create Task Library )
     TAICHI::Task * ptrBipedTorsoPosRpy = new BipedTorsoPosRpy("BipedTorsoPosRpy", 3, nV);
     TAICHI::Task * ptrBipedTorsoPosXyz = new BipedTorsoPosXyz("BipedTorsoPosXyz", 3, nV);
-    // TAICHI::Task * ptrBipedFootForce = new BipedFootForce("BipedFootForce", nFc, nV);
     TAICHI::Task * ptrQuadSoleForce = new QuadSoleForce("QuadSoleForce", nFc, nV);
-    // TAICHI::Task * ptrBipedFootForceChange = new BipedFootForceChange("BipedFootForceChange", nFc, nV);
     TAICHI::Task * ptrQuadSoleForceChange = new QuadSoleForceChange("QuadSoleForceChange", nFc, nV);
-    // TAICHI::Task * ptrBipedFootPosition = new BipedFootPosition("BipedFootPosition", 12, nV);
     TAICHI::Task * ptrQuadSolePosition = new QuadSolePosition("QuadSolePosition", nFc, nV);
 
     TAICHI::Constraint * ptrBipedDynamicConsistency = new BipedDynamicConsistency("BipedDynamicConsistency", 6, nV);
@@ -94,9 +91,6 @@ bool BipedController::update(double timeCtrlSys, const Eigen::VectorXd & imuData
         tick = 0;
         time = 0.0;
     }
-    // std::cout << "imuData" <<imuData<< std::endl;
-    // std::cout << "jntPos" <<jntPos<< std::endl;
-    // estimate --> plan --> control
     stateEstimation(imuData, jntPos, jntVel, forceSensorData, LeftSoleXyzRpyAct, RightSoleXyzRpyAct, LeftArmHandXyzRpyAct, RightArmHandXyzRpyAct);
     motionPlan();
     taskControl();
@@ -339,13 +333,13 @@ bool BipedController::taskControl(){
     cpuTimeRes = doubleData.at(1);
 
     // get wbc variables output and clac toq //
-    // here shows the nV=G + Fc //
+    // here shows the nV = G + Fc //
     if (simpleStatus == 0){
         myWbc->getResultOpt(varOpt);
         qDDotOpt = varOpt.head(nJg);
         forceOpt = varOpt.tail(nFc);
-        tauOpt = biped->eqCstrMatTau * varOpt + biped->eqCstrMatTauBias;
-        // tauOpt = biped->eqCstrMatTauBias;
+        // tauOpt = biped->eqCstrMatTau * varOpt + biped->eqCstrMatTauBias;
+        tauOpt = biped->eqCstrMatTauBias;
     }
 
     return true;

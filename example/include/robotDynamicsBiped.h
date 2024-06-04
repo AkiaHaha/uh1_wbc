@@ -25,6 +25,7 @@
 
 //#include "taichi/robotDynamics.h"
 #include "robotDynamics.h"
+#include "operation.h"
 
 using namespace RigidBodyDynamics;
 using namespace RigidBodyDynamics::Math;

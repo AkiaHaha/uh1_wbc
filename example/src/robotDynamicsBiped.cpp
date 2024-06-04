@@ -77,33 +77,31 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     Joint floatingWaistJoint, fixedSoleJoint, fixedAnkleJoint, fixedArmEndJoint;
 
     // ------------------------------------------------------ Biped parameters------------------------------------------------------
-    floatingWaistLink = Body(5.39, Vector3d(-0.0002, 0.0, -0.04522), Vector3d(0.0490211, 0.0445821, 0.00824619));
+    floatingWaistLink = BodyAkia(5.39, Vector3d(-0.0002, 0.0, -0.04522), 0.044582, 0.0082464, 0.049021, 8.7034e-05, -1.9893e-05, 4.021e-06);
 
-    leftLegLink[0] = Body(2.244, Vector3d(-0.04923,   0.0001, 0.0072), Vector3d(0.00304494, 0.00296885, 0.00189201));//hip yaw
-    leftLegLink[1] = Body(2.232, Vector3d(-0.0058 , -0.00319, -9e-05), Vector3d(0.00243264, 0.00225325, 0.00205492));//hip row
-    leftLegLink[2] = Body(4.152, Vector3d(0.00746, -0.02346, -0.08193), Vector3d(0.0829503, 0.0821457, 0.00510909));//hip pitch
-    leftLegLink[3] = Body(1.721, Vector3d(-0.00136, -0.00512, -0.1384), Vector3d(0.0125237, 0.0123104, 0.0019428));//knee
-    leftLegLink[4] = Body(0.552448, Vector3d(0.048568, 0, -0.045609), Vector3d(0.00362, 0.00355701, 0.000149987));//ankle
+    leftLegLink[0] = BodyAkia(2.244, Vector3d(-0.04923, 0.0001, 0.0072), 0.0025731, 0.0030444, 0.0022883, 9.159e-06, -0.00051948, 1.949e-06); // hip yaw
+    leftLegLink[1] = BodyAkia(2.232, Vector3d(-0.0058, -0.00319, -9e-05), 0.0020603, 0.0022482, 0.0024323, 3.2115e-05, 2.878e-06, -7.813e-06); // hip row
+    leftLegLink[2] = BodyAkia(4.152, Vector3d(0.00746, -0.02346, -0.08193), 0.082618, 0.081579, 0.0060081, -0.00066654, 0.0040725, 0.0072024); // hip pitch
+    leftLegLink[3] = BodyAkia(1.721, Vector3d(-0.00136, -0.00512, -0.1384), 0.012205, 0.012509, 0.0020629, -6.8431e-05, 0.0010862, 0.00022549); // knee
+    leftLegLink[4] = BodyAkia(0.474, Vector3d(0.042575, 0, -0.044672), 0.000159668, 0.002900286, 0.002805438, -5e-09, 0.000141063, 1.4e-08); // ankle
 
-    rightLegLink[0] = Body(2.244, Vector3d(-0.04923,   -0.0001, 0.0072), Vector3d(0.00304494, 0.00296885, 0.00189201));//hip yaw
-    rightLegLink[1] = Body(2.232, Vector3d(-0.0058 , 0.00319, -9e-05), Vector3d(0.00243264, 0.00225325, 0.00205492));//hip row
-    rightLegLink[2] = Body(4.152, Vector3d(0.00746, 0.02346, -0.08193), Vector3d(0.0829503, 0.0821457, 0.00510909));//hip pitch
-    rightLegLink[3] = Body(1.721, Vector3d(-0.00136, 0.00512, -0.1384), Vector3d(0.0125237, 0.0123104, 0.0019428));//knee
-    rightLegLink[4] = Body(0.552448, Vector3d(0.048568, 0, -0.045609), Vector3d(0.00362, 0.00355701, 0.000149987));//ankle
+    rightLegLink[0] = BodyAkia(2.244, Vector3d(-0.04923, -0.0001, 0.0072), 0.0025731, 0.0030444, 0.0022883, 9.159e-06, -0.00051948, 1.949e-06); // hip yaw
+    rightLegLink[1] = BodyAkia(2.232, Vector3d(-0.0058, 0.00319, -9e-05), 0.0020603, 0.0022482, 0.0024323, 3.2115e-05, 2.878e-06, -7.813e-06); // hip row
+    rightLegLink[2] = BodyAkia(4.152, Vector3d(0.00746, 0.02346, -0.08193), 0.082618, 0.081579, 0.0060081, -0.00066654, 0.0040725, 0.0072024); // hip pitch
+    rightLegLink[3] = BodyAkia(1.721, Vector3d(-0.00136, 0.00512, -0.1384), 0.012205, 0.012509, 0.0020629, -6.8431e-05, 0.0010862, 0.00022549); // knee
+    rightLegLink[4] = BodyAkia(0.474, Vector3d(0.042575, 0, -0.044672), 0.000159668, 0.002900286, 0.002805438, -5e-09, 0.000141063, 1.4e-08); // ankle
 
-    leftArmLink[0] = Body(1.033 , Vector3d(0.005045, 0.053657, -0.015715), Vector3d(0.00129936, 0.000987113, 0.000858198));//pitch
-    leftArmLink[1] = Body(0.793 , Vector3d(0.000679, 0.00115, -0.094076), Vector3d(0.00170388, 0.00158256, 0.00100336));//roe
-    leftArmLink[2] = Body(0.839 , Vector3d(0.01365, 0.002767, -0.16266), Vector3d(0.00408038, 0.00370367, 0.000622687));//yaw
-    leftArmLink[3] = Body(0.669 , Vector3d(0.15908, -0.000144, -0.015776), Vector3d(0.00601829, 0.00600579, 0.000408305));//elbow
-    //leftArmLink[4] = Body(0.1 , Vector3d(0.0, 0.0, 0.0), Vector3d(0.0, 0.0, 0.0));//
+    leftArmLink[0] = BodyAkia(1.033, Vector3d(0.005045, 0.053657, -0.015715), 0.0012985, 0.00087279, 0.00097338, -1.7333e-05, 8.683e-06, 3.9656e-05); // pitch
+    leftArmLink[1] = BodyAkia(0.793, Vector3d(0.000679, 0.00115, -0.094076), 0.0015742, 0.0016973, 0.0010183, 2.298e-06, -7.2265e-05, -6.3691e-05); // row
+    leftArmLink[2] = BodyAkia(0.839, Vector3d(0.01365, 0.002767, -0.16266), 0.003664, 0.0040789, 0.00066383, -1.0671e-05, 0.00034733, 7.0213e-05); // yaw
+    leftArmLink[3] = BodyAkia(0.723, Vector3d(0.164862, 0.000118, -0.015734), 0.00042388, 0.0060062, 0.0060023, -3.6086e-05, 0.00029293, 4.664e-06); // elbow
 
-    rightArmLink[0] = Body(1.033 , Vector3d(0.005045, -0.053657, -0.015715), Vector3d(0.00129936, 0.000987113, 0.000858198));//pitch
-    rightArmLink[1] = Body(0.793 , Vector3d(0.000679, -0.00115, -0.094076), Vector3d(0.00170388, 0.00158256, 0.00100336));//roe
-    rightArmLink[2] = Body(0.839 , Vector3d(0.01365, -0.002767, -0.16266), Vector3d(0.00408038, 0.00370367, 0.000622687));//yaw
-    rightArmLink[3] = Body(0.669 , Vector3d(0.15908, 0.000144, -0.015776), Vector3d(0.00601829, 0.00600579, 0.000408305));//elbow
-    //rightArmLink[4] = Body(0.1 , Vector3d(0.0, 0.0, 0.0), Vector3d(0.0, 0.0, 0.0));//
+    rightArmLink[0] = BodyAkia(1.033, Vector3d(0.005045, -0.053657, -0.015715), 0.0012985, 0.00087279, 0.00097338, -1.7333e-05, 8.683e-06, 3.9656e-05); // pitch
+    rightArmLink[1] = BodyAkia(0.793, Vector3d(0.000679, -0.00115, -0.094076), 0.0015742, 0.0016973, 0.0010183, 2.298e-06, -7.2265e-05, -6.3691e-05); // row
+    rightArmLink[2] = BodyAkia(0.839, Vector3d(0.01365, -0.002767, -0.16266), 0.003664, 0.0040789, 0.00066383, -1.0671e-05, 0.00034733, 7.0213e-05); // yaw
+    rightArmLink[3] = BodyAkia(0.723, Vector3d(0.164862, 0.000118, -0.015734), 0.00042388, 0.0060062, 0.0060023, -3.6086e-05, 0.00029293, 4.664e-06); // elbow
 
-    torsoLink = Body(17.789, Vector3d(0.000489, 0.002797, 0.20484), Vector3d(0.000489, 0.002797, 0.20484));
+    torsoLink = BodyAkia(17.789, Vector3d(0.000489, 0.002797, 0.20484), 0.4873,0.40963,0.12785,-0.00053763,0.0020276,-0.00074582);
 
     fixedAnkleLink = Body(0.0, Vector3d (0., 0., 0.), Vector3d (0., 0., 0.));
     fixedSoleLink = Body(0.0, Vector3d (0., 0., 0.), Vector3d (0., 0., 0.));
@@ -128,17 +126,17 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     //Pelvis relates the world coordinate system
     idPelvis = model->AddBody(0, Xtrans(Vector3d(0., 0. , 0.)), floatingWaistJoint, floatingWaistLink,"pelvis");
 
-    idLeftLegLink[0] = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0875, -0.1742)), joint_Rz, leftLegLink[0], "lhy");
+    idLeftLegLink[0] = model->AddBody(idPelvis, Xtrans(Vector3d(0, -0.0875, -0.1742)), joint_Rz, leftLegLink[0], "lhy");
     idLeftLegLink[1] = model->AppendBody(Xtrans(Vector3d(0.039468, 0, 0)), joint_Rx, leftLegLink[1], "lhr");
-    idLeftLegLink[2] = model->AppendBody(Xtrans(Vector3d(0, 0.11536, 0)), joint_Ry, leftLegLink[2], "lhp");
+    idLeftLegLink[2] = model->AppendBody(Xtrans(Vector3d(0, -0.11536, 0)), joint_Ry, leftLegLink[2], "lhp");
     idLeftLegLink[3] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, leftLegLink[3], "lk");
     idLeftLegLink[4] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, fixedAnkleLink, "la");
     idLeftSole = model->AppendBody(Xtrans(Vector3d(0.0556, 0, -0.05)), fixedSoleJoint, leftLegLink[4], "lsole");//Daniel 5.1
     idLeftSoleGround = model->AppendBody(Xtrans(Vector3d(0, 0, -0.012)), fixedSoleJoint, fixedSoleLink, "lsoleg");
 
-    idRightLegLink[0] = model->AddBody(idPelvis, Xtrans(Vector3d(0, -0.0875, -0.1742)), joint_Rz, rightLegLink[0], "rhy");
+    idRightLegLink[0] = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0875, -0.1742)), joint_Rz, rightLegLink[0], "rhy");
     idRightLegLink[1] = model->AppendBody(Xtrans(Vector3d(0.039468, 0, 0)), joint_Rx, rightLegLink[1], "rhr");
-    idRightLegLink[2] = model->AppendBody(Xtrans(Vector3d(0, -0.11536, 0)), joint_Ry, rightLegLink[2], "rhp");
+    idRightLegLink[2] = model->AppendBody(Xtrans(Vector3d(0, 0.11536, 0)), joint_Ry, rightLegLink[2], "rhp");
     idRightLegLink[3] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, rightLegLink[3], "rk");
     idRightLegLink[4] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, fixedAnkleLink, "ra");
     idRightSole = model->AppendBody(Xtrans(Vector3d(0.0556, 0, -0.05)), fixedSoleJoint, rightLegLink[4], "rsole");//5.31
@@ -147,14 +145,14 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     //Torso, relates the world coordinate system by pelvis
     idTorso = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0, 0.0)), joint_Rz, torsoLink, "torso");
 
-    idLeftArmLink[0] = model->AddBody(idTorso, Xtrans(Vector3d(0.0055, 0.15535, 0.42999)), joint_Ry, leftArmLink[0], "lsp");
-    idLeftArmLink[1] = model->AppendBody(Xtrans(Vector3d(-0.0055, 0.0565, -0.0165)), joint_Rx, leftArmLink[1], "lsr");
+    idLeftArmLink[0] = model->AddBody(idTorso, Xtrans(Vector3d(0.0055, -0.15535, 0.42999)), joint_Ry, leftArmLink[0], "lsp");
+    idLeftArmLink[1] = model->AppendBody(Xtrans(Vector3d(-0.0055, -0.0565, -0.0165)), joint_Rx, leftArmLink[1], "lsr");
     idLeftArmLink[2] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.1343)), joint_Rz, leftArmLink[2], "lsy");
     idLeftArmLink[3] = model->AppendBody(Xtrans(Vector3d(0.0185, 0, -0.198)), joint_Ry, leftArmLink[3], "ls");
     idLeftArmEnd = model->AppendBody(Xtrans(Vector3d(0.0, 0.0, 0.0)), fixedArmEndJoint, fixedArmEndLink, "left_arm_end");
 
-    idRightArmLink[0] = model->AddBody(idTorso, Xtrans(Vector3d(0.0055, -0.15535, 0.42999)), joint_Ry, rightLegLink[0], "rsp");
-    idRightArmLink[1] = model->AppendBody(Xtrans(Vector3d(-0.0055, -0.0565, -0.0165)), joint_Rx, rightLegLink[1], "rsr");
+    idRightArmLink[0] = model->AddBody(idTorso, Xtrans(Vector3d(0.0055, 0.15535, 0.42999)), joint_Ry, rightLegLink[0], "rsp");
+    idRightArmLink[1] = model->AppendBody(Xtrans(Vector3d(-0.0055, 0.0565, -0.0165)), joint_Rx, rightLegLink[1], "rsr");
     idRightArmLink[2] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.1343)), joint_Rz, rightLegLink[2], "rsy");
     idRightArmLink[3] = model->AppendBody(Xtrans(Vector3d(0.0185, 0, -0.198)), joint_Ry, rightLegLink[3], "rs");
     idRightArmEnd = model->AppendBody(Xtrans(Vector3d(0.0, 0.0, 0.0)), fixedArmEndJoint, fixedArmEndLink, "right_arm_link");
