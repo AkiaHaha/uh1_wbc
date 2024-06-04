@@ -162,7 +162,7 @@ private:
     // std::vector<double> kdFootXyz{0., 0., 0.};
     // std::vector<double> kpFootRpy{0., 0., 0.};
     // std::vector<double> kdFootRpy{0., 0., 0.};
-     std::vector<double> kpFootArmXyz{0., 0., 0.};
+    std::vector<double> kpFootArmXyz{0., 0., 0.};
     std::vector<double> kdFootArmXyz{0., 0., 0.};
     std::vector<double> kpFootArmRpy{0., 0., 0.};
     std::vector<double> kdFootArmRpy{0., 0., 0.};
