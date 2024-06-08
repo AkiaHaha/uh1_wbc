@@ -1,0 +1,4 @@
+<launch>
+    <node name="uh1Controller" pkg="unitree_wbc" type="uh1Controller" output="screen" launch-prefix="xterm -e gdb -ex run --args">
+    </node>
+</launch>

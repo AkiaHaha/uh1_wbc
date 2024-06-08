@@ -1,0 +1,36 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ROS: Launch",
+      "request": "launch",
+      "target": "/home/ukia/ws_uh1/src/unitree_wbc/launch/debug1.launch",
+      "type": "ros"
+    },
+    {
+      "name": "C++ Launch",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "/home/ukia/ws_uh1/devel/lib/unitree_wbc/uh1Controller",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "/home/ukia/ws_uh1/",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "logging": {
+        "moduleLoad": true,
+        "trace": true
+      }
+    }
+  ]
+}

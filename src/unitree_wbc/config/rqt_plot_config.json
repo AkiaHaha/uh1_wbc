@@ -1,0 +1,34 @@
+     {
+       "Perspective": {
+         "name": "Default",
+         "panels": [
+           {
+             "name": "Plot",
+             "type": "rqt_plot::Plot",
+             "properties": {
+               "topics": [
+                 "/joint_pos_msg/data[0]",
+                 "/joint_pos_msg/data[1]",
+                 "/joint_pos_msg/data[2]",
+                 "/joint_pos_msg/data[3]",
+                 "/joint_pos_msg/data[4]",
+                 "/joint_pos_msg/data[5]",
+                 "/joint_pos_msg/data[6]",
+                 "/joint_pos_msg/data[7]",
+                 "/joint_pos_msg/data[8]",
+                 "/joint_pos_msg/data[9]",
+                 "/joint_pos_msg/data[10]",
+                 "/joint_pos_msg/data[11]",
+                 "/joint_pos_msg/data[12]",
+                 "/joint_pos_msg/data[13]",
+                 "/joint_pos_msg/data[14]",
+                 "/joint_pos_msg/data[15]",
+                 "/joint_pos_msg/data[16]",
+                 "/joint_pos_msg/data[17]",
+                 "/joint_pos_msg/data[18]"
+               ]
+             }
+           }
+         ]
+       }
+     }
