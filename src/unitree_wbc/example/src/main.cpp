@@ -79,7 +79,7 @@ bool runWebots(ros::Publisher& joint_pos_pub){
 
 
     // simulation loop
-    std::cout << "Program started haha1." << std::endl << endl;
+    std::cout << "Program started ." << std::endl << endl;
     while (bipedWebots.robot->step(TIME_STEP) != -1)
     {
         // read data from Webots
