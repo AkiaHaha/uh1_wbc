@@ -61,7 +61,7 @@ bool runWebots(ros::Publisher& joint_pos_pub){
     // controller
     BipedController bipedCtrl;
 
-    // vector
+    // vector //
     Eigen::VectorXd standPosCmd = Eigen::VectorXd::Zero(19);
     Eigen::VectorXd jointTorCmd = Eigen::VectorXd::Zero(19);
 
@@ -79,7 +79,7 @@ bool runWebots(ros::Publisher& joint_pos_pub){
 
 
     // simulation loop
-    std::cout << "Program started ." << std::endl << endl;
+    std::cout << "Program started dd." << std::endl << endl;
     while (bipedWebots.robot->step(TIME_STEP) != -1)
     {
         // read data from Webots
@@ -119,7 +119,6 @@ bool runWebots(ros::Publisher& joint_pos_pub){
                 jointPosAtStartCtrl = robotStateSim.jointPosAct;
                 flagStartCtrl = 1;
             }
-
             bipedCtrl.getValueQdd(jointPosAcc);
             for (size_t i = 0; i < 19; i++){
                 jointPosInteg[i] = integrator.Integrate(jointPosAcc[i]);
