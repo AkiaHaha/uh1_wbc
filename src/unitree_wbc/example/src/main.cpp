@@ -39,8 +39,6 @@ int main(int argc, char **argv) {
     ros::NodeHandle nh;
     ros::Publisher joint_pos_pub = nh.advertise<std_msgs::Float64MultiArray>("joint_positions", 19);
 
-    cout << "---hello ros debug ---" << endl<<endl;
-
     runWebots(joint_pos_pub);
     return 0;
 }
