@@ -125,7 +125,7 @@ void WebotsRobot::initWebots()
 
 void WebotsRobot::deleteRobot()
 {
-    delete robot;
+    // delete robot;
 }
 
 

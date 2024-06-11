@@ -50,7 +50,7 @@ bool runWebots(ros::Publisher& joint_pos_pub){
     double simTime = 0;
     const int goStandCnt = 3;
     const double goStandTime = goStandCnt * SAMPLE_TIME;	//second机器人曲膝的时间
-    const int simStopCnt  = goStandCnt + 100000;
+    const int simStopCnt  = goStandCnt + 1000000;
     const double simStopTime = simStopCnt * SAMPLE_TIME;    //second机器人停止仿真的时间
     
     // webots
@@ -79,20 +79,21 @@ bool runWebots(ros::Publisher& joint_pos_pub){
 
 
     // simulation loop
-    std::cout << "Program started dd." << std::endl << endl;
+    std::cout << "Program started dd21." << std::endl << endl;
     while (bipedWebots.robot->step(TIME_STEP) != -1)
     {
         // read data from Webots
         simTime = bipedWebots.robot->getTime();
         bipedWebots.readData(simTime, robotStateSim);
+        // akiaPrint1(robotStateSim.jointPosAct, 19, 5, 5, 5, 1, 4, 4);
 
         // control robot
         if (simCnt < goStandCnt){
             standPosCmd << 0, 0, -0.3, 0.8, -0.46, //left leg--RYP
                            0, 0, -0.3, 0.8, -0.46,//right leg
                            0,                     //torso
-                           0, 0, 0, 0.5 ,  //left arm--PRY
-                           0, 0, 0, 0.5 ; //right arm
+                           0, 0, 0, -1.6 ,  //left arm--PRY
+                           0, 0, 0, -1.6 ; //right arm
 
             // standPosCmd << 0, 0, 0, 0, 0, //left leg--RYP
             //                0, 0, 0, 0, 0,//right leg
@@ -108,6 +109,8 @@ bool runWebots(ros::Publisher& joint_pos_pub){
                              robotStateSim.LeftSoleXyzRpyAct, robotStateSim.RightSoleXyzRpyAct,
                              robotStateSim.LeftArmHandXyzRpyAct, robotStateSim.RightArmHandXyzRpyAct);
             bipedCtrl.getValueTauOpt(jointTorCmd);
+
+            // jointTorCmd = Eigen::VectorXd::Zero(19);
 
             // bipedWebots.setMotorTau(jointTorCmd);
             // if (jointTorCmd(0) > 0){
@@ -126,11 +129,13 @@ bool runWebots(ros::Publisher& joint_pos_pub){
             jointPosInteg += jointPosAtStartCtrl;
 
             for (size_t i = 0; i < 19; i++){
-                joint_pos_msg.data[i] = robotStateSim.jointPosAct[i];
+                // joint_pos_msg.data[i] = 10;
+                // joint_pos_msg.data[i] = jointPosAcc[i];
+                joint_pos_msg.data[i] = jointTorCmd[i];
+                // joint_pos_msg.data[i] = robotStateSim.jointPosAct[i];
             }
             
             joint_pos_pub.publish(joint_pos_msg);
-
             bipedWebots.setMotorPos(jointPosInteg);
             // cout << "*** cnt " << simCnt << " ***" << endl;
             // akiaPrint1(robotStateSim.jointPosAct, 19, 5, 5, 5, 1, 4, 4);

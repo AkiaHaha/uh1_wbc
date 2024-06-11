@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="(empty)"
+	BuildStamp="20240611-0714-Experimental"
+	Name="AkiaWawa"
+	Generator="ctest-3.16.3"
+	CompilerName="/usr/bin/c++"
+	CompilerVersion="9.4.0"
+	OSName="Linux"
+	Hostname="AkiaWawa"
+	OSRelease="5.15.146.1-microsoft-standard-WSL2"
+	OSVersion="#1 SMP Thu Jan 11 04:09:03 UTC 2024"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="183"
+	ProcessorCacheSize="36864"
+	NumberOfLogicalCPU="32"
+	NumberOfPhysicalCPU="16"
+	TotalVirtualMemory="8192"
+	TotalPhysicalMemory="31905"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="2419.2"
+	>
+	<Testing>
+		<StartDateTime>Jun 11 20:49 CST</StartDateTime>
+		<StartTestTime>1718110190</StartTestTime>
+		<TestList/>
+		<EndDateTime>Jun 11 20:49 CST</EndDateTime>
+		<EndTestTime>1718110190</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>
