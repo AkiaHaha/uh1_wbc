@@ -1,21 +1,3 @@
-/**
- *	This file is part of TAICHI.
- *
- *	TAICHI -- Task Arrangement In Control HIerarchy.
- *	Copyright (C) 2015-2021 Beijing Research Institute of UBTECH Robotics.
- *	All rights reserved.
- *
- *	Licensed under the Apache License 2.0. See LICENSE for more details.
- */
-
-/**
- * @file webotsInterface.h
- * @brief the header file for Webots simulation
- * @author Jiajun Wang
- * @date 2021
- * @version alpha
- */
- 
 #ifndef TAICHI_EXAMPLE_WEBOTS_INTERFACE_H
 #define TAICHI_EXAMPLE_WEBOTS_INTERFACE_H
 

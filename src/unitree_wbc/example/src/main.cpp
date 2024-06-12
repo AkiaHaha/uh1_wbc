@@ -1,20 +1,3 @@
-/**
- *	This file is part of TAICHI.
- *
- *	TAICHI -- Task Arrangement In Control HIerarchy.
- *	Copyright (C) 2015-2021 Beijing Research Institute of UBTECH Robotics.
- *	All rights reserved.
- *
- *	Licensed under the Apache License 2.0. See LICENSE for more details.
- */
-
-/**
- * @file main.cpp
- * @brief the main function file to run controller in Webots.
- * @author Jiajun Wang
- * @date 2021
- * @version
- */
 #include <ros/ros.h>
 #include <std_msgs/Float64MultiArray.h>
 
@@ -29,7 +12,7 @@
 
 using namespace std;
 
-bool runWebots(ros::Publisher& joint_pos_pub);
+bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub);
 
 
 
@@ -38,13 +21,14 @@ int main(int argc, char **argv) {
     ros::init(argc, argv, "webots_controller");
     ros::NodeHandle nh;
     ros::Publisher joint_pos_pub = nh.advertise<std_msgs::Float64MultiArray>("joint_positions", 19);
+    ros::Publisher sim_info_pub = nh.advertise<std_msgs::Float64MultiArray>("sim_info", 1);
 
-    runWebots(joint_pos_pub);
+    runWebots(joint_pos_pub, sim_info_pub);
     return 0;
 }
 
 
-bool runWebots(ros::Publisher& joint_pos_pub){
+bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     // timing
     int simCnt = 0;
     double simTime = 0;
@@ -75,10 +59,11 @@ bool runWebots(ros::Publisher& joint_pos_pub){
 
     // ros init
     std_msgs::Float64MultiArray joint_pos_msg;
+    std_msgs::Float64MultiArray sim_info_msg;
     joint_pos_msg.data.resize(19);
+    sim_info_msg.data.resize(10);
 
-
-    // simulation loop
+    // simulation loopsim_information_msg
     std::cout << "Program started dd21." << std::endl << endl;
     while (bipedWebots.robot->step(TIME_STEP) != -1)
     {
@@ -134,8 +119,11 @@ bool runWebots(ros::Publisher& joint_pos_pub){
                 joint_pos_msg.data[i] = jointTorCmd[i];
                 // joint_pos_msg.data[i] = robotStateSim.jointPosAct[i];
             }
-            
+            sim_info_msg.data[0] = simTime;
+
+            sim_info_pub.publish(sim_info_msg);
             joint_pos_pub.publish(joint_pos_msg);
+
             bipedWebots.setMotorPos(jointPosInteg);
             // cout << "*** cnt " << simCnt << " ***" << endl;
             // akiaPrint1(robotStateSim.jointPosAct, 19, 5, 5, 5, 1, 4, 4);

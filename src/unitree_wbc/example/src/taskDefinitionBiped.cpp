@@ -1,21 +1,3 @@
-/**
- *	This file is part of TAICHI.
- *
- *	TAICHI -- Task Arrangement In Control HIerarchy.
- *	Copyright (C) 2015-2021 Beijing Research Institute of UBTECH Robotics.
- *	All rights reserved.
- *
- *	Licensed under the Apache License 2.0. See LICENSE for more details.
- */
-
-/**
- * @file taskDefinitionBiped.cpp
- * @brief Function implementation part of the subclasses, that are declared in taskDefinitionBiped.h
- * @author Yijie Guo, Jiajun Wang
- * @date 2021
- * @version alpha
- */
-
 #include "taskDefinitionBiped.h"
 
 bool BipedFloatingBaseDynamics::update(const TAICHI::RobotDynamics &robot){

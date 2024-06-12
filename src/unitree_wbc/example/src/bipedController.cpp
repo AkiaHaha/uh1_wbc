@@ -1,21 +1,3 @@
-/**
- *	This file is part of TAICHI.
- *
- *	TAICHI -- Task Arrangement In Control HIerarchy.
- *	Copyright (C) 2015-2021 Beijing Research Institute of UBTECH Robotics.
- *	All rights reserved.
- *
- *	Licensed under the Apache License 2.0. See LICENSE for more details.
- */
-
-/**
- * @file bipedController.cpp
- * @brief Function implementation part of the class BipedController.
- * @author Jiajun Wang, Yijie Guo
- * @date 2021
- * @version alpha
- */
-
 #include "bipedController.h"
 #include "robotDynamics.h"
 #include "robotDynamicsBiped.h"
@@ -295,7 +277,7 @@ bool BipedController::taskControl(){
     myWbc->updateRobotDynamics(qGen, qDotGen);
 
     // ------------------------------ Set PD gains ------------------------------------
-
+ 
     kpTorsoRpy = {100., 100., 100.};
     kdTorsoRpy = {6., 6., 6.};
     kpTorsoXyz = {400., 400., 400.};

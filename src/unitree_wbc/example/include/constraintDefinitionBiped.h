@@ -1,21 +1,3 @@
-/**
- *	This file is part of TAICHI.
- *
- *	TAICHI -- Task Arrangement In Control HIerarchy.
- *	Copyright (C) 2015-2021 Beijing Research Institute of UBTECH Robotics.
- *	All rights reserved.
- *
- *	Licensed under the Apache License 2.0. See LICENSE for more details.
- */
-
-/**
- * @file constraintDefinitionBiped.h
- * @brief Declaration of the subclasses of the abstract class Constraint
- * @author Yijie Guo
- * @date 2021
- * @version alpha
- */
-
 #ifndef TAICHI_EXAMPLE_CONSTRAINTDEFINITION_BIPED_H
 #define TAICHI_EXAMPLE_CONSTRAINTDEFINITION_BIPED_H
 
