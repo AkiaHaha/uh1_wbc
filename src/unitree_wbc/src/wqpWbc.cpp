@@ -1,21 +1,3 @@
-/**
- *	This file is part of TAICHI.
- *
- *	TAICHI -- Task Arrangement In Control HIerarchy.
- *	Copyright (C) 2015-2021 Beijing Research Institute of UBTECH Robotics.
- *	All rights reserved.
- *
- *	Licensed under the Apache License 2.0. See LICENSE for more details.
- */
-
-/**
- * @file WqpWbc.cpp
- * @brief Function implementation part of class WqpWbc
- * @author Jiajun Wang
- * @date 2020-2021
- * @version alpha
- */
-
 #include "wqpWbc.h"
 
 namespace TAICHI {
@@ -272,7 +254,7 @@ bool WqpWbc::qpSolve(){
                                       lbCstrAll.data(), ubCstrAll.data(),
                                       nWSR, cpuTimePtr);
         if(statusCodeSolving > 0){
-            std::cout << "init QP : " << qpOASES::MessageHandling::getErrorCodeMessage(statusCodeSolving) << std::endl;
+            std::cout << "init QP yy: " << qpOASES::MessageHandling::getErrorCodeMessage(statusCodeSolving) << std::endl;
             qpReset();
         }else {
             initDone = true;

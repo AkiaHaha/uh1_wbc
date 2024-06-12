@@ -94,7 +94,7 @@ bool BipedController::getValueTauOpt(Eigen::VectorXd &jntTorOpt){
 
 bool BipedController::getValueQdd(Eigen::VectorXd &Qdd){
     for (int i = 0; i < nJa; i++){
-        Qdd(i) = qDDotOpt(i);
+        Qdd(i) = qDDotOpt(i+6);
     }
     return true;
 }
@@ -224,7 +224,7 @@ bool BipedController::motionPlan(){//Daniel 5.23
 
 
         //flag
-        cout << "plan stage 111"  << endl<<endl;
+        // cout << "plan stage 111"  << endl<<endl;
         //torso
         xyzTorsoTgt = xyzTorsoEst;
         xyzDotTorsoTgt << 0.0, 0.0, 0.0;
@@ -297,10 +297,10 @@ bool BipedController::taskControl(){
     // kpFootArmRpy = {100., 100., 100.};
     // kdFootArmRpy = {6., 6., 6.};
     // ------------------------------ Calculate Reference ------------------------------
-    // // torso
+    // torso
     // torsoRpyRef = diag(kpTorsoRpy)*(rpyTorsoTgt - rpyTorsoEst) + diag(kdTorsoRpy)*(rpyDotTorsoTgt - rpyDotTorsoEst);
     // torsoXyzRef = diag(kpTorsoXyz)*(xyzTorsoTgt - xyzTorsoEst) + diag(kdTorsoXyz)*(xyzDotTorsoTgt - xyzDotTorsoEst);
-    // //left foot
+    //left foot
     // footArmPosRef.segment(0,3) = diag(kpFootArmRpy)*(rpyFootTgt[0] - rpyFootEst[0]) + diag(kdFootArmRpy)*(rpyDotFootTgt[0] - rpyDotFootEst[0]);
     // footArmPosRef.segment(3,3) = diag(kpFootArmXyz)*(xyzFootTgt[0] - xyzFootEst[0]) + diag(kdFootArmXyz)*(xyzDotFootTgt[0] - xyzDotFootEst[0]); 
     // //right foot 
@@ -314,7 +314,7 @@ bool BipedController::taskControl(){
     // footArmPosRef.segment(21,3) = diag(kpFootArmXyz)*(xyzArmTgt[1] - xyzArmEst[1]) + diag(kdFootArmXyz)*(xyzDotArmTgt[1] - xyzDotArmEst[1]);     
     
     // force
-    // footArmforceRef = Eigen::VectorXd::Zero(nFc);
+    footArmforceRef = Eigen::VectorXd::Zero(nFc);
 
     // footArmforceChangeRef = forceOpt;
     // footArmforceChangeRef.segment(3,3) << 0,0,0;
@@ -326,8 +326,8 @@ bool BipedController::taskControl(){
     weightTorsoPosition << 100., 100., 100.;
     weightTorsoOrientation << 100., 100., 100.;
     weightFootArmPosition << 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000.,
-                        // 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000.;
                         100000., 100000., 100000., 100000., 100000., 100000., 100000., 100000., 100000., 100000., 100000., 100000.;
+                        // 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000.;
                         // 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100.;
                         // 10., 10., 10., 10., 10., 10., 10., 10., 10., 10., 10., 10.;
                         // 50., 50., 50., 50., 50., 50., 50., 50., 50., 50., 50., 50.;
@@ -390,6 +390,15 @@ bool BipedController::taskControl(){
         forceOpt = varOpt.tail(nFc);
         tauOpt = biped->eqCstrMatTau * varOpt + biped->eqCstrMatTauBias;
         // tauOpt = biped->eqCstrMatTauBias;
+
+        cout << "timeCs************* "  << timeCs << endl;
+        cout << "qDDotOpt------------" << endl;
+        akiaPrint1(qDDotOpt, 25, 6, 6, 5, 5, 1, 4, 4);
+        cout << "forceOpt------------"  << endl;
+        akiaPrint1(forceOpt, 24, 4, 6, 6, 6, 6);
+        cout << "tauOpt--------------" << endl;
+        akiaPrint1(tauOpt, 19, 5, 5, 5, 1, 4, 4);
+        cout << endl;
     }
 
     return true;

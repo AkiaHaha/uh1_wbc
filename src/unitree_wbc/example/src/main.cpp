@@ -98,6 +98,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             // jointTorCmd = Eigen::VectorXd::Zero(19);
 
             // bipedWebots.setMotorTau(jointTorCmd);
+
             // if (jointTorCmd(0) > 0){
             //     cout << "*************" << endl;
             //     throw std::runtime_error("Torque command greater than 0");
@@ -116,8 +117,8 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             for (size_t i = 0; i < 19; i++){
                 // joint_pos_msg.data[i] = 10;
                 // joint_pos_msg.data[i] = jointPosAcc[i];
-                joint_pos_msg.data[i] = jointTorCmd[i];
-                // joint_pos_msg.data[i] = robotStateSim.jointPosAct[i];
+                // joint_pos_msg.data[i] = jointTorCmd[i];
+                joint_pos_msg.data[i] = robotStateSim.jointPosAct[i];
             }
             sim_info_msg.data[0] = simTime;
 

@@ -1,21 +1,3 @@
-/**
- *	This file is part of TAICHI.
- *
- *	TAICHI -- Task Arrangement In Control HIerarchy.
- *	Copyright (C) 2015-2021 Beijing Research Institute of UBTECH Robotics.
- *	All rights reserved.
- *
- *	Licensed under the Apache License 2.0. See LICENSE for more details.
- */
-
-/**
- * @file HqpWbc.cpp
- * @brief Function implementation part of class HqpWbc
- * @author Yan Xie
- * @date 2020-2021
- * @version alpha
- */
-
 #include "hqpWbc.h"
 
 namespace TAICHI {
