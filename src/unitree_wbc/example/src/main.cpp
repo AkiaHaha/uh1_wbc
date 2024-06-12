@@ -125,6 +125,9 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             sim_info_pub.publish(sim_info_msg);
             joint_pos_pub.publish(joint_pos_msg);
 
+            jointPosInteg.segment(11,4) << 0, 0, 0, -1.6 ;
+            jointPosInteg.segment(15,4) << 0, 0, 0, -1.6 ;
+
             bipedWebots.setMotorPos(jointPosInteg);
             // cout << "*** cnt " << simCnt << " ***" << endl;
             // akiaPrint1(robotStateSim.jointPosAct, 19, 5, 5, 5, 1, 4, 4);
