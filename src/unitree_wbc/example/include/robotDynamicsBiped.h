@@ -3,7 +3,7 @@
 
 #define TYPELEFTSOLE 0
 #define TYPERIGHTSOLE 1
-#define GRAVITY_CONST 9.80665
+#define GRAVITY_CONST 9.81
 
 //#include "taichi/robotDynamics.h"
 #include "robotDynamics.h"
@@ -80,9 +80,7 @@ private:
     unsigned int idLeftSole, idRightSole;
     unsigned int idLeftFixedAnkle, idRightFixedAnkle;
     unsigned int idRightSoleGround, idLeftSoleGround;
-    unsigned int idLeftArmEnd, idRightArmEnd;
-    unsigned int idLeftLegLink[5],idLeftArmLink[5];
-    unsigned int idRightLegLink[5],idRightArmLink[5];
+    unsigned int idLeftLegLink[5],idRightLegLink[5];
     double massAll;
 
     // -------- for Centroidal Dynamics -------

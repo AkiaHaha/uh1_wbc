@@ -67,23 +67,17 @@ class Derivative {
 
 struct webotState
 {
-    Eigen::VectorXd jointPosAct = Eigen::VectorXd::Zero(19);
-    Eigen::VectorXd jointVelAct = Eigen::VectorXd::Zero(19);
-    Eigen::VectorXd jointTorAct = Eigen::VectorXd::Zero(19);
+    Eigen::VectorXd jointPosAct = Eigen::VectorXd::Zero(10);
+    Eigen::VectorXd jointVelAct = Eigen::VectorXd::Zero(10);
+    Eigen::VectorXd jointTorAct = Eigen::VectorXd::Zero(10);
     Eigen::VectorXd imu9DAct = Eigen::VectorXd::Zero(12);
     Eigen::VectorXd footGrfAct = Eigen::VectorXd::Zero(2);
     Eigen::Vector3d waistRpyAct = Eigen::Vector3d::Zero();
     Eigen::Vector3d waistRpyVelAct = Eigen::Vector3d::Zero();
     Eigen::Vector3d waistXyzAccAct = Eigen::Vector3d::Zero();
-
-    //Add to corritify state estimation | Daniel 24.5.23 //
-    // Eigen::Vector3d waistXyzVelAct = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d waistXyzAct = Eigen::Vector3d::Zero();
     Eigen::VectorXd waistXyzPosVelAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd LeftSoleXyzRpyAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd RightSoleXyzRpyAct = Eigen::VectorXd::Zero(6);
-    Eigen::VectorXd LeftArmHandXyzRpyAct = Eigen::VectorXd::Zero(6);
-    Eigen::VectorXd RightArmHandXyzRpyAct = Eigen::VectorXd::Zero(6);
 };
 
 /**
@@ -103,22 +97,17 @@ private:
     Eigen::VectorXd getMotorPos();
     Eigen::VectorXd getMotorTau();
     Eigen::Vector3d getWaistAcc();
-    // Eigen::VectorXd getFootForce6D(const int& footFlag);
-    // Eigen::VectorXd getFootForce12D();
+
     Eigen::VectorXd getFootForce(const int& footFlag);
     Eigen::VectorXd getFootForce2D();
     Eigen::Vector3d rotm2Rpy(const Eigen::Matrix3d & rotm);
 
     std::vector<Motor*> legMotor;
     std::vector<PositionSensor*> legSensor;
-    // std::vector<Motor*> torqueSensor;
     std::vector<TouchSensor*> forceSensor;
     InertialUnit *imu;
     Gyro *gyro;
     Accelerometer *accelerometer;
-    // GPS *Waistgps;
-    // GPS* LFootGps;
-    // GPS* RFootGps;
     Node* Waist;
     Node* SoleLeft;
     Node* SoleRight;

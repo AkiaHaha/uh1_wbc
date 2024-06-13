@@ -35,7 +35,8 @@ include_directories(
   include/${PROJECT_NAME}
   ${catkin_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIR}
-  example/include
+  "/home/ukia/wws_uh1/src/unitree_wbc/example/include"
+  "/home/ukia/wws_uh1/src/unitree_wbc/include"
 )
 
 link_directories(/usr/local/lib)

@@ -67,14 +67,14 @@ set(unitree_wbc_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(unitree_wbc_SOURCE_PREFIX /home/ukia/ws_uh1/src/unitree_wbc)
-  set(unitree_wbc_DEVEL_PREFIX /home/ukia/ws_uh1/devel)
+  set(unitree_wbc_SOURCE_PREFIX /home/ukia/wws_uh1/src/unitree_wbc)
+  set(unitree_wbc_DEVEL_PREFIX /home/ukia/wws_uh1/devel)
   set(unitree_wbc_INSTALL_PREFIX "")
   set(unitree_wbc_PREFIX ${unitree_wbc_DEVEL_PREFIX})
 else()
   set(unitree_wbc_SOURCE_PREFIX "")
   set(unitree_wbc_DEVEL_PREFIX "")
-  set(unitree_wbc_INSTALL_PREFIX /home/ukia/ws_uh1/install)
+  set(unitree_wbc_INSTALL_PREFIX /home/ukia/wws_uh1/install)
   set(unitree_wbc_PREFIX ${unitree_wbc_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(unitree_wbc_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/ukia/ws_uh1/src/unitree_wbc/include;/usr/include/eigen3 " STREQUAL " ")
+if(NOT "/home/ukia/wws_uh1/src/unitree_wbc/include;/usr/include/eigen3 " STREQUAL " ")
   set(unitree_wbc_INCLUDE_DIRS "")
-  set(_include_dirs "/home/ukia/ws_uh1/src/unitree_wbc/include;/usr/include/eigen3")
+  set(_include_dirs "/home/ukia/wws_uh1/src/unitree_wbc/include;/usr/include/eigen3")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -110,7 +110,7 @@ if(NOT "/home/ukia/ws_uh1/src/unitree_wbc/include;/usr/include/eigen3 " STREQUAL
         message(FATAL_ERROR "Project 'unitree_wbc' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'unitree_wbc' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/ukia/ws_uh1/src/unitree_wbc/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'unitree_wbc' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/ukia/wws_uh1/src/unitree_wbc/${idir}'.  ${_report}")
     endif()
     _list_append_unique(unitree_wbc_INCLUDE_DIRS ${include})
   endforeach()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/ukia/ws_uh1/devel/lib;/home/ukia/ws_uh1/devel/lib;/home/ukia/ustc_ws/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/ukia/wws_uh1/devel/lib;/home/ukia/wws_uh1/devel/lib;/home/ukia/ws_uh1/devel/lib;/home/ukia/ustc_ws/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

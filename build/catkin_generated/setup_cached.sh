@@ -7,4 +7,4 @@
 # new environment variables
 
 # modified environment variables
-export PWD='/home/ukia/ws_uh1/build'
+export PWD='/home/ukia/wws_uh1/build'

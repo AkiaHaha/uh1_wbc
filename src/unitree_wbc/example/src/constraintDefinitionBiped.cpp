@@ -30,8 +30,8 @@ bool BipedFrictionCone::update(const TAICHI::RobotDynamics &robot){
                 0.0, 0.0, 0.0, -1.0, 0.0, -muStaticFriction,
                 0.0, 0.0, 0.0, 0.0, 1.0, -muStaticFriction,
                 0.0, 0.0, 0.0, 0.0, -1.0, -muStaticFriction;
-    cstrMatC.block(0, 25, 4, 6) = fricMat;
-    cstrMatC.block(4, 31, 4, 6) = fricMat;//Daniel 5.22
+    cstrMatC.block(0, 16, 4, 6) = fricMat;
+    cstrMatC.block(4, 22, 4, 6) = fricMat;
     lbC  = -myInfinity * Eigen::VectorXd::Ones(8);
     ubC  = Eigen::VectorXd::Zero(8);
     return true;
@@ -61,8 +61,8 @@ bool BipedCenterOfPressure::update(const TAICHI::RobotDynamics &robot){
                 0.0, 1.0, 0.0, 0.0, 0.0, -sole2Back * copFactor,
                 1.0, 0.0, 0.0, 0.0, 0.0, -sole2Left * copFactor,
                -1.0, 0.0, 0.0, 0.0, 0.0, -sole2Right * copFactor;
-    cstrMatC.block(0, 25, 4, 6) = copMat;
-    cstrMatC.block(4, 31, 4, 6) = copMat;//Daniel 5.22
+    cstrMatC.block(0, 16, 4, 6) = copMat;
+    cstrMatC.block(4, 22, 4, 6) = copMat;//Daniel 5.22
     lbC  = -myInfinity * Eigen::VectorXd::Ones(8);
     ubC  = Eigen::VectorXd::Zero(8);
     return true;

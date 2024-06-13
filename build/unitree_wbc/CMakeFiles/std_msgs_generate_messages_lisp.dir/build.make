@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ukia/ws_uh1/src
+CMAKE_SOURCE_DIR = /home/ukia/wws_uh1/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ukia/ws_uh1/build
+CMAKE_BINARY_DIR = /home/ukia/wws_uh1/build
 
 # Utility rule file for std_msgs_generate_messages_lisp.
 
@@ -63,10 +63,10 @@ unitree_wbc/CMakeFiles/std_msgs_generate_messages_lisp.dir/build: std_msgs_gener
 .PHONY : unitree_wbc/CMakeFiles/std_msgs_generate_messages_lisp.dir/build
 
 unitree_wbc/CMakeFiles/std_msgs_generate_messages_lisp.dir/clean:
-	cd /home/ukia/ws_uh1/build/unitree_wbc && $(CMAKE_COMMAND) -P CMakeFiles/std_msgs_generate_messages_lisp.dir/cmake_clean.cmake
+	cd /home/ukia/wws_uh1/build/unitree_wbc && $(CMAKE_COMMAND) -P CMakeFiles/std_msgs_generate_messages_lisp.dir/cmake_clean.cmake
 .PHONY : unitree_wbc/CMakeFiles/std_msgs_generate_messages_lisp.dir/clean
 
 unitree_wbc/CMakeFiles/std_msgs_generate_messages_lisp.dir/depend:
-	cd /home/ukia/ws_uh1/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ukia/ws_uh1/src /home/ukia/ws_uh1/src/unitree_wbc /home/ukia/ws_uh1/build /home/ukia/ws_uh1/build/unitree_wbc /home/ukia/ws_uh1/build/unitree_wbc/CMakeFiles/std_msgs_generate_messages_lisp.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/ukia/wws_uh1/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ukia/wws_uh1/src /home/ukia/wws_uh1/src/unitree_wbc /home/ukia/wws_uh1/build /home/ukia/wws_uh1/build/unitree_wbc /home/ukia/wws_uh1/build/unitree_wbc/CMakeFiles/std_msgs_generate_messages_lisp.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : unitree_wbc/CMakeFiles/std_msgs_generate_messages_lisp.dir/depend
 

@@ -6,5 +6,5 @@ CXX_FLAGS =  -O0 -Wall -g -ggdb -fPIC   -std=c++14
 
 CXX_DEFINES = -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"unitree_wbc\" -Dunitree_wbc_EXPORTS
 
-CXX_INCLUDES = -I/home/ukia/ws_uh1/src/unitree_wbc/include/unitree_wbc -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -I/home/ukia/ws_uh1/src/unitree_wbc/example/include -I/usr/local/webots/include/controller/c -I/usr/local/webots/include/controller/cpp 
+CXX_INCLUDES = -I/home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -I/home/ukia/wws_uh1/src/unitree_wbc/example/include -I/home/ukia/wws_uh1/src/unitree_wbc/include -I/usr/local/webots/include/controller/c -I/usr/local/webots/include/controller/cpp 
 

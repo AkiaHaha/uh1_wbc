@@ -39,8 +39,7 @@ public:
     bool update(double timeCtrlSys, const Eigen::VectorXd & imuData,
                 const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
                 const Eigen::VectorXd & forceSensorData, 
-                const Eigen::VectorXd & LeftSoleXyzRpyAct, const Eigen::VectorXd & RightSoleXyzRpyAct, 
-                const Eigen::VectorXd & LeftArmHandXyzRpyAct, const Eigen::VectorXd & RightArmHandXyzRpyAct);
+                const Eigen::VectorXd & LeftSoleXyzRpyAct, const Eigen::VectorXd & RightSoleXyzRpyAct);
     bool getValueTauOpt(Eigen::VectorXd & jntTorOpt);
     bool getValuePosCurrent(Eigen::VectorXd & jntPosCur);
     bool getValueQdd(Eigen::VectorXd & Qdd);
@@ -50,8 +49,7 @@ private:
     bool stateEstimation(const Eigen::VectorXd & imuData,
                         const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
                         const Eigen::VectorXd & forceSensorData, 
-                        const Eigen::VectorXd & LeftSoleXyzRpyAct, const Eigen::VectorXd & RightSoleXyzRpyAct,
-                        const Eigen::VectorXd & LeftArmHandXyzRpyAct, const Eigen::VectorXd & RightArmHandXyzRpyAct);                         
+                        const Eigen::VectorXd & LeftSoleXyzRpyAct, const Eigen::VectorXd & RightSoleXyzRpyAct);                         
     bool motionPlan();
     bool taskControl();
     Eigen::MatrixXd diag(const std::vector<double>& diagElement);
@@ -67,9 +65,9 @@ private:
     double timeCs{0.0};                     // time of CS (Control System)
     int tick{0};                            // the tick-tack for time accumulation
     double time{0.0};                       // run time (sec) for current behavior
-    int nJg{25};
-    int nJa{19};
-    int nFc{24};//Daniel 24.5.21
+    int nJg{16};
+    int nJa{10};
+    int nFc{12};//Daniel 24.5.21
     
     Eigen::VectorXd qActuated = Eigen::VectorXd::Zero(nJa); ;
     Eigen::VectorXd qDotActuated = Eigen::VectorXd::Zero(nJa);
@@ -78,8 +76,6 @@ private:
     Eigen::VectorXd qDotGen = Eigen::VectorXd::Zero(nJg);
     Eigen::Vector3d xyzTorsoEst = Eigen::Vector3d::Zero(), xyzDotTorsoEst = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTorsoEst = Eigen::Vector3d::Zero(), rpyDotTorsoEst = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d xyzFootEst = Eigen::Vector3d::Zero(), xyzDotFootEst = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyFootEst = Eigen::Vector3d::Zero(), rpyDotFootEst = Eigen::Vector3d::Zero();
 
     Eigen::Vector3d xyzFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d xyzDotFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
@@ -96,10 +92,7 @@ private:
     Eigen::Vector3d xyzDotTorsoTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTorsoTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyDotTorsoTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d xyzFootTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d xyzDotFootTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyFootTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyDotFootTgt = Eigen::Vector3d::Zero();
+
     Eigen::Vector3d xyzFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d xyzDotFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
@@ -110,10 +103,6 @@ private:
     Eigen::Vector3d rpyFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyDotFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
 
-    // Eigen::Vector3d xyzArmTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d xyzDotArmTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyArmTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyDotArmTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d xyzArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d xyzDotArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
@@ -129,10 +118,6 @@ private:
     // reference
     Eigen::Vector3d torsoXyzRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d torsoRpyRef = Eigen::Vector3d::Zero();
-    // Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(nFc);//Daniel 24.5.21
-    // Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(12);//Daniel
-    // Eigen::VectorXd forceRef = Eigen::VectorXd::Zero(nFc);
-    // Eigen::VectorXd forceChangeRef = Eigen::VectorXd::Zero(nFc);
     Eigen::VectorXd footArmPosRef = Eigen::VectorXd::Zero(nFc);//Daniel
     Eigen::VectorXd footArmforceRef = Eigen::VectorXd::Zero(nFc);
     Eigen::VectorXd footArmforceChangeRef = Eigen::VectorXd::Zero(nFc);
@@ -152,10 +137,6 @@ private:
     std::vector<double> kdTorsoXyz{0., 0., 0.};
     std::vector<double> kpTorsoRpy = {0., 0., 0.};
     std::vector<double> kdTorsoRpy = {0., 0., 0.};
-    // std::vector<double> kpFootXyz{0., 0., 0.};
-    // std::vector<double> kdFootXyz{0., 0., 0.};
-    // std::vector<double> kpFootRpy{0., 0., 0.};
-    // std::vector<double> kdFootRpy{0., 0., 0.};
     std::vector<double> kpFootArmXyz{0., 0., 0.};
     std::vector<double> kdFootArmXyz{0., 0., 0.};
     std::vector<double> kpFootArmRpy{0., 0., 0.};
@@ -167,22 +148,14 @@ private:
     double jointQddotLimit{1e4};
     double myInfinity{1e6};
     double CopFactor{0.9};  
-    // double soleFront{0.105};
-    // double soleBack{0.075};
-    // double soleLeft{0.04};
-    // double soleRight{0.04};
     double soleFront{0.186};
     double soleBack{0.094};
     double soleLeft{0.015};
-    double soleRight{0.015};//this item modified based on uh1 foot//Daniel.24.5.10//
+    double soleRight{0.015};
     // weights
     Eigen::Vector3d weightTorsoPosition = Eigen::Vector3d::Zero();
     Eigen::Vector3d weightTorsoOrientation = Eigen::Vector3d::Zero();
-    // Eigen::VectorXd weightFootPosition = Eigen::VectorXd::Zero(nFc);
-    // Eigen::VectorXd weightFootPosition = Eigen::VectorXd::Zero(nFc);//Daniel 24.5.21
-    // Eigen::VectorXd weightFootForce = Eigen::VectorXd::Zero(nFc);
-    // Eigen::VectorXd weightFootForceChange = Eigen::VectorXd::Zero(nFc);
-    Eigen::VectorXd weightFootArmPosition = Eigen::VectorXd::Zero(nFc);//Daniel 24.5.21
+    Eigen::VectorXd weightFootArmPosition = Eigen::VectorXd::Zero(nFc);
     Eigen::VectorXd weightFootArmForce = Eigen::VectorXd::Zero(nFc);
     Eigen::VectorXd weightFootArmForceChange = Eigen::VectorXd::Zero(nFc);
 

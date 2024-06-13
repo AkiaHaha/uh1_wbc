@@ -1,13 +1,13 @@
 # TAICHI : Task Arrangement In Control HIerarchy
 
-TAICHI is a robot whole-body control toolbox, originated from an internal project of Beijing Research Institute of UBTECH Robotics. It aims to arrange and solve tasks with changing control hierarchy automatically, which allows users to modify the control hierarchy freely online according to their needs. TAICHI provides interfaces to define robot dynamics, tasks and constraints in the form of abstract classes. Quadratic Programming (QP) based whole-body control solvers are provided for task solving.
+TAICHI is a robot whole-body control toolbox, originated from an internal project of Beijing Research Institute of UBTECH Robotics. It aims to arrange and solve tasks with changing control hierarchy automatically, which allows users to modify the control hierarchy freely online according to their needs. TAICHI provides interfaces to define robot dynamics, tasks and constraints in the form of abstract classes. Bipedratic Programming (QP) based whole-body control solvers are provided for task solving.
 
 To illustrate the usage of TAICHI, a 12 DoF biped example is provided, along with its task and constraint libraries. Users can directly use these libraries to control similar robots. 
 Detailed guide to this toolbox can be seen in the tutorial [biped_example](http://10.10.1.70/TAICHI/TAICHI/wikis/TAICHI:-Biped-Example).
 ## Features
 In the current version of TACHI, two types of whole-body control solvers are provided:
-- WQP: Weighted Quadratic Programming, where tasks are solved in one QP, weighting coefficients are used to adjust the priority of tasks.
-- HQP: Hierarchical Quadratic Programming, where tasks are placed in different hierarchy levels and solved with a sequence of QPs, tasks in the lower level won't influence the tasks in the higher level.
+- WQP: Weighted Bipedratic Programming, where tasks are solved in one QP, weighting coefficients are used to adjust the priority of tasks.
+- HQP: Hierarchical Bipedratic Programming, where tasks are placed in different hierarchy levels and solved with a sequence of QPs, tasks in the lower level won't influence the tasks in the higher level.
 
 In the future release, two more features will be added
 - RHP-HQP Solver[1]: HQP solver with Recursive Hierarchical Projection, which can realize the smooth transition of task hierarchy and weight. The current WQP and HQP solver will be unified in this solver.

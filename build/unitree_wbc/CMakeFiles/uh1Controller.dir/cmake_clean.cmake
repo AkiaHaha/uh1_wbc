@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/ukia/ws_uh1/devel/lib/unitree_wbc/uh1Controller"
-  "/home/ukia/ws_uh1/devel/lib/unitree_wbc/uh1Controller.pdb"
+  "/home/ukia/wws_uh1/devel/lib/unitree_wbc/uh1Controller"
+  "/home/ukia/wws_uh1/devel/lib/unitree_wbc/uh1Controller.pdb"
   "CMakeFiles/uh1Controller.dir/example/src/bipedController.cpp.o"
   "CMakeFiles/uh1Controller.dir/example/src/constraintDefinitionBiped.cpp.o"
   "CMakeFiles/uh1Controller.dir/example/src/main.cpp.o"

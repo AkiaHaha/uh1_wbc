@@ -1,4 +1,4 @@
-prefix=/home/ukia/ws_uh1/install
+prefix=/home/ukia/wws_uh1/install
 
 Name: unitree_wbc
 Description: Description of unitree_wbc
