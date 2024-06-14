@@ -3,7 +3,7 @@
 
 #define TYPELEFTSOLE 0
 #define TYPERIGHTSOLE 1
-#define GRAVITY_CONST 9.80665
+#define GRAVITY_CONST 9.81
 
 //#include "taichi/robotDynamics.h"
 #include "robotDynamics.h"

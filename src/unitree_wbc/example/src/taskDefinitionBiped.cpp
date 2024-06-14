@@ -41,44 +41,36 @@ bool BipedTorsoPosXyz::update(const TAICHI::RobotDynamics &robot){
     return true;
 }
 
-// bool BipedFootPosition::update(const TAICHI::RobotDynamics &robot){
-//     taskMatA.leftCols(robot.NJG) = robot.contactJacoTc.J;
-//     taskVecB = ref - robot.contactJacoTc.JdotQdot;
-//     return true;
-// }
-
-bool QuadSolePosition::update(const TAICHI::RobotDynamics &robot){
+bool BipedFootPosition::update(const TAICHI::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.contactJacoTc.J;
     taskVecB = ref - robot.contactJacoTc.JdotQdot;
     return true;
 }
 
-// bool BipedArmPosition::update(const TAICHI::RobotDynamics &robot){//Daniel 24.5.28
+bool BipedFootForce::update(const TAICHI::RobotDynamics &robot){
+    taskMatA.rightCols(robot.NFC) = Eigen::MatrixXd::Identity(robot.NFC, robot.NFC);
+    taskVecB = ref;
+    return true;
+}
+
+bool BipedFootForceChange::update(const TAICHI::RobotDynamics &robot){
+    taskMatA.rightCols(robot.NFC) = Eigen::MatrixXd::Identity(robot.NFC, robot.NFC);
+    taskVecB = ref;
+    return true;
+}
+
+// bool QuadSoleForceChange::update(const TAICHI::RobotDynamics &robot){
+//     taskMatA.rightCols(robot.NFC) = Eigen::MatrixXd::Identity(robot.NFC, robot.NFC);
+//     taskVecB = ref;
+//     return true;
+// }
+// bool QuadSoleForce::update(const TAICHI::RobotDynamics &robot){
+//     taskMatA.rightCols(robot.NFC) = Eigen::MatrixXd::Identity(robot.NFC, robot.NFC);
+//     taskVecB = ref;
+//     return true;
+// }
+// bool QuadSolePosition::update(const TAICHI::RobotDynamics &robot){
 //     taskMatA.leftCols(robot.NJG) = robot.contactJacoTc.J;
 //     taskVecB = ref - robot.contactJacoTc.JdotQdot;
 //     return true;
 // }
-
-bool QuadSoleForce::update(const TAICHI::RobotDynamics &robot){
-    taskMatA.rightCols(robot.NFC) = Eigen::MatrixXd::Identity(robot.NFC, robot.NFC);
-    taskVecB = ref;
-    return true;
-}
-
-// bool BipedFootForce::update(const TAICHI::RobotDynamics &robot){
-//     taskMatA.rightCols(robot.NFC) = Eigen::MatrixXd::Identity(robot.NFC, robot.NFC);
-//     taskVecB = ref;
-//     return true;
-// }
-
-// bool BipedFootForceChange::update(const TAICHI::RobotDynamics &robot){
-//     taskMatA.rightCols(robot.NFC) = Eigen::MatrixXd::Identity(robot.NFC, robot.NFC);
-//     taskVecB = ref;
-//     return true;
-// }
-
-bool QuadSoleForceChange::update(const TAICHI::RobotDynamics &robot){
-    taskMatA.rightCols(robot.NFC) = Eigen::MatrixXd::Identity(robot.NFC, robot.NFC);
-    taskVecB = ref;
-    return true;
-}

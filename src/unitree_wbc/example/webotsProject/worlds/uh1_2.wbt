@@ -5,6 +5,7 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
 
 WorldInfo {
+  gravity 9.8
   CFM 1e-07
   ERP 0.8
   basicTimeStep 1
@@ -21,8 +22,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.12668016192380216 0.0628328469853437 -0.9899515997838862 2.228706145845213
-  position 2.4541299323160066 3.2287512377102052 2.041706294574445
+  orientation 0.12679855149024152 0.04563081553412414 -0.9908783759945857 2.456508939545835
+  position 1.8107967707135164 1.5863046723777563 1.4985747078208682
 }
 TexturedBackground {
 }
@@ -34,8 +35,8 @@ RectangleArena {
   floorSize 10 10
 }
 DEF UnitreeH1 Robot {
-  translation -0.039104286573273 -0.0002661842375742202 0.9699123836213601
-  rotation 0.006990093965879392 -0.9999755535077398 0.00017599215249291346 0.04006361302094739
+  translation -0.07948878943776048 -0.0005414630122224048 0.969912809408059
+  rotation 0.0070100595022132015 -0.9999753983399163 0.00024855723957023247 0.040061995102326144
   children [
     GPS {
       name "gps_upperBody"
@@ -56,7 +57,7 @@ DEF UnitreeH1 Robot {
     }
     HingeJoint {
       jointParameters HingeJointParameters {
-        position -6.811782538227884e-08
+        position -6.298438280077175e-09
         axis 0 0 1
         anchor 0 0.0875 -0.1742
       }
@@ -73,8 +74,7 @@ DEF UnitreeH1 Robot {
         }
       ]
       endPoint Solid {
-        translation -2.605473345753799e-18 0.0875 -0.17419999999999947
-        rotation 0 0 -1 6.664001874625056e-08
+        translation -2.6054733457530792e-18 0.0875 -0.17419999999999947
         children [
           DEF left_hip_yaw_link_visual CadShape {
             url [
@@ -83,7 +83,7 @@ DEF UnitreeH1 Robot {
           }
           HingeJoint {
             jointParameters HingeJointParameters {
-              position 1.551443118211236e-06
+              position 2.3024634315269294e-07
               anchor 0.039468 0 0
             }
             device [
@@ -99,8 +99,8 @@ DEF UnitreeH1 Robot {
               }
             ]
             endPoint Solid {
-              translation 0.039467999999999975 5.551218469991275e-17 -6.661337286519041e-16
-              rotation 1 0 0 1.5514391761804457e-06
+              translation 0.039467999999999975 5.55113046061306e-17 -6.66133801993848e-16
+              rotation 1 0 0 2.3084779657169695e-07
               children [
                 DEF left_hip_roll_link_visual CadShape {
                   url [
@@ -109,7 +109,7 @@ DEF UnitreeH1 Robot {
                 }
                 HingeJoint {
                   jointParameters HingeJointParameters {
-                    position -0.29999945381008264
+                    position -0.2999999050781379
                     axis 0 1 0
                     anchor 0 0.11536 0
                   }
@@ -126,8 +126,8 @@ DEF UnitreeH1 Robot {
                     }
                   ]
                   endPoint Solid {
-                    translation 3.469459079805551e-17 0.11535999999999996 2.220445859752292e-16
-                    rotation 0 -1 0 0.29999945381008286
+                    translation 3.469449059642314e-17 0.11535999999999996 2.2204460163176457e-16
+                    rotation 0 -1 0 0.2999999050781379
                     children [
                       DEF left_hip_pitch_link_visual CadShape {
                         url [
@@ -136,7 +136,7 @@ DEF UnitreeH1 Robot {
                       }
                       HingeJoint {
                         jointParameters HingeJointParameters {
-                          position 0.8000027753272081
+                          position 0.8000003941782503
                           axis 0 1 0
                           anchor 0 0 -0.4
                         }
@@ -153,8 +153,8 @@ DEF UnitreeH1 Robot {
                           }
                         ]
                         endPoint Solid {
-                          translation 6.088623544176969e-17 2.7755575615628747e-17 -0.40000000000000024
-                          rotation 0 1 0 0.8000027753272079
+                          translation 6.088689370352815e-17 2.775557561562857e-17 -0.40000000000000024
+                          rotation 0 1 0 0.8000003941782505
                           children [
                             DEF left_knee_link_visual CadShape {
                               url [
@@ -163,7 +163,7 @@ DEF UnitreeH1 Robot {
                             }
                             HingeJoint {
                               jointParameters HingeJointParameters {
-                                position -0.46000023145693664
+                                position -0.4600000420694976
                                 axis 0 1 0
                                 anchor 0 0 -0.4
                               }
@@ -180,8 +180,8 @@ DEF UnitreeH1 Robot {
                                 }
                               ]
                               endPoint DEF LeftFootSole Solid {
-                                translation 0.0720179288674016 -5.551115123125811e-17 -0.42011909345994436
-                                rotation 0 -0.9999999999999999 0 0.4600002314569365
+                                translation 0.07201792505709478 -5.5511151231256545e-17 -0.42011910709923456
+                                rotation 0 -1 0 0.46000004206949807
                                 children [
                                   DEF left_ankle_torque_sensor HingeJoint {
                                     jointParameters HingeJointParameters {
@@ -235,7 +235,7 @@ DEF UnitreeH1 Robot {
                                   ]
                                   inertiaMatrix [
                                     0.000159668 0.002900286 0.002805438
-                                    -5e-09 0.000141063 1.4e-08
+                                    0 0 0
                                   ]
                                 }
                               }
@@ -254,7 +254,7 @@ DEF UnitreeH1 Robot {
                             ]
                             inertiaMatrix [
                               0.012205 0.012509 0.0020629
-                              -6.8431e-05 0.0010862 0.00022549
+                              0 0 0
                             ]
                           }
                         }
@@ -273,7 +273,7 @@ DEF UnitreeH1 Robot {
                       ]
                       inertiaMatrix [
                         0.082618 0.081579 0.0060081
-                        -0.00066654 0.0040725 0.0072024
+                        0 0 0
                       ]
                     }
                   }
@@ -292,7 +292,7 @@ DEF UnitreeH1 Robot {
                 ]
                 inertiaMatrix [
                   0.0020603 0.0022482 0.0024323
-                  3.2115e-05 2.878e-06 -7.813e-06
+                  0 0 0
                 ]
               }
             }
@@ -311,14 +311,14 @@ DEF UnitreeH1 Robot {
           ]
           inertiaMatrix [
             0.0025731 0.0030444 0.0022883
-            9.159e-06 -0.00051948 1.949e-06
+            0 0 0
           ]
         }
       }
     }
     HingeJoint {
       jointParameters HingeJointParameters {
-        position 2.8111597220659793e-08
+        position 1.2122656249373185e-08
         axis 0 0 1
         anchor 0 -0.0875 -0.1742
       }
@@ -335,8 +335,7 @@ DEF UnitreeH1 Robot {
         }
       ]
       endPoint Solid {
-        translation -1.3484756717752589e-18 -0.08750000000000002 -0.17419999999999947
-        rotation 0 0 1 2.9802322387695313e-08
+        translation -1.348476115557403e-18 -0.08750000000000002 -0.17419999999999947
         children [
           DEF right_hip_yaw_link_visual CadShape {
             url [
@@ -345,7 +344,7 @@ DEF UnitreeH1 Robot {
           }
           HingeJoint {
             jointParameters HingeJointParameters {
-              position -6.928717948636842e-07
+              position -2.3145066746837683e-07
               anchor 0.039468 0 0
             }
             device [
@@ -361,8 +360,8 @@ DEF UnitreeH1 Robot {
               }
             ]
             endPoint Solid {
-              translation 0.03946800000000001 2.7755114070290573e-17 -6.661338340059935e-16
-              rotation -0.9999999999999999 0 0 6.931843369968572e-07
+              translation 0.03946800000000001 2.775542143851191e-17 -6.661338211991193e-16
+              rotation -1 0 0 2.3084779657169695e-07
               children [
                 DEF right_hip_roll_link_visual CadShape {
                   url [
@@ -371,7 +370,7 @@ DEF UnitreeH1 Robot {
                 }
                 HingeJoint {
                   jointParameters HingeJointParameters {
-                    position -0.29999971718726326
+                    position -0.2999999043716568
                     axis 0 1 0
                     anchor 0 -0.11536 0
                   }
@@ -388,8 +387,8 @@ DEF UnitreeH1 Robot {
                     }
                   ]
                   endPoint Solid {
-                    translation 1.3877850604856198e-17 -0.11536000000000002 2.220446010002042e-16
-                    rotation 0 -1 0 0.29999971718726315
+                    translation 1.3877809041571905e-17 -0.11536000000000002 2.2204460359791626e-16
+                    rotation 0 -1 0 0.29999990437165736
                     children [
                       DEF right_hip_pitch_link_visual CadShape {
                         url [
@@ -398,7 +397,7 @@ DEF UnitreeH1 Robot {
                       }
                       HingeJoint {
                         jointParameters HingeJointParameters {
-                          position 0.800001153048131
+                          position 0.8000003856912518
                           axis 0 1 0
                           anchor 0 0 -0.4
                         }
@@ -416,7 +415,7 @@ DEF UnitreeH1 Robot {
                         ]
                         endPoint Solid {
                           translation 0 0 -0.4
-                          rotation 0 1 0 0.8000011530481311
+                          rotation 0 1 0 0.8000003856912518
                           children [
                             DEF right_knee_link_visual CadShape {
                               url [
@@ -425,7 +424,7 @@ DEF UnitreeH1 Robot {
                             }
                             HingeJoint {
                               jointParameters HingeJointParameters {
-                                position -0.46000015845801845
+                                position -0.4600000383217444
                                 axis 0 1 0
                                 anchor 0 0 -0.4
                               }
@@ -442,8 +441,8 @@ DEF UnitreeH1 Robot {
                                 }
                               ]
                               endPoint DEF RightFootSole Solid {
-                                translation 0.07200000316916014 -5.551115123125767e-17 -0.419999988591022
-                                rotation 0 -1 0 0.4600001584580186
+                                translation 0.07200000076643534 -5.551115123125744e-17 -0.41999999724083403
+                                rotation 0 -1 0 0.46000003832174446
                                 children [
                                   DEF right_ankle_torque_sensor HingeJoint {
                                     jointParameters HingeJointParameters {
@@ -497,7 +496,7 @@ DEF UnitreeH1 Robot {
                                   ]
                                   inertiaMatrix [
                                     0.000159668 0.002900286 0.002805438
-                                    5e-09 0.000141063 -1.4e-08
+                                    0 0 0
                                   ]
                                 }
                               }
@@ -516,7 +515,7 @@ DEF UnitreeH1 Robot {
                             ]
                             inertiaMatrix [
                               0.012205 0.012509 0.0020629
-                              6.8431e-05 0.0010862 -0.00022549
+                              0 0 0
                             ]
                           }
                         }
@@ -535,7 +534,7 @@ DEF UnitreeH1 Robot {
                       ]
                       inertiaMatrix [
                         0.082618 0.081579 0.0060081
-                        0.00066654 0.0040725 -0.0072024
+                        0 0 0
                       ]
                     }
                   }
@@ -554,7 +553,7 @@ DEF UnitreeH1 Robot {
                 ]
                 inertiaMatrix [
                   0.0020603 0.0022482 0.0024323
-                  -3.2115e-05 2.878e-06 7.813e-06
+                  0 0 0
                 ]
               }
             }
@@ -573,14 +572,14 @@ DEF UnitreeH1 Robot {
           ]
           inertiaMatrix [
             0.0025731 0.0030444 0.0022883
-            -9.159e-06 -0.00051948 -1.949e-06
+            0 0 0
           ]
         }
       }
     }
     HingeJoint {
       jointParameters HingeJointParameters {
-        position 5.026292382119863e-09
+        position 2.1282664336603718e-11
         axis 0 0 1
       }
       device [
@@ -596,377 +595,13 @@ DEF UnitreeH1 Robot {
         }
       ]
       endPoint Solid {
-        translation -4.666380916075152e-05 6.134767592958973e-05 -0.0011463259148001281
-        rotation -0.9182995613812416 0.38652693017197465 0.08557363974290556 0.00012244632968031897
+        translation -4.66638090368617e-05 6.134767602382651e-05 -0.0011463259148001281
+        rotation -0.9183008432519904 0.3865274708118346 0.08555744029884142 0.00012244618823476283
         children [
           DEF torso_link_visual CadShape {
             url [
               "../meshes/torso_link.dae"
             ]
-          }
-          HingeJoint {
-            jointParameters HingeJointParameters {
-              position 7.521935264861205e-08
-              axis 0 0.906309 0.422616
-              anchor 0.0055 0.15535 0.42999
-            }
-            device [
-              RotationalMotor {
-                name "left_shoulder_pitch_joint"
-                maxVelocity 9
-                minPosition -2.87
-                maxPosition 2.87
-                maxTorque 75
-              }
-              PositionSensor {
-                name "left_shoulder_pitch_joint_sensor"
-              }
-            ]
-            endPoint Solid {
-              translation 0.005499999999999993 0.15535 0.4299900000000003
-              rotation 0.9999999999999849 1.6964722438620436e-07 3.7609633939779544e-08 0.4363299999999261
-              children [
-                DEF left_shoulder_pitch_link_visual CadShape {
-                  url [
-                    "../meshes/left_shoulder_pitch_link.dae"
-                  ]
-                }
-                HingeJoint {
-                  jointParameters HingeJointParameters {
-                    position 4.1214916485046664e-09
-                    anchor -0.0055 0.0565 -0.0165
-                  }
-                  device [
-                    RotationalMotor {
-                      name "left_shoulder_roll_joint"
-                      maxVelocity 9
-                      minPosition -0.34
-                      maxPosition 3.11
-                      maxTorque 75
-                    }
-                    PositionSensor {
-                      name "left_shoulder_roll_joint_sensor"
-                    }
-                  ]
-                  endPoint Solid {
-                    translation -0.005499999999999988 0.056500000000000106 -0.01649999999999996
-                    rotation -1 -1.2425376168553949e-18 -9.1675769765108e-18 0.4363299958784143
-                    children [
-                      DEF left_shoulder_roll_link_visual CadShape {
-                        url [
-                          "../meshes/left_shoulder_roll_link.dae"
-                        ]
-                      }
-                      HingeJoint {
-                        jointParameters HingeJointParameters {
-                          position 1.912447261222107e-09
-                          axis 0 0 1
-                          anchor 0 0 -0.1343
-                        }
-                        device [
-                          RotationalMotor {
-                            name "left_shoulder_yaw_joint"
-                            maxVelocity 20
-                            minPosition -1.3
-                            maxPosition 4.45
-                            maxTorque 75
-                          }
-                          PositionSensor {
-                            name "left_shoulder_yaw_joint_sensor"
-                          }
-                        ]
-                        endPoint Solid {
-                          translation 4.973777625520476e-18 -8.326672683737466e-17 -0.13429999999999964
-                          children [
-                            DEF left_shoulder_yaw_link_visual CadShape {
-                              url [
-                                "../meshes/left_shoulder_yaw_link.dae"
-                              ]
-                            }
-                            HingeJoint {
-                              jointParameters HingeJointParameters {
-                                position -1.599999999390987
-                                axis 0 1 0
-                                anchor 0.0185 0 -0.198
-                              }
-                              device [
-                                RotationalMotor {
-                                  name "left_elbow_joint"
-                                  maxVelocity 20
-                                  minPosition -1.8
-                                  maxPosition 3
-                                  maxTorque 75
-                                }
-                                PositionSensor {
-                                  name "left_elbow_joint_sensor"
-                                }
-                              ]
-                              endPoint DEF LeftArmSole Solid {
-                                translation 0.0185 0 -0.198
-                                rotation 0 -1 0 1.599999999390987
-                                children [
-                                  DEF left_elbow_link_visual CadShape {
-                                    url [
-                                      "../meshes/left_elbow_link.dae"
-                                    ]
-                                  }
-                                ]
-                                name "left_elbow_link"
-                                boundingObject Cylinder {
-                                  height 0.09
-                                  radius 0.03
-                                }
-                                physics Physics {
-                                  density -1
-                                  mass 0.723
-                                  centerOfMass [
-                                    0.164862 0.000118 -0.015734
-                                  ]
-                                  inertiaMatrix [
-                                    0.00042388 0.0060062 0.0060023
-                                    -3.6086e-05 0.00029293 4.664e-06
-                                  ]
-                                }
-                              }
-                            }
-                          ]
-                          name "left_shoulder_yaw_link"
-                          boundingObject Cylinder {
-                            height 0.01
-                            radius 0.04
-                          }
-                          physics Physics {
-                            density -1
-                            mass 0.839
-                            centerOfMass [
-                              0.01365 0.002767 -0.16266
-                            ]
-                            inertiaMatrix [
-                              0.003664 0.0040789 0.00066383
-                              -1.0671e-05 0.00034733 7.0213e-05
-                            ]
-                          }
-                        }
-                      }
-                    ]
-                    name "left_shoulder_roll_link"
-                    boundingObject Cylinder {
-                      height 0.01
-                      radius 0.04
-                    }
-                    physics Physics {
-                      density -1
-                      mass 0.793
-                      centerOfMass [
-                        0.000679 0.00115 -0.094076
-                      ]
-                      inertiaMatrix [
-                        0.0015742 0.0016973 0.0010183
-                        2.298e-06 -7.2265e-05 -6.3691e-05
-                      ]
-                    }
-                  }
-                }
-              ]
-              name "left_shoulder_pitch_link"
-              boundingObject Cylinder {
-                height 0.04
-                radius 0.03
-              }
-              physics Physics {
-                density -1
-                mass 1.033
-                centerOfMass [
-                  0.005045 0.053657 -0.015715
-                ]
-                inertiaMatrix [
-                  0.0012985 0.00087279 0.00097338
-                  -1.7333e-05 8.683e-06 3.9656e-05
-                ]
-              }
-            }
-          }
-          HingeJoint {
-            jointParameters HingeJointParameters {
-              position 7.391940106320904e-08
-              axis 0 0.906309 -0.422616
-              anchor 0.0055 -0.15535 0.42999
-            }
-            device [
-              RotationalMotor {
-                name "right_shoulder_pitch_joint"
-                maxVelocity 9
-                minPosition -2.87
-                maxPosition 2.87
-                maxTorque 75
-              }
-              PositionSensor {
-                name "right_shoulder_pitch_joint_sensor"
-              }
-            ]
-            endPoint Solid {
-              translation 0.00549999999999999 -0.15534999999999996 0.4299900000000003
-              rotation -0.9999999999999853 1.6671535817051038e-07 -3.69596591723991e-08 0.4363299999998984
-              children [
-                DEF right_shoulder_pitch_link_visual CadShape {
-                  url [
-                    "../meshes/right_shoulder_pitch_link.dae"
-                  ]
-                }
-                HingeJoint {
-                  jointParameters HingeJointParameters {
-                    position 8.488694873238619e-09
-                    anchor -0.0055 -0.0565 -0.0165
-                  }
-                  device [
-                    RotationalMotor {
-                      name "right_shoulder_roll_joint"
-                      maxVelocity 9
-                      minPosition -3.11
-                      maxPosition 0.34
-                      maxTorque 75
-                    }
-                    PositionSensor {
-                      name "right_shoulder_roll_joint_sensor"
-                    }
-                  ]
-                  endPoint Solid {
-                    translation -0.005499999999999983 -0.05650000000000033 -0.016499999999999293
-                    rotation 1 -2.640637032563773e-18 8.87746909033068e-18 0.43633000848860276
-                    children [
-                      DEF right_shoulder_roll_link_visual CadShape {
-                        url [
-                          "../meshes/right_shoulder_roll_link.dae"
-                        ]
-                      }
-                      HingeJoint {
-                        jointParameters HingeJointParameters {
-                          position 1.5021320177842313e-09
-                          axis 0 0 1
-                          anchor 0 0 -0.1343
-                        }
-                        device [
-                          RotationalMotor {
-                            name "right_shoulder_yaw_joint"
-                            maxVelocity 20
-                            minPosition -4.45
-                            maxPosition 1.3
-                            maxTorque 75
-                          }
-                          PositionSensor {
-                            name "right_shoulder_yaw_joint_sensor"
-                          }
-                        ]
-                        endPoint Solid {
-                          translation 2.818925731847389e-18 -5.551115122702343e-17 -0.1343000000000003
-                          children [
-                            DEF right_shoulder_yaw_link_visual CadShape {
-                              url [
-                                "../meshes/right_shoulder_yaw_link.dae"
-                              ]
-                            }
-                            HingeJoint {
-                              jointParameters HingeJointParameters {
-                                position -1.5999999993909864
-                                axis 0 1 0
-                                anchor 0.0185 0 -0.198
-                              }
-                              device [
-                                RotationalMotor {
-                                  name "right_elbow_joint"
-                                  maxVelocity 20
-                                  minPosition -2.5
-                                  maxPosition 2.61
-                                  maxTorque 75
-                                }
-                                PositionSensor {
-                                  name "right_elbow_joint_sensor"
-                                }
-                              ]
-                              endPoint DEF RightArmSole Solid {
-                                translation 0.0185 0 -0.198
-                                rotation 0 -1 0 1.5999999993909864
-                                children [
-                                  DEF right_elbow_link_visual CadShape {
-                                    url [
-                                      "../meshes/right_elbow_link.dae"
-                                    ]
-                                  }
-                                ]
-                                name "right_elbow_link"
-                                boundingObject Cylinder {
-                                  height 0.09
-                                  radius 0.03
-                                }
-                                physics Physics {
-                                  density -1
-                                  mass 0.723
-                                  centerOfMass [
-                                    0.164862 -0.000118 -0.015734
-                                  ]
-                                  inertiaMatrix [
-                                    0.00042388 0.0060062 0.0060023
-                                    3.6086e-05 0.00029293 -4.664e-06
-                                  ]
-                                }
-                              }
-                            }
-                          ]
-                          name "right_shoulder_yaw_link"
-                          boundingObject Cylinder {
-                            height 0.01
-                            radius 0.04
-                          }
-                          physics Physics {
-                            density -1
-                            mass 0.839
-                            centerOfMass [
-                              0.01365 -0.002767 -0.16266
-                            ]
-                            inertiaMatrix [
-                              0.003664 0.0040789 0.00066383
-                              1.0671e-05 0.00034733 -7.0213e-05
-                            ]
-                          }
-                        }
-                      }
-                    ]
-                    name "right_shoulder_roll_link"
-                    boundingObject Cylinder {
-                      height 0.01
-                      radius 0.04
-                    }
-                    physics Physics {
-                      density -1
-                      mass 0.793
-                      centerOfMass [
-                        0.000679 -0.00115 -0.094076
-                      ]
-                      inertiaMatrix [
-                        0.0015742 0.0016973 0.0010183
-                        -2.298e-06 -7.2265e-05 6.3691e-05
-                      ]
-                    }
-                  }
-                }
-              ]
-              name "right_shoulder_pitch_link"
-              boundingObject Cylinder {
-                height 0.04
-                radius 0.03
-              }
-              physics Physics {
-                density -1
-                mass 1.033
-                centerOfMass [
-                  0.005045 -0.053657 -0.015715
-                ]
-                inertiaMatrix [
-                  0.0012985 0.00087279 0.00097338
-                  1.7333e-05 8.683e-06 -3.9656e-05
-                ]
-              }
-            }
           }
           Solid {
             translation 0.108485 0.0175 0.693171
@@ -1044,7 +679,7 @@ DEF UnitreeH1 Robot {
           ]
           inertiaMatrix [
             0.4873 0.40963 0.12785
-            -0.00053763 0.0020276 -0.00074582
+            0 0 0
           ]
         }
       }
@@ -1062,7 +697,7 @@ DEF UnitreeH1 Robot {
     ]
     inertiaMatrix [
       0.044582 0.0082464 0.049021
-      8.7034e-05 -1.9893e-05 4.021e-06
+      0 0 0
     ]
   }
   controller "<extern>"

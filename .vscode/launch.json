@@ -4,17 +4,17 @@
     {
       "name": "ROS: Launch",
       "request": "launch",
-      "target": "/home/ukia/ws_uh1/src/unitree_wbc/launch/debug1.launch",
+      "target": "/home/ukia/wwws_uh1/src/unitree_wbc/launch/debug1.launch",
       "type": "ros"
     },
     {
       "name": "C++ Launch",
       "type": "cppdbg",
       "request": "launch",
-      "program": "/home/ukia/ws_uh1/devel/lib/unitree_wbc/uh1Controller",
+      "program": "/home/ukia/wwws_uh1/devel/lib/unitree_wbc/uh1Controller",
       "args": [],
       "stopAtEntry": false,
-      "cwd": "/home/ukia/ws_uh1/",
+      "cwd": "/home/ukia/wwws_uh1/",
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",

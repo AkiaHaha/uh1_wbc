@@ -92,8 +92,8 @@ private:
     qpOASES::real_t * dualOptPtr = nullptr;
 
     bool initDone{false};
-    int nWSRDes{100};
-    double cpuTimeDes{10};
+    int nWSRDes{200};
+    double cpuTimeDes{20};
 
     // ---------------------------- Costs/Objects --------------------------------------
 

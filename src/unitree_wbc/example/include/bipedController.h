@@ -18,7 +18,7 @@
 #endif // PI
 
 #ifndef GRAVITY
-    #define GRAVITY 9.80665
+    #define GRAVITY 9.8
 #endif // GRAVITY-CONST
 
 #ifndef EPSILON
@@ -67,9 +67,9 @@ private:
     double timeCs{0.0};                     // time of CS (Control System)
     int tick{0};                            // the tick-tack for time accumulation
     double time{0.0};                       // run time (sec) for current behavior
-    int nJg{25};
-    int nJa{19};
-    int nFc{24};//Daniel 24.5.21
+    int nJg{NG};
+    int nJa{NJ};
+    int nFc{NFCC};//Daniel 24.5.21
     
     Eigen::VectorXd qActuated = Eigen::VectorXd::Zero(nJa); ;
     Eigen::VectorXd qDotActuated = Eigen::VectorXd::Zero(nJa);

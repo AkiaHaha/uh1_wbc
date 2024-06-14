@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ukia/ws_uh1/src
+CMAKE_SOURCE_DIR = /home/ukia/wwws_uh1/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ukia/ws_uh1/build
+CMAKE_BINARY_DIR = /home/ukia/wwws_uh1/build
 
 # Include any dependencies generated for this target.
 include unitree_wbc/CMakeFiles/unitree_wbc.dir/depend.make
@@ -58,82 +58,82 @@ include unitree_wbc/CMakeFiles/unitree_wbc.dir/progress.make
 include unitree_wbc/CMakeFiles/unitree_wbc.dir/flags.make
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/constraint.cpp.o: unitree_wbc/CMakeFiles/unitree_wbc.dir/flags.make
-unitree_wbc/CMakeFiles/unitree_wbc.dir/src/constraint.cpp.o: /home/ukia/ws_uh1/src/unitree_wbc/src/constraint.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ukia/ws_uh1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object unitree_wbc/CMakeFiles/unitree_wbc.dir/src/constraint.cpp.o"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/unitree_wbc.dir/src/constraint.cpp.o -c /home/ukia/ws_uh1/src/unitree_wbc/src/constraint.cpp
+unitree_wbc/CMakeFiles/unitree_wbc.dir/src/constraint.cpp.o: /home/ukia/wwws_uh1/src/unitree_wbc/src/constraint.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ukia/wwws_uh1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object unitree_wbc/CMakeFiles/unitree_wbc.dir/src/constraint.cpp.o"
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/unitree_wbc.dir/src/constraint.cpp.o -c /home/ukia/wwws_uh1/src/unitree_wbc/src/constraint.cpp
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/constraint.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/unitree_wbc.dir/src/constraint.cpp.i"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ukia/ws_uh1/src/unitree_wbc/src/constraint.cpp > CMakeFiles/unitree_wbc.dir/src/constraint.cpp.i
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ukia/wwws_uh1/src/unitree_wbc/src/constraint.cpp > CMakeFiles/unitree_wbc.dir/src/constraint.cpp.i
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/constraint.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/unitree_wbc.dir/src/constraint.cpp.s"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ukia/ws_uh1/src/unitree_wbc/src/constraint.cpp -o CMakeFiles/unitree_wbc.dir/src/constraint.cpp.s
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ukia/wwws_uh1/src/unitree_wbc/src/constraint.cpp -o CMakeFiles/unitree_wbc.dir/src/constraint.cpp.s
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.o: unitree_wbc/CMakeFiles/unitree_wbc.dir/flags.make
-unitree_wbc/CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.o: /home/ukia/ws_uh1/src/unitree_wbc/src/hqpWbc.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ukia/ws_uh1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object unitree_wbc/CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.o"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.o -c /home/ukia/ws_uh1/src/unitree_wbc/src/hqpWbc.cpp
+unitree_wbc/CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.o: /home/ukia/wwws_uh1/src/unitree_wbc/src/hqpWbc.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ukia/wwws_uh1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object unitree_wbc/CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.o"
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.o -c /home/ukia/wwws_uh1/src/unitree_wbc/src/hqpWbc.cpp
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.i"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ukia/ws_uh1/src/unitree_wbc/src/hqpWbc.cpp > CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.i
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ukia/wwws_uh1/src/unitree_wbc/src/hqpWbc.cpp > CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.i
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.s"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ukia/ws_uh1/src/unitree_wbc/src/hqpWbc.cpp -o CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.s
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ukia/wwws_uh1/src/unitree_wbc/src/hqpWbc.cpp -o CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.s
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.o: unitree_wbc/CMakeFiles/unitree_wbc.dir/flags.make
-unitree_wbc/CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.o: /home/ukia/ws_uh1/src/unitree_wbc/src/robotDynamics.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ukia/ws_uh1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object unitree_wbc/CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.o"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.o -c /home/ukia/ws_uh1/src/unitree_wbc/src/robotDynamics.cpp
+unitree_wbc/CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.o: /home/ukia/wwws_uh1/src/unitree_wbc/src/robotDynamics.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ukia/wwws_uh1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object unitree_wbc/CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.o"
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.o -c /home/ukia/wwws_uh1/src/unitree_wbc/src/robotDynamics.cpp
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.i"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ukia/ws_uh1/src/unitree_wbc/src/robotDynamics.cpp > CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.i
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ukia/wwws_uh1/src/unitree_wbc/src/robotDynamics.cpp > CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.i
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.s"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ukia/ws_uh1/src/unitree_wbc/src/robotDynamics.cpp -o CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.s
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ukia/wwws_uh1/src/unitree_wbc/src/robotDynamics.cpp -o CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.s
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/task.cpp.o: unitree_wbc/CMakeFiles/unitree_wbc.dir/flags.make
-unitree_wbc/CMakeFiles/unitree_wbc.dir/src/task.cpp.o: /home/ukia/ws_uh1/src/unitree_wbc/src/task.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ukia/ws_uh1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object unitree_wbc/CMakeFiles/unitree_wbc.dir/src/task.cpp.o"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/unitree_wbc.dir/src/task.cpp.o -c /home/ukia/ws_uh1/src/unitree_wbc/src/task.cpp
+unitree_wbc/CMakeFiles/unitree_wbc.dir/src/task.cpp.o: /home/ukia/wwws_uh1/src/unitree_wbc/src/task.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ukia/wwws_uh1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object unitree_wbc/CMakeFiles/unitree_wbc.dir/src/task.cpp.o"
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/unitree_wbc.dir/src/task.cpp.o -c /home/ukia/wwws_uh1/src/unitree_wbc/src/task.cpp
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/task.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/unitree_wbc.dir/src/task.cpp.i"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ukia/ws_uh1/src/unitree_wbc/src/task.cpp > CMakeFiles/unitree_wbc.dir/src/task.cpp.i
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ukia/wwws_uh1/src/unitree_wbc/src/task.cpp > CMakeFiles/unitree_wbc.dir/src/task.cpp.i
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/task.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/unitree_wbc.dir/src/task.cpp.s"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ukia/ws_uh1/src/unitree_wbc/src/task.cpp -o CMakeFiles/unitree_wbc.dir/src/task.cpp.s
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ukia/wwws_uh1/src/unitree_wbc/src/task.cpp -o CMakeFiles/unitree_wbc.dir/src/task.cpp.s
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wbc.cpp.o: unitree_wbc/CMakeFiles/unitree_wbc.dir/flags.make
-unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wbc.cpp.o: /home/ukia/ws_uh1/src/unitree_wbc/src/wbc.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ukia/ws_uh1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wbc.cpp.o"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/unitree_wbc.dir/src/wbc.cpp.o -c /home/ukia/ws_uh1/src/unitree_wbc/src/wbc.cpp
+unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wbc.cpp.o: /home/ukia/wwws_uh1/src/unitree_wbc/src/wbc.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ukia/wwws_uh1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wbc.cpp.o"
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/unitree_wbc.dir/src/wbc.cpp.o -c /home/ukia/wwws_uh1/src/unitree_wbc/src/wbc.cpp
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wbc.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/unitree_wbc.dir/src/wbc.cpp.i"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ukia/ws_uh1/src/unitree_wbc/src/wbc.cpp > CMakeFiles/unitree_wbc.dir/src/wbc.cpp.i
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ukia/wwws_uh1/src/unitree_wbc/src/wbc.cpp > CMakeFiles/unitree_wbc.dir/src/wbc.cpp.i
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wbc.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/unitree_wbc.dir/src/wbc.cpp.s"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ukia/ws_uh1/src/unitree_wbc/src/wbc.cpp -o CMakeFiles/unitree_wbc.dir/src/wbc.cpp.s
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ukia/wwws_uh1/src/unitree_wbc/src/wbc.cpp -o CMakeFiles/unitree_wbc.dir/src/wbc.cpp.s
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.o: unitree_wbc/CMakeFiles/unitree_wbc.dir/flags.make
-unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.o: /home/ukia/ws_uh1/src/unitree_wbc/src/wqpWbc.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ukia/ws_uh1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.o"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.o -c /home/ukia/ws_uh1/src/unitree_wbc/src/wqpWbc.cpp
+unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.o: /home/ukia/wwws_uh1/src/unitree_wbc/src/wqpWbc.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ukia/wwws_uh1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.o"
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.o -c /home/ukia/wwws_uh1/src/unitree_wbc/src/wqpWbc.cpp
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.i"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ukia/ws_uh1/src/unitree_wbc/src/wqpWbc.cpp > CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.i
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ukia/wwws_uh1/src/unitree_wbc/src/wqpWbc.cpp > CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.i
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.s"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ukia/ws_uh1/src/unitree_wbc/src/wqpWbc.cpp -o CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.s
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ukia/wwws_uh1/src/unitree_wbc/src/wqpWbc.cpp -o CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.s
 
 # Object files for target unitree_wbc
 unitree_wbc_OBJECTS = \
@@ -147,46 +147,46 @@ unitree_wbc_OBJECTS = \
 # External object files for target unitree_wbc
 unitree_wbc_EXTERNAL_OBJECTS =
 
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/src/constraint.cpp.o
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.o
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.o
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/src/task.cpp.o
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wbc.cpp.o
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.o
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/build.make
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/libroscpp.so
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /usr/local/lib/libpthread.so
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/librosconsole.so
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/librosconsole_log4cxx.so
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/librosconsole_backend_interface.so
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/liblog4cxx.so
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/libxmlrpcpp.so
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/libroscpp_serialization.so
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/librostime.so
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/libcpp_common.so
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /usr/local/lib/librbdl.so
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: /home/ukia/ustc_ws/devel/lib/libqpOASES.so
-/home/ukia/ws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ukia/ws_uh1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX shared library /home/ukia/ws_uh1/devel/lib/libunitree_wbc.so"
-	cd /home/ukia/ws_uh1/build/unitree_wbc && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/unitree_wbc.dir/link.txt --verbose=$(VERBOSE)
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/src/constraint.cpp.o
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.o
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.o
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/src/task.cpp.o
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wbc.cpp.o
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/src/wqpWbc.cpp.o
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/build.make
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/libroscpp.so
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /usr/local/lib/libpthread.so
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/librosconsole.so
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/librosconsole_log4cxx.so
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/librosconsole_backend_interface.so
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/liblog4cxx.so
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/libxmlrpcpp.so
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/libroscpp_serialization.so
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/librostime.so
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /opt/ros/noetic/lib/libcpp_common.so
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /usr/local/lib/librbdl.so
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: /home/ukia/ustc_ws/devel/lib/libqpOASES.so
+/home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so: unitree_wbc/CMakeFiles/unitree_wbc.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ukia/wwws_uh1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX shared library /home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so"
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/unitree_wbc.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-unitree_wbc/CMakeFiles/unitree_wbc.dir/build: /home/ukia/ws_uh1/devel/lib/libunitree_wbc.so
+unitree_wbc/CMakeFiles/unitree_wbc.dir/build: /home/ukia/wwws_uh1/devel/lib/libunitree_wbc.so
 
 .PHONY : unitree_wbc/CMakeFiles/unitree_wbc.dir/build
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/clean:
-	cd /home/ukia/ws_uh1/build/unitree_wbc && $(CMAKE_COMMAND) -P CMakeFiles/unitree_wbc.dir/cmake_clean.cmake
+	cd /home/ukia/wwws_uh1/build/unitree_wbc && $(CMAKE_COMMAND) -P CMakeFiles/unitree_wbc.dir/cmake_clean.cmake
 .PHONY : unitree_wbc/CMakeFiles/unitree_wbc.dir/clean
 
 unitree_wbc/CMakeFiles/unitree_wbc.dir/depend:
-	cd /home/ukia/ws_uh1/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ukia/ws_uh1/src /home/ukia/ws_uh1/src/unitree_wbc /home/ukia/ws_uh1/build /home/ukia/ws_uh1/build/unitree_wbc /home/ukia/ws_uh1/build/unitree_wbc/CMakeFiles/unitree_wbc.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/ukia/wwws_uh1/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ukia/wwws_uh1/src /home/ukia/wwws_uh1/src/unitree_wbc /home/ukia/wwws_uh1/build /home/ukia/wwws_uh1/build/unitree_wbc /home/ukia/wwws_uh1/build/unitree_wbc/CMakeFiles/unitree_wbc.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : unitree_wbc/CMakeFiles/unitree_wbc.dir/depend
 

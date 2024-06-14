@@ -67,14 +67,14 @@ set(unitree_wbc_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(unitree_wbc_SOURCE_PREFIX /home/ukia/ws_uh1/src/unitree_wbc)
-  set(unitree_wbc_DEVEL_PREFIX /home/ukia/ws_uh1/devel)
+  set(unitree_wbc_SOURCE_PREFIX /home/ukia/wwws_uh1/src/unitree_wbc)
+  set(unitree_wbc_DEVEL_PREFIX /home/ukia/wwws_uh1/devel)
   set(unitree_wbc_INSTALL_PREFIX "")
   set(unitree_wbc_PREFIX ${unitree_wbc_DEVEL_PREFIX})
 else()
   set(unitree_wbc_SOURCE_PREFIX "")
   set(unitree_wbc_DEVEL_PREFIX "")
-  set(unitree_wbc_INSTALL_PREFIX /home/ukia/ws_uh1/install)
+  set(unitree_wbc_INSTALL_PREFIX /home/ukia/wwws_uh1/install)
   set(unitree_wbc_PREFIX ${unitree_wbc_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/ukia/ws_uh1/install/lib;/home/ukia/ws_uh1/devel/lib;/home/ukia/ustc_ws/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/ukia/wwws_uh1/install/lib;/home/ukia/wwws_uh1/devel/lib;/home/ukia/ws_uh1/devel/lib;/home/ukia/ustc_ws/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

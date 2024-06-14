@@ -2,6 +2,7 @@
 #define TAICHI_EXAMPLE_CONSTRAINTDEFINITION_BIPED_H
 
 #include "constraint.h"
+#include "operation.h"
 //#include "taichi/constraint.h"
 
 

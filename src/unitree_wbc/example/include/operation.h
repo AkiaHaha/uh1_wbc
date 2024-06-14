@@ -9,6 +9,22 @@
 
 #include "robotDynamics.h"
 
+#ifndef NG
+    #define NG 17
+#endif // DELTA-T
+
+#ifndef NJ
+    #define NJ 11
+#endif // DELTA-T
+
+#ifndef NFCC
+    #define NFCC 12
+#endif // DELTA-T
+
+#ifndef NV
+    #define NV 29
+#endif // DELTA-T
+
 void akiaPrint1(const Eigen::VectorXd &vector, int length, int numRows, ...);
 std::string akiaPrint2(const Eigen::VectorXd &vector, int length, int numRows, ...);
 void akiaPrint3(const Eigen::VectorXd &vector, int length, int numRows, ...);
