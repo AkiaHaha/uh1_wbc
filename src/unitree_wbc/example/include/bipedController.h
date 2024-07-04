@@ -8,6 +8,7 @@
 #include <Eigen/Dense>
 
 #include "wqpWbc.h"
+#include "hqpWbc.h"
 #include "robotDynamicsBiped.h"
 #include "taskDefinitionBiped.h"
 #include "constraintDefinitionBiped.h"
@@ -69,7 +70,7 @@ private:
     double time{0.0};                       // run time (sec) for current behavior
     int nJg{NG};
     int nJa{NJ};
-    int nFc{NFCC};//Daniel 24.5.21
+    int nFc{NFCC2};//Daniel 24.5.21
     
     Eigen::VectorXd qActuated = Eigen::VectorXd::Zero(nJa); ;
     Eigen::VectorXd qDotActuated = Eigen::VectorXd::Zero(nJa);
@@ -133,15 +134,15 @@ private:
     // Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(12);//Daniel
     // Eigen::VectorXd forceRef = Eigen::VectorXd::Zero(nFc);
     // Eigen::VectorXd forceChangeRef = Eigen::VectorXd::Zero(nFc);
-    Eigen::VectorXd footArmPosRef = Eigen::VectorXd::Zero(nFc);//Daniel
-    Eigen::VectorXd footArmforceRef = Eigen::VectorXd::Zero(nFc);
-    Eigen::VectorXd footArmforceChangeRef = Eigen::VectorXd::Zero(nFc);
+    Eigen::VectorXd footArmPosRef = Eigen::VectorXd::Zero(NFCC4);//Daniel
+    Eigen::VectorXd footArmforceRef = Eigen::VectorXd::Zero(NFCC2);
+    Eigen::VectorXd footArmforceChangeRef = Eigen::VectorXd::Zero(NFCC2);
 
     // result of QP-WBC
-    int nV{nJg + nFc};
+    int nV{NV};
     Eigen::VectorXd varOpt = Eigen::VectorXd::Zero(nV);
     Eigen::VectorXd qDDotOpt = Eigen::VectorXd::Zero(nJg);
-    Eigen::VectorXd forceOpt = Eigen::VectorXd::Zero(nFc);
+    Eigen::VectorXd forceOpt = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd tauOpt = Eigen::VectorXd::Zero(nJa);
     int simpleStatus{0};       // 0: solve; 1: fail
     int nWsrRes{0};            // the number of working set recalculations actually performed
@@ -152,14 +153,14 @@ private:
     std::vector<double> kdTorsoXyz{0., 0., 0.};
     std::vector<double> kpTorsoRpy = {0., 0., 0.};
     std::vector<double> kdTorsoRpy = {0., 0., 0.};
-    // std::vector<double> kpFootXyz{0., 0., 0.};
-    // std::vector<double> kdFootXyz{0., 0., 0.};
-    // std::vector<double> kpFootRpy{0., 0., 0.};
-    // std::vector<double> kdFootRpy{0., 0., 0.};
-    std::vector<double> kpFootArmXyz{0., 0., 0.};
-    std::vector<double> kdFootArmXyz{0., 0., 0.};
-    std::vector<double> kpFootArmRpy{0., 0., 0.};
-    std::vector<double> kdFootArmRpy{0., 0., 0.};
+    std::vector<double> kpFootXyz{0., 0., 0.};
+    std::vector<double> kdFootXyz{0., 0., 0.};
+    std::vector<double> kpFootRpy{0., 0., 0.};
+    std::vector<double> kdFootRpy{0., 0., 0.};
+    std::vector<double> kpArmXyz{0., 0., 0.};
+    std::vector<double> kdArmXyz{0., 0., 0.};
+    std::vector<double> kpArmRpy{0., 0., 0.};
+    std::vector<double> kdArmRpy{0., 0., 0.};
 
     // parameters
     double muStatic{0.6};
@@ -167,10 +168,6 @@ private:
     double jointQddotLimit{1e4};
     double myInfinity{1e6};
     double CopFactor{0.9};  
-    // double soleFront{0.105};
-    // double soleBack{0.075};
-    // double soleLeft{0.04};
-    // double soleRight{0.04};
     double soleFront{0.186};
     double soleBack{0.094};
     double soleLeft{0.015};
@@ -178,13 +175,9 @@ private:
     // weights
     Eigen::Vector3d weightTorsoPosition = Eigen::Vector3d::Zero();
     Eigen::Vector3d weightTorsoOrientation = Eigen::Vector3d::Zero();
-    // Eigen::VectorXd weightFootPosition = Eigen::VectorXd::Zero(nFc);
-    // Eigen::VectorXd weightFootPosition = Eigen::VectorXd::Zero(nFc);//Daniel 24.5.21
-    // Eigen::VectorXd weightFootForce = Eigen::VectorXd::Zero(nFc);
-    // Eigen::VectorXd weightFootForceChange = Eigen::VectorXd::Zero(nFc);
-    Eigen::VectorXd weightFootArmPosition = Eigen::VectorXd::Zero(nFc);//Daniel 24.5.21
-    Eigen::VectorXd weightFootArmForce = Eigen::VectorXd::Zero(nFc);
-    Eigen::VectorXd weightFootArmForceChange = Eigen::VectorXd::Zero(nFc);
+    Eigen::VectorXd weightFootArmPosition = Eigen::VectorXd::Zero(NFCC4);//Daniel 24.5.21
+    Eigen::VectorXd weightFootArmForce = Eigen::VectorXd::Zero(NFCC2);
+    Eigen::VectorXd weightFootArmForceChange = Eigen::VectorXd::Zero(NFCC2);
 
     // bounds
     Eigen::VectorXd lowerbounds = -jointQddotLimit * Eigen::VectorXd::Ones(nV);

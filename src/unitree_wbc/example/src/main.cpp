@@ -64,7 +64,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     sim_info_msg.data.resize(10);
 
     // simulation loopsim_information_msg
-    std::cout << "Program started dd70." << std::endl << endl;
+    std::cout << "Program started dd80." << std::endl << endl;
     while (bipedWebots.robot->step(TIME_STEP) != -1)
     {
         // read data from Webots
@@ -75,9 +75,9 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
         if (simCnt < goStandCnt){
             standPosCmd << 0, 0, -0.3, 0.8, -0.46, //left leg--RYP
                            0, 0, -0.3, 0.8, -0.46,//right leg
-                           0;                     //torso
-                        //    0, 0, 0, -1.6 + PI,  //left arm--PRY
-                        //    0, 0, 0, -1.6 + PI; //right arm
+                           0,                     //torso
+                           0, 0, 0, 0,  //left arm--PRY
+                           0, 0, 0, 0; //right arm
 
             // standPosCmd << 0, 0, 0, 0, 0, //left leg--RYP
             //                0, 0, 0, 0, 0,//right leg
@@ -101,7 +101,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             }
             bipedCtrl.getValueQdd(jointPosAcc);
             for (size_t i = 0; i < NJ; i++){
-                jointPosInteg[i] = integrator.Integrate(jointPosAcc[i]);
+                 jointPosInteg[i] = integrator.Integrate(jointPosAcc[i]);
             }
             jointPosInteg += jointPosAtStartCtrl;
 
@@ -117,24 +117,23 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             joint_pos_pub.publish(joint_pos_msg);
 //-----------------------------------------------------------------
 //universal set toq / pos
-            jointTorCmd.tail(1) << 0;
-            bipedWebots.setMotorTau(jointTorCmd);
+            // jointTorCmd(16) = 0;
+            // bipedWebots.setMotorTau(jointTorCmd);
             // bipedWebots.setMotorPos(jointPosInteg);
 
 
-//pos-leg 
-            // standPosCmd << 0, 0, -0.3, 0.8, -0.46, //left leg--RYP
-            //     0, 0, -0.3, 0.8, -0.46,//right leg
-            //     0,                     //torso
-            //     0, 0, 0, 0,  //left arm--PRY
-            //     0, 0, 0, 0; //right arm
-            // standPosCmd.segment(11,4) = jointTorCmd.segment(11,4);
-            // standPosCmd.segment(15,4) = jointTorCmd.segment(15,4);
+//pos-leg&torso 
+            // standPosCmd.segment(11,8) = jointTorCmd.segment(11,8);
             // bipedWebots.setMotorPosTau(standPosCmd);
+            // akiaPrint1(standPosCmd, 19, 5, 5, 5, 1, 4, 4);
+//pos-leg
+            // standPosCmd.segment(10,9) = jointTorCmd.segment(10,9);
+            // bipedWebots.setMotorPosTau3(standPosCmd);
+            // akiaPrint1(standPosCmd, 19, 5, 5, 5, 1, 4, 4);
 
 //pos-shoulder
-            // standPosCmd.head(11) = jointTorCmd.head(11);
-            // bipedWebots.setMotorPosTau2(standPosCmd);    
+            standPosCmd.head(10) = jointTorCmd.head(10);
+            bipedWebots.setMotorPosTau2(standPosCmd);    
 //-----------------------------------------------------------------
 
         }else{

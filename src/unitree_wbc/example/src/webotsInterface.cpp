@@ -18,14 +18,14 @@ void WebotsRobot::initWebots()
     legMotor[8] = robot->getMotor("right_knee_joint");
     legMotor[9] = robot->getMotor("right_ankle_joint");
     legMotor[10] = robot->getMotor("torso_joint");
-    // legMotor[11] = robot->getMotor("left_shoulder_pitch_joint");
-    // legMotor[12] = robot->getMotor("left_shoulder_roll_joint");
-    // legMotor[13] = robot->getMotor("left_shoulder_yaw_joint");
-    // legMotor[14] = robot->getMotor("left_elbow_joint");
-    // legMotor[15] = robot->getMotor("right_shoulder_pitch_joint");
-    // legMotor[16] = robot->getMotor("right_shoulder_roll_joint");
-    // legMotor[17] = robot->getMotor("right_shoulder_yaw_joint");
-    // legMotor[18] = robot->getMotor("right_elbow_joint");
+    legMotor[11] = robot->getMotor("left_shoulder_pitch_joint");
+    legMotor[12] = robot->getMotor("left_shoulder_roll_joint");
+    legMotor[13] = robot->getMotor("left_shoulder_yaw_joint");
+    legMotor[14] = robot->getMotor("left_elbow_joint");
+    legMotor[15] = robot->getMotor("right_shoulder_pitch_joint");
+    legMotor[16] = robot->getMotor("right_shoulder_roll_joint");
+    legMotor[17] = robot->getMotor("right_shoulder_yaw_joint");
+    legMotor[18] = robot->getMotor("right_elbow_joint");
     
     // motor sensors
     legSensor.resize(NJ);
@@ -40,14 +40,14 @@ void WebotsRobot::initWebots()
     legSensor[8] = robot->getPositionSensor("right_knee_joint_sensor");
     legSensor[9] = robot->getPositionSensor("right_ankle_joint_sensor");//torqueSensor-1
     legSensor[10] = robot->getPositionSensor("torso_joint_sensor");
-    // legSensor[11] = robot->getPositionSensor("left_shoulder_pitch_joint_sensor");
-    // legSensor[12] = robot->getPositionSensor("left_shoulder_roll_joint_sensor");
-    // legSensor[13] = robot->getPositionSensor("left_shoulder_yaw_joint_sensor");
-    // legSensor[14] = robot->getPositionSensor("left_elbow_joint_sensor");
-    // legSensor[15] = robot->getPositionSensor("right_shoulder_pitch_joint_sensor");
-    // legSensor[16] = robot->getPositionSensor("right_shoulder_roll_joint_sensor");
-    // legSensor[17] = robot->getPositionSensor("right_shoulder_yaw_joint_sensor");
-    // legSensor[18] = robot->getPositionSensor("right_elbow_joint_sensor");
+    legSensor[11] = robot->getPositionSensor("left_shoulder_pitch_joint_sensor");
+    legSensor[12] = robot->getPositionSensor("left_shoulder_roll_joint_sensor");
+    legSensor[13] = robot->getPositionSensor("left_shoulder_yaw_joint_sensor");
+    legSensor[14] = robot->getPositionSensor("left_elbow_joint_sensor");
+    legSensor[15] = robot->getPositionSensor("right_shoulder_pitch_joint_sensor");
+    legSensor[16] = robot->getPositionSensor("right_shoulder_roll_joint_sensor");
+    legSensor[17] = robot->getPositionSensor("right_shoulder_yaw_joint_sensor");
+    legSensor[18] = robot->getPositionSensor("right_elbow_joint_sensor");
     
     // other sensors
     imu = robot->getInertialUnit("inertial_unit_upperBody");
@@ -56,8 +56,8 @@ void WebotsRobot::initWebots()
     Waist = robot->getFromDef("UnitreeH1");
     SoleLeft = robot->getFromDef("LeftFootSole");
     SoleRight = robot->getFromDef("RightFootSole");
-    // ArmHandLeft = robot->getFromDef("LeftArmSole");
-    // ArmHandRight = robot->getFromDef("RightArmSole");
+    ArmHandLeft = robot->getFromDef("LeftArmSole");
+    ArmHandRight = robot->getFromDef("RightArmSole");
 
     // enable
     for (int i = 0; i < NJ; i++) {
@@ -160,25 +160,25 @@ bool WebotsRobot::readData(double simTime, webotState & robotStateSim)
     robotStateSim.RightSoleXyzRpyAct.tail(3) = rotm2Rpy(a4);
 
     //Arm xyz and rpy //Daniel 5.26
-    // const double* b1 = ArmHandLeft->getPosition();
-    // const double* b2Array = ArmHandLeft->getOrientation();
-    // Eigen::Matrix3d b2;
-    // b2 << b2Array[0], b2Array[1], b2Array[2],
-    //     b2Array[3], b2Array[4], b2Array[5],
-    //     b2Array[6], b2Array[7], b2Array[8];
+    const double* b1 = ArmHandLeft->getPosition();
+    const double* b2Array = ArmHandLeft->getOrientation();
+    Eigen::Matrix3d b2;
+    b2 << b2Array[0], b2Array[1], b2Array[2],
+        b2Array[3], b2Array[4], b2Array[5],
+        b2Array[6], b2Array[7], b2Array[8];
 
-    // const double* b3 = ArmHandRight->getPosition();
-    // const double* b4Array = ArmHandRight->getOrientation();
-    // Eigen::Matrix3d b4;
-    // b4 << b4Array[0], b4Array[1], b4Array[2],
-    //     b4Array[3], b4Array[4], b4Array[5],
-    //     b4Array[6], b4Array[7], b4Array[8];
+    const double* b3 = ArmHandRight->getPosition();
+    const double* b4Array = ArmHandRight->getOrientation();
+    Eigen::Matrix3d b4;
+    b4 << b4Array[0], b4Array[1], b4Array[2],
+        b4Array[3], b4Array[4], b4Array[5],
+        b4Array[6], b4Array[7], b4Array[8];
 
-    // robotStateSim.LeftArmHandXyzRpyAct.head(3) << b1[0], b1[1], b1[2];
-    // robotStateSim.LeftArmHandXyzRpyAct.tail(3) = rotm2Rpy(b2);
+    robotStateSim.LeftArmHandXyzRpyAct.head(3) << b1[0], b1[1], b1[2];
+    robotStateSim.LeftArmHandXyzRpyAct.tail(3) = rotm2Rpy(b2);
 
-    // robotStateSim.RightArmHandXyzRpyAct.head(3) << b3[0], b3[1], b3[2];
-    // robotStateSim.RightArmHandXyzRpyAct.tail(3) = rotm2Rpy(b4);
+    robotStateSim.RightArmHandXyzRpyAct.head(3) << b3[0], b3[1], b3[2];
+    robotStateSim.RightArmHandXyzRpyAct.tail(3) = rotm2Rpy(b4);
 
     return true;
 }
@@ -190,25 +190,36 @@ bool WebotsRobot::setMotorPos(const Eigen::VectorXd& jointPosTar) {
     return true;
 }
 
-// bool WebotsRobot::setMotorPosTau(const Eigen::VectorXd& jointTauPosMixed) {
-//     for (int i = 0; i < 11; i++) {
-//         legMotor[i]->setPosition(jointTauPosMixed(i, 0));}
+bool WebotsRobot::setMotorPosTau(const Eigen::VectorXd& jointTauPosMixed) {
+    for (int i = 0; i < 11; i++) {
+        legMotor[i]->setPosition(jointTauPosMixed(i, 0));}
 
-//     for (int i = 0; i < 8; i++) { 
-//         legMotor[11+i]->setTorque(jointTauPosMixed(11+i, 0));}
+    for (int i = 0; i < 8; i++) { 
+        legMotor[11+i]->setTorque(jointTauPosMixed(11+i, 0));}
 
-//     return true;
-// }
+    return true;
+}
 
-// bool WebotsRobot::setMotorPosTau2(const Eigen::VectorXd& jointTauPosMixed) {
-//     for (int i = 0; i < 11; i++) {
-//         legMotor[i]->setTorque(jointTauPosMixed(i, 0));}
+bool WebotsRobot::setMotorPosTau2(const Eigen::VectorXd& jointTauPosMixed) {
+    for (int i = 0; i < 10; i++) {
+        legMotor[i]->setTorque(jointTauPosMixed(i, 0));}
 
-//     for (int i = 0; i < 8; i++) { 
-//         legMotor[11+i]->setPosition(jointTauPosMixed(11+i, 0));}
+    for (int i = 0; i < 9; i++) { 
+        legMotor[10+i]->setPosition(jointTauPosMixed(10+i, 0));}
         
-//     return true;
-// }
+    return true;
+}
+
+bool WebotsRobot::setMotorPosTau3(const Eigen::VectorXd& jointTauPosMixed) {
+    for (int i = 0; i < 10; i++) {
+        legMotor[i]->setPosition(jointTauPosMixed(i, 0));}
+
+    for (int i = 0; i < 9; i++) { 
+        legMotor[10+i]->setTorque(jointTauPosMixed(10+i, 0));}
+        
+    return true;
+}
+
 
 
 bool WebotsRobot::setMotorTau(const Eigen::VectorXd& jointTauTar) {

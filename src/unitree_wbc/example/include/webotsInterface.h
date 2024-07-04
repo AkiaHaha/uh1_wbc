@@ -97,8 +97,9 @@ public:
     bool readData(double simTime, webotState &robotState);
     bool setMotorPos(const Eigen::VectorXd & jointPosTar);
     bool setMotorTau(const Eigen::VectorXd & jointTauTar);
-    // bool setMotorPosTau(const Eigen::VectorXd & jointTauPosMixed);
-    // bool setMotorPosTau2(const Eigen::VectorXd & jointTauPosMixed);
+    bool setMotorPosTau(const Eigen::VectorXd & jointTauPosMixed);
+    bool setMotorPosTau2(const Eigen::VectorXd & jointTauPosMixed);
+    bool setMotorPosTau3(const Eigen::VectorXd & jointTauPosMixed);
 
 private:
     Eigen::VectorXd getMotorPos();
@@ -113,6 +114,7 @@ private:
     InertialUnit *imu;
     Gyro *gyro;
     Accelerometer *accelerometer;
+    
     Node* Waist;
     Node* SoleLeft;
     Node* SoleRight;

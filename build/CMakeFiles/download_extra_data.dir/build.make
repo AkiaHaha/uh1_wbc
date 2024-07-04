@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ukia/wwws_uh1/src
+CMAKE_SOURCE_DIR = /home/ukia/wwwws_uh1/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ukia/wwws_uh1/build
+CMAKE_BINARY_DIR = /home/ukia/wwwws_uh1/build
 
 # Utility rule file for download_extra_data.
 
@@ -67,6 +67,6 @@ CMakeFiles/download_extra_data.dir/clean:
 .PHONY : CMakeFiles/download_extra_data.dir/clean
 
 CMakeFiles/download_extra_data.dir/depend:
-	cd /home/ukia/wwws_uh1/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ukia/wwws_uh1/src /home/ukia/wwws_uh1/src /home/ukia/wwws_uh1/build /home/ukia/wwws_uh1/build /home/ukia/wwws_uh1/build/CMakeFiles/download_extra_data.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/ukia/wwwws_uh1/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ukia/wwwws_uh1/src /home/ukia/wwwws_uh1/src /home/ukia/wwwws_uh1/build /home/ukia/wwwws_uh1/build /home/ukia/wwwws_uh1/build/CMakeFiles/download_extra_data.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/download_extra_data.dir/depend
 

@@ -1,8 +1,8 @@
-# Install script for directory: /home/ukia/wwws_uh1/src/unitree_wbc
+# Install script for directory: /home/ukia/wwwws_uh1/src/unitree_wbc
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/ukia/wwws_uh1/install")
+  set(CMAKE_INSTALL_PREFIX "/home/ukia/wwwws_uh1/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -38,17 +38,17 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ukia/wwws_uh1/build/unitree_wbc/catkin_generated/installspace/unitree_wbc.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ukia/wwwws_uh1/build/unitree_wbc/catkin_generated/installspace/unitree_wbc.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/unitree_wbc/cmake" TYPE FILE FILES
-    "/home/ukia/wwws_uh1/build/unitree_wbc/catkin_generated/installspace/unitree_wbcConfig.cmake"
-    "/home/ukia/wwws_uh1/build/unitree_wbc/catkin_generated/installspace/unitree_wbcConfig-version.cmake"
+    "/home/ukia/wwwws_uh1/build/unitree_wbc/catkin_generated/installspace/unitree_wbcConfig.cmake"
+    "/home/ukia/wwwws_uh1/build/unitree_wbc/catkin_generated/installspace/unitree_wbcConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/unitree_wbc" TYPE FILE FILES "/home/ukia/wwws_uh1/src/unitree_wbc/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/unitree_wbc" TYPE FILE FILES "/home/ukia/wwwws_uh1/src/unitree_wbc/package.xml")
 endif()
 

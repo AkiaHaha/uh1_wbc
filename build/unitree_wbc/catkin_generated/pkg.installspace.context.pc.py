@@ -4,5 +4,5 @@ PROJECT_PKG_CONFIG_INCLUDE_DIRS = "${prefix}/include;/usr/include/eigen3".split(
 PROJECT_CATKIN_DEPENDS = "roscpp;rospy;std_msgs".replace(';', ' ')
 PKG_CONFIG_LIBRARIES_WITH_PREFIX = "-lunitree_wbc".split(';') if "-lunitree_wbc" != "" else []
 PROJECT_NAME = "unitree_wbc"
-PROJECT_SPACE_DIR = "/home/ukia/wwws_uh1/install"
+PROJECT_SPACE_DIR = "/home/ukia/wwwws_uh1/install"
 PROJECT_VERSION = "0.0.0"

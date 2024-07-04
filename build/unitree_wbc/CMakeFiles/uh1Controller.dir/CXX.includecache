@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/bipedController.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/bipedController.h
 iostream
 -
 string
@@ -18,23 +18,25 @@ stdexcept
 Eigen/Dense
 -
 wqpWbc.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/wqpWbc.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/wqpWbc.h
+hqpWbc.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/hqpWbc.h
 robotDynamicsBiped.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/robotDynamicsBiped.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/robotDynamicsBiped.h
 taskDefinitionBiped.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/taskDefinitionBiped.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/taskDefinitionBiped.h
 constraintDefinitionBiped.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/constraintDefinitionBiped.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/constraintDefinitionBiped.h
 operation.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/operation.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/operation.h
 
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/constraintDefinitionBiped.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/constraintDefinitionBiped.h
 constraint.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/constraint.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/constraint.h
 operation.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/operation.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/operation.h
 
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/operation.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/operation.h
 Eigen/Dense
 -
 iostream
@@ -46,19 +48,21 @@ vector
 cstdarg
 -
 robotDynamics.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/robotDynamics.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/robotDynamics.h
 
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/robotDynamicsBiped.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/robotDynamicsBiped.h
 robotDynamics.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/robotDynamics.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/robotDynamics.h
 operation.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/operation.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/operation.h
 
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/taskDefinitionBiped.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/taskDefinitionBiped.h
 task.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/task.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/task.h
+operation.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/operation.h
 
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/webotsInterface.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/webotsInterface.h
 webots/Robot.hpp
 -
 webots/Supervisor.hpp
@@ -86,17 +90,17 @@ iostream
 Eigen/Dense
 -
 operation.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/include/operation.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/include/operation.h
 
-/home/ukia/wwws_uh1/src/unitree_wbc/example/src/bipedController.cpp
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/src/bipedController.cpp
 bipedController.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/src/bipedController.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/src/bipedController.h
 robotDynamics.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/src/robotDynamics.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/src/robotDynamics.h
 robotDynamicsBiped.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/src/robotDynamicsBiped.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/src/robotDynamicsBiped.h
 
-/home/ukia/wwws_uh1/src/unitree_wbc/example/src/main.cpp
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/src/main.cpp
 ros/ros.h
 -
 std_msgs/Float64MultiArray.h
@@ -110,17 +114,17 @@ iomanip
 stdexcept
 -
 webotsInterface.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/src/webotsInterface.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/src/webotsInterface.h
 bipedController.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/src/bipedController.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/src/bipedController.h
 operation.h
-/home/ukia/wwws_uh1/src/unitree_wbc/example/src/operation.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/example/src/operation.h
 
-/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/ErrorMsg.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/include/unitree_wbc/ErrorMsg.h
 string
 -
 
-/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/constraint.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/include/unitree_wbc/constraint.h
 iostream
 -
 vector
@@ -132,9 +136,15 @@ Eigen/Dense
 ErrorMsg.h
 -
 robotDynamics.h
-/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
 
-/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/include/unitree_wbc/hqpWbc.h
+qpOASES.hpp
+-
+wbc.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/include/unitree_wbc/wbc.h
+
+/home/ukia/wwwws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
 iostream
 -
 vector
@@ -146,7 +156,7 @@ Eigen/Dense
 rbdl/rbdl.h
 -
 
-/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/task.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/include/unitree_wbc/task.h
 iostream
 -
 vector
@@ -156,9 +166,9 @@ string
 Eigen/Dense
 -
 robotDynamics.h
-/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
 
-/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/wbc.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/include/unitree_wbc/wbc.h
 iostream
 -
 vector
@@ -172,17 +182,17 @@ algorithm
 Eigen/Dense
 -
 task.h
-/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/task.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/include/unitree_wbc/task.h
 constraint.h
-/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/constraint.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/include/unitree_wbc/constraint.h
 robotDynamics.h
-/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
 
-/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/wqpWbc.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/include/unitree_wbc/wqpWbc.h
 qpOASES.hpp
 -
 wbc.h
-/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/wbc.h
+/home/ukia/wwwws_uh1/src/unitree_wbc/include/unitree_wbc/wbc.h
 
 /opt/ros/noetic/include/ros/advertise_options.h
 ros/forwards.h

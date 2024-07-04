@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ukia/wwws_uh1/src
+CMAKE_SOURCE_DIR = /home/ukia/wwwws_uh1/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ukia/wwws_uh1/build
+CMAKE_BINARY_DIR = /home/ukia/wwwws_uh1/build
 
 # Utility rule file for roscpp_generate_messages_eus.
 
@@ -63,10 +63,10 @@ unitree_wbc/CMakeFiles/roscpp_generate_messages_eus.dir/build: roscpp_generate_m
 .PHONY : unitree_wbc/CMakeFiles/roscpp_generate_messages_eus.dir/build
 
 unitree_wbc/CMakeFiles/roscpp_generate_messages_eus.dir/clean:
-	cd /home/ukia/wwws_uh1/build/unitree_wbc && $(CMAKE_COMMAND) -P CMakeFiles/roscpp_generate_messages_eus.dir/cmake_clean.cmake
+	cd /home/ukia/wwwws_uh1/build/unitree_wbc && $(CMAKE_COMMAND) -P CMakeFiles/roscpp_generate_messages_eus.dir/cmake_clean.cmake
 .PHONY : unitree_wbc/CMakeFiles/roscpp_generate_messages_eus.dir/clean
 
 unitree_wbc/CMakeFiles/roscpp_generate_messages_eus.dir/depend:
-	cd /home/ukia/wwws_uh1/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ukia/wwws_uh1/src /home/ukia/wwws_uh1/src/unitree_wbc /home/ukia/wwws_uh1/build /home/ukia/wwws_uh1/build/unitree_wbc /home/ukia/wwws_uh1/build/unitree_wbc/CMakeFiles/roscpp_generate_messages_eus.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/ukia/wwwws_uh1/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ukia/wwwws_uh1/src /home/ukia/wwwws_uh1/src/unitree_wbc /home/ukia/wwwws_uh1/build /home/ukia/wwwws_uh1/build/unitree_wbc /home/ukia/wwwws_uh1/build/unitree_wbc/CMakeFiles/roscpp_generate_messages_eus.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : unitree_wbc/CMakeFiles/roscpp_generate_messages_eus.dir/depend
 

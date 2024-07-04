@@ -1,4 +1,4 @@
-# TAICHI : Task Arrangement In Control HIerarchy
+clee# TAICHI : Task Arrangement In Control HIerarchy
 
 TAICHI is a robot whole-body control toolbox, originated from an internal project of Beijing Research Institute of UBTECH Robotics. It aims to arrange and solve tasks with changing control hierarchy automatically, which allows users to modify the control hierarchy freely online according to their needs. TAICHI provides interfaces to define robot dynamics, tasks and constraints in the form of abstract classes. Quadratic Programming (QP) based whole-body control solvers are provided for task solving.
 

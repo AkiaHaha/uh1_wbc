@@ -10,19 +10,23 @@
 #include "robotDynamics.h"
 
 #ifndef NG
-    #define NG 17
+    #define NG 25
 #endif // DELTA-T
 
 #ifndef NJ
-    #define NJ 11
+    #define NJ 19
 #endif // DELTA-T
 
-#ifndef NFCC
-    #define NFCC 12
+#ifndef NFCC4
+    #define NFCC4 24
+#endif // DELTA-T
+
+#ifndef NFCC2
+    #define NFCC2 12
 #endif // DELTA-T
 
 #ifndef NV
-    #define NV 29
+    #define NV 37
 #endif // DELTA-T
 
 void akiaPrint1(const Eigen::VectorXd &vector, int length, int numRows, ...);
