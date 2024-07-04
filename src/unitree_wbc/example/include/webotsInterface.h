@@ -100,6 +100,7 @@ public:
     bool setMotorPosTau(const Eigen::VectorXd & jointTauPosMixed);
     bool setMotorPosTau2(const Eigen::VectorXd & jointTauPosMixed);
     bool setMotorPosTau3(const Eigen::VectorXd & jointTauPosMixed);
+    bool setMotorPosTau4(const Eigen::VectorXd & jointTauPosMixed);
 
 private:
     Eigen::VectorXd getMotorPos();

@@ -64,7 +64,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     sim_info_msg.data.resize(10);
 
     // simulation loopsim_information_msg
-    std::cout << "Program started dd80." << std::endl << endl;
+    std::cout << "Program started dd81." << std::endl << endl;
     while (bipedWebots.robot->step(TIME_STEP) != -1)
     {
         // read data from Webots
@@ -118,7 +118,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
 //-----------------------------------------------------------------
 //universal set toq / pos
             // jointTorCmd(16) = 0;
-            // bipedWebots.setMotorTau(jointTorCmd);
+            bipedWebots.setMotorTau(jointTorCmd);
             // bipedWebots.setMotorPos(jointPosInteg);
 
 
@@ -132,8 +132,12 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             // akiaPrint1(standPosCmd, 19, 5, 5, 5, 1, 4, 4);
 
 //pos-shoulder
-            standPosCmd.head(10) = jointTorCmd.head(10);
-            bipedWebots.setMotorPosTau2(standPosCmd);    
+            // standPosCmd.head(10) = jointTorCmd.head(10);
+            // bipedWebots.setMotorPosTau2(standPosCmd);  
+
+//only-pos-torso
+            // bipedWebots.setMotorPosTau4(jointTorCmd);
+
 //-----------------------------------------------------------------
 
         }else{

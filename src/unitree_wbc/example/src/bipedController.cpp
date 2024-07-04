@@ -14,6 +14,8 @@ BipedController::BipedController(){
     // Instantiate task & constraint (Create Task Library )
     TAICHI::Task * ptrBipedTorsoPosRpy = new BipedTorsoPosRpy("BipedTorsoPosRpy", 3, nV);
     TAICHI::Task * ptrBipedTorsoPosXyz = new BipedTorsoPosXyz("BipedTorsoPosXyz", 3, nV);
+    TAICHI::Task * ptrBipedUpTorsoPosRpy = new BipedUpTorsoPosRpy("BipedUpTorsoPosRpy", 3, nV);
+    TAICHI::Task * ptrBipedUpTorsoPosXyz = new BipedUpTorsoPosXyz("BipedUpTorsoPosXyz", 3, nV);
     // TAICHI::Task * ptrForce = new BipedFootForce("Force", nFc, nV);
     // TAICHI::Task * ptrForceChange = new BipedFootForceChange("ForceChange", nFc, nV);
     // TAICHI::Task * ptrPosition = new BipedFootPosition("Position", nFc, nV);
@@ -38,6 +40,8 @@ BipedController::BipedController(){
     // Add task & constraint to the instance
     myWbc->addTask(ptrBipedTorsoPosRpy, 0);
     myWbc->addTask(ptrBipedTorsoPosXyz, 0);
+    myWbc->addTask(ptrBipedUpTorsoPosRpy, 0);
+    myWbc->addTask(ptrBipedUpTorsoPosXyz, 0);
     myWbc->addTask(ptrForce, 0);
     myWbc->addTask(ptrForceChange, 0);
     myWbc->addTask(ptrPosition, 0);
@@ -132,8 +136,23 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
     xyzDotTorsoEst = trosoStateTemp.tail(3);
     qGen.head(3) = xyzTorsoEst;
     qDotGen.head(3) = xyzDotTorsoEst;//>>>
-    cout << "torso" << "-------------------------------" << endl;
+    cout << "******************** Torso ****************************" << endl;
+    cout << rpyTorsoEst.transpose() << endl;
     cout << xyzTorsoEst.transpose() << endl;
+
+    //<<<upTorso pose//
+    Eigen::VectorXd poseTemp0 = Eigen::VectorXd::Zero(12,1);
+    poseTemp0 = biped->estFootArmPosVelInWorld(qGen, qDotGen, 0);
+
+    rpyUpTorsoEst = poseTemp0.head(3);
+    xyzUpTorsoEst = poseTemp0.segment(3,3);
+    rpyDotUpTorsoEst = poseTemp0.segment(6,3);
+    xyzDotUpTorsoEst = poseTemp0.tail(3);
+
+    cout << "******************** Up Torso ****************************" << endl;
+    // cout << akiaPrint2(footStateTemp0, 12, 4, 3, "rpy", 3, "***xyz", 3, "rpyDot", 3, "xyzDot") << endl;
+    cout << rpyUpTorsoEst.transpose() << endl;
+    cout << xyzUpTorsoEst.transpose() << endl;
 
     //<<<foot ee posVel//
     Eigen::VectorXd footStateTemp0 = Eigen::VectorXd::Zero(12,1);
@@ -188,6 +207,10 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
         flagEstFirst = 1;
 
         xyzTorsoInit = xyzTorsoEst;
+        xyzUpTorsoInit = xyzUpTorsoEst;
+
+        rpyTorsoInit = rpyTorsoEst;
+        rpyUpTorsoInit = rpyUpTorsoEst;
 
         rpyFootInit[0] = rpyFootEst[0]; 
         xyzFootInit[0] = xyzFootEst[0]; 
@@ -235,6 +258,15 @@ bool BipedController::motionPlan(){//Daniel 5.23
         xyzDotTorsoTgt << 0.0, 0.0, -0.02*PI*cos(time/1*PI);
         rpyTorsoTgt << 0.0, 0.0, 0.0;
         rpyDotTorsoTgt << 0.0, 0.0, 0.0;
+
+        //Up torso
+        // xyzUpTorsoTgt = xyzUpTorsoInit;
+        // xyzDotUpTorsoTgt << 0.0, 0.0, 0.0;
+
+        xyzUpTorsoTgt << xyzUpTorsoInit(0), xyzUpTorsoInit(1), -0.02*sin(time/1*PI)+xyzUpTorsoInit(2);
+        xyzDotUpTorsoTgt << 0.0, 0.0, -0.02*PI*cos(time/1*PI);
+        rpyUpTorsoTgt << 0.0, 0.0, 0.0;
+        rpyDotUpTorsoTgt << 0.0, 0.0, 0.0;
         
         //foot
         xyzFootTgt[0] = xyzFootInit[0];
@@ -247,15 +279,18 @@ bool BipedController::motionPlan(){//Daniel 5.23
         rpyFootTgt[1] = rpyFootInit[1];
         rpyDotFootTgt[1] = rpyDotFootInit[1];
 
-        // xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z()+0.1*sin(time/1*PI);
-        // xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z()+0.1*PI*cos(time/1*PI);
-        xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z();
-        xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z();
+        xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z()+0.1*sin(time/1*PI);
+        xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z()+0.1*PI*cos(time/1*PI);
+        // xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z();
+        // xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z();
         rpyArmTgt[0] = rpyArmInit[0];
         rpyDotArmTgt[0] = rpyDotArmInit[0];
 
-        xyzArmTgt[1] = xyzArmInit[1];
-        xyzDotArmTgt[1] = xyzDotArmInit[1];
+
+        // xyzArmTgt[1] = xyzArmInit[1];
+        // xyzDotArmTgt[1] = xyzDotArmInit[1];
+        xyzArmTgt[1] << xyzArmInit[1].x(), xyzArmInit[1].y(), xyzArmInit[1].z()-0.1*sin(time/1*PI);
+        xyzDotArmTgt[1] << xyzDotArmInit[1].x(), xyzDotArmInit[1].y(), xyzDotArmInit[1].z()-0.1*PI*cos(time/1*PI);
         rpyArmTgt[1] = rpyArmInit[1];
         rpyDotArmTgt[1] = rpyDotFootInit[1];
 
@@ -273,19 +308,28 @@ bool BipedController::taskControl(){
     kpTorsoXyz = {600., 600., 600.};
     kdTorsoXyz = {30., 30., 30.};
 
+    kpUpTorsoRpy = {1200, 1200, 5000};
+    kdUpTorsoRpy = fillVector2(100, 3);
+    kpUpTorsoXyz = fillVector2(1200, 3);
+    kdUpTorsoXyz = fillVector2(60, 3);
+
     kpFootXyz = {800., 800., 800.};
     kdFootXyz = {15., 15., 15.};
     kpFootRpy = {500., 500., 500.};
     kdFootRpy = {6., 6., 6.};
 
-    kpArmXyz = {1000., 1000., 1000.};
-    kdArmXyz = {100, 100, 100};
-    kpArmRpy = {1000., 1000., 1000.};
-    kdArmRpy = {100, 100, 100};
+    kpArmXyz = fillVector2(1200, 3);
+    kdArmXyz = fillVector2(120, 3);
+    kpArmRpy = fillVector2(1000, 3);
+    kdArmRpy = fillVector2(100, 3);
     // ------------------------------ Calculate Reference ------------------------------
     // torso
     torsoRpyRef = diag(kpTorsoRpy)*(rpyTorsoTgt - rpyTorsoEst) + diag(kdTorsoRpy)*(rpyDotTorsoTgt - rpyDotTorsoEst);
     torsoXyzRef = diag(kpTorsoXyz)*(xyzTorsoTgt - xyzTorsoEst) + diag(kdTorsoXyz)*(xyzDotTorsoTgt - xyzDotTorsoEst);
+
+    //up torso
+    upTorsoRpyRef = diag(kpUpTorsoRpy)*(rpyUpTorsoTgt - rpyUpTorsoEst) + diag(kdUpTorsoRpy)*(rpyDotUpTorsoTgt - rpyDotUpTorsoEst);
+    upTorsoXyzRef = diag(kpUpTorsoXyz)*(xyzUpTorsoTgt - xyzUpTorsoEst) + diag(kdUpTorsoXyz)*(xyzDotUpTorsoTgt - xyzDotUpTorsoEst);
     // left foot
     footArmPosRef.segment(0,3) = diag(kpFootRpy)*(rpyFootTgt[0] - rpyFootEst[0]) + diag(kdFootRpy)*(rpyDotFootTgt[0] - rpyDotFootEst[0]);
     footArmPosRef.segment(3,3) = diag(kpFootXyz)*(xyzFootTgt[0] - xyzFootEst[0]) + diag(kdFootXyz)*(xyzDotFootTgt[0] - xyzDotFootEst[0]); 
@@ -316,13 +360,13 @@ bool BipedController::taskControl(){
 
     
     // ------------------------------ set weights --------------------------------------
-    weightTorsoPosition << 100000., 100000., 100000.;                                           
-    weightTorsoOrientation << 1000., 1000., 1000.;
-    weightFootArmPosition << 
-                            1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000.,  
-                            1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000.;
-                            // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
-                            // 1000., 1000., 1000., 100., 100., 100., 1000., 1000., 1000., 100., 100., 100.;
+    weightTorsoPosition = fillVector3(600000);                                           
+    weightTorsoOrientation = fillVector3(600000); 
+
+    weightUpTorsoPosition = fillVector3(300000);                                        
+    weightUpTorsoOrientation << 300000, 300000, 3000000;
+    
+    weightFootArmPosition = fillVector(1000, 1000);   
     weightFootArmForceChange << 4., 4., 1., 3., 3., 0.3, 4., 4., 1., 3., 3., 0.3;
                         // 0.4, 0.4, 0.1, 0.3, 0.3, 0.003, 0.4, 0.4, 0.1, 0.3, 0.3, 0.003;
     weightFootArmForce << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1;
@@ -330,6 +374,8 @@ bool BipedController::taskControl(){
     // ------------------------------ Update task & constraint -------------------------                 
     myWbc->updateTask("BipedTorsoPosRpy", torsoRpyRef, weightTorsoOrientation);
     myWbc->updateTask("BipedTorsoPosXyz", torsoXyzRef, weightTorsoPosition);
+    myWbc->updateTask("BipedUpTorsoPosRpy", upTorsoRpyRef, weightUpTorsoOrientation);
+    myWbc->updateTask("BipedUpTorsoPosXyz", upTorsoXyzRef, weightUpTorsoPosition);
     myWbc->updateTask("Position", footArmPosRef, weightFootArmPosition);
     myWbc->updateTask("ForceChange", footArmforceChangeRef, weightFootArmForceChange);
     myWbc->updateTask("Force", footArmforceRef, weightFootArmForce);

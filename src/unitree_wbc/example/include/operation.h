@@ -48,4 +48,8 @@ private:
     double Q_prev;   // Previous zero-order integrator value
     const double dt; // Sample time (1 ms)
 };
+
+Eigen::VectorXd fillVector(double firstValue, double secondValue);
+std::vector<double> fillVector2(double value, int length);
+Eigen::Vector3d fillVector3(double value);
 #endif//OPERATION_H_

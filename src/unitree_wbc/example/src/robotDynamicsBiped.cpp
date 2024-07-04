@@ -41,6 +41,9 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     floatBaseJacoTc.J = MatrixNd :: Zero(NJF, NJG);///< JacobianTc of floating-base.
     floatBaseJacoTc.JdotQdot = VectorNd :: Zero(NJF);
 
+    upTorsoJacoTc.J = MatrixNd :: Zero(NJF, NJG);///< JacobianTc of floating-base.
+    upTorsoJacoTc.JdotQdot = VectorNd :: Zero(NJF);
+
     biContactJacoTc.J = MatrixNd :: Zero(12, NJG);///< JacobianTc of contact point(s)
     biContactJacoTc.JdotQdot = VectorNd :: Zero(12); 
 
@@ -145,6 +148,7 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
 
     //Torso, relates the world coordinate system by pelvis
     idTorso = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0, 0.0)), joint_Rz, torsoLink, "torso");
+    // idTorso = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0, 0.1)), fixedSoleJoint, torsoLink, "torso");
 
     // idLeftArmLink[0] = model->AddBody(idTorso, Xtrans(Vector3d(0.0055, 0.15535, 0.42999)), joint_Ry, leftArmLink[0], "lsp");
     // idLeftArmLink[1] = model->AppendBody(Xtrans(Vector3d(-0.0055, 0.0565, -0.0165)), joint_Rx, leftArmLink[1], "lsr");
@@ -194,6 +198,8 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
   
     waistJacob = MatrixNd::Zero(NJF, NJG);
     waistJDotQDot = VectorNd::Zero(NJF);
+    upTorsoJacob = MatrixNd::Zero(NJF, NJG);
+    upTorsoJDotQDot = VectorNd::Zero(NJF);
 
     leftArmSoleJacob = MatrixNd::Zero(NJF, NJG);
     rightArmSoleJacob = MatrixNd::Zero(NJF, NJG);
@@ -240,6 +246,8 @@ bool RobotDynamicsBiped::calcWbcDependence(){
     biContactJacoTc.JdotQdot = dualSoleJDotQDot;
     floatBaseJacoTc.J = waistJacob;
     floatBaseJacoTc.JdotQdot = waistJDotQDot;
+    upTorsoJacoTc.J = upTorsoJacob;
+    upTorsoJacoTc.JdotQdot = upTorsoJDotQDot;
     eqCstrMatTau << selMatActuated * inertiaMat, //A*G * G*G
                 -selMatActuated * leftLegSoleJacob.transpose(),//A*F * G*F()
                 -selMatActuated * rightLegSoleJacob.transpose();//A*F * G*F   ====>A*(G+2F)   {TauActuated = eqCstrMatTau * x^T + eqCstrMatTauBias}  ===> X = (G+2F) * 1  = (g+fc)*1=nv*1
@@ -329,6 +337,12 @@ VectorNd RobotDynamicsBiped::estFootArmPosVelInWorld(const VectorNd& jointPos, c
     UpdateKinematicsCustom(*model, & qTemp, & qDotTemp, NULL);
     switch (footType)
     {
+        case 0: // Up torso
+            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idTorso, Math::Vector3d::Zero(), false);
+            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idTorso, false);
+            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idTorso, Math::Vector3d::Zero(), false);
+            break; 
+
         case 1: // Left Sole
             sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
             sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idLeftSoleGround, false);
@@ -412,6 +426,16 @@ bool RobotDynamicsBiped::calcWaistJacob() {
 
 bool RobotDynamicsBiped::calcWaistJDotQDot() {
     waistJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idPelvis, Vector3d::Zero(), false);
+    return true;
+}
+
+bool RobotDynamicsBiped::calcUpTorsoJacob() {
+    CalcPointJacobian6D(*model, jntPositions, idTorso, Vector3d::Zero(), upTorsoJacob, false);
+    return true;
+}
+
+bool RobotDynamicsBiped::calcUpTorsoJDotQDot() {
+    upTorsoJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idTorso, Vector3d::Zero(), false);
     return true;
 }
 
@@ -533,8 +557,22 @@ bool RobotDynamicsBiped::calcSoleTask() {
 }
 
 bool RobotDynamicsBiped::calcWaistTask() {
+    // if (!model) {
+    //     std::cerr << "Model pointer is null!" << std::endl;
+    //     return false;
+    // }
+    // if (jntPositions.size() == 0) {
+    //     std::cerr << "Joint positions are not initialized!" << std::endl;
+    //     return false;
+    // }
+    // if (upTorsoJacob.rows() == 0 || upTorsoJacob.cols() == 0) {
+    //     std::cerr << "upTorsoJacob is not initialized!" << std::endl;
+    //     return false;
+    // }
+    calcUpTorsoJacob();
+    calcUpTorsoJDotQDot();  
     calcWaistJacob();
-    calcWaistJDotQDot();
+    calcWaistJDotQDot(); 
     return true;
 }
 

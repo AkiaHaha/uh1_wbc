@@ -220,6 +220,18 @@ bool WebotsRobot::setMotorPosTau3(const Eigen::VectorXd& jointTauPosMixed) {
     return true;
 }
 
+bool WebotsRobot::setMotorPosTau4(const Eigen::VectorXd& jointTauPosMixed) {
+    for (int i = 0; i < 10; i++) {
+        legMotor[i]->setTorque(jointTauPosMixed(i, 0));}
+
+        legMotor[10]->setPosition(0.);
+
+    for (int i = 0; i < 8; i++) { 
+        legMotor[11+i]->setTorque(jointTauPosMixed(11+i, 0));}
+        
+    return true;
+}
+
 
 
 bool WebotsRobot::setMotorTau(const Eigen::VectorXd& jointTauTar) {

@@ -96,6 +96,32 @@ public:
     bool update(const TAICHI::RobotDynamics &robot) override;
 };
 
+class BipedUpTorsoPosRpy: public TAICHI::Task{
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     */
+    BipedUpTorsoPosRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedUpTorsoPosRpy() = default;
+    bool update(const TAICHI::RobotDynamics &robot) override;
+};
+
+class BipedUpTorsoPosXyz: public TAICHI::Task{
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     */
+    BipedUpTorsoPosXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedUpTorsoPosXyz() = default;
+    bool update(const TAICHI::RobotDynamics &robot) override;
+};
+
 class QuadSolePosition : public TAICHI::Task{
 public:
     /**
@@ -136,44 +162,44 @@ public:
     bool update(const TAICHI::RobotDynamics &robot) override;
 };
 
-// class BipedFootPosition : public TAICHI::Task{
-// public:
-//     /**
-//      * @brief Constructor
-//      * @param taskName The unique identification of the Task: name
-//      * @param taskDim The dimension of Task
-//      * @param varDim The DoF of variables in the WBC problem
-//      */
-//     BipedFootPosition(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-//     ~BipedFootPosition() = default;
-//     bool update(const TAICHI::RobotDynamics &robot) override;
-// };
+class BipedFootPosition : public TAICHI::Task{
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     */
+    BipedFootPosition(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedFootPosition() = default;
+    bool update(const TAICHI::RobotDynamics &robot) override;
+};
 
 
-// class BipedFootForce : public TAICHI::Task{
-// public:
-//     /**
-//      * @brief Constructor
-//      * @param taskName The unique identification of the Task: name
-//      * @param taskDim The dimension of Task
-//      * @param varDim The DoF of variables in the WBC problem
-//      */
-//     BipedFootForce(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-//     ~BipedFootForce() = default;
-//     bool update(const TAICHI::RobotDynamics &robot) override;
-// };
+class BipedFootForce : public TAICHI::Task{
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     */
+    BipedFootForce(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedFootForce() = default;
+    bool update(const TAICHI::RobotDynamics &robot) override;
+};
 
-// class BipedFootForceChange : public TAICHI::Task{
-// public:
-//     /**
-//      * @brief Constructor
-//      * @param taskName The unique identification of the Task: name
-//      * @param taskDim The dimension of Task
-//      * @param varDim The DoF of variables in the WBC problem
-//      */
-//     BipedFootForceChange(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-//     ~BipedFootForceChange() = default;
-//     bool update(const TAICHI::RobotDynamics &robot) override;
-// };
+class BipedFootForceChange : public TAICHI::Task{
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     */
+    BipedFootForceChange(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedFootForceChange() = default;
+    bool update(const TAICHI::RobotDynamics &robot) override;
+};
 
 #endif // TAICHI_EXAMPLE_TASKDEFINITION_BIPED_H

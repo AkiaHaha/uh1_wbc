@@ -158,3 +158,31 @@ double Integrator::Integrate(double Qdd) {
 
     return Q;
 }
+
+Eigen::VectorXd fillVector(double firstValue, double secondValue) {
+    Eigen::VectorXd vector = Eigen::VectorXd::Zero(NFCC4);
+    
+    for (int i = 0; i < 12; ++i) {
+        vector(i) = firstValue;
+    }
+
+    for (int i = 12; i < NFCC4; ++i) {
+        vector(i) = secondValue;
+    }
+
+    return vector;
+}
+
+
+std::vector<double> fillVector2(double value, int length) {
+    std::vector<double> vector(length, value);
+    return vector;
+}
+
+Eigen::Vector3d fillVector3(double value){
+    Eigen::Vector3d vector = Eigen::VectorXd::Zero(3);
+    for (int i = 0; i < 3; ++i) {
+        vector(i) = value;
+    }
+    return vector;
+}

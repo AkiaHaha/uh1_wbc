@@ -105,6 +105,9 @@ private:
     MatrixNd waistJacob;
     VectorNd waistJDotQDot;
 
+    MatrixNd upTorsoJacob;
+    VectorNd upTorsoJDotQDot;
+
     MatrixNd leftArmSoleJacob;
     MatrixNd rightArmSoleJacob;
     MatrixNd leftLegSoleJacob;
@@ -125,6 +128,8 @@ private:
 
     bool calcWaistJacob();
     bool calcWaistJDotQDot();
+    bool calcUpTorsoJacob();
+    bool calcUpTorsoJDotQDot();
     bool calcSoleJacob();
     bool calcSoleJDotQDot();
 
