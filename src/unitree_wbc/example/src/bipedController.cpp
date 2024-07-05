@@ -254,16 +254,15 @@ bool BipedController::motionPlan(){//Daniel 5.23
         //torso
         // xyzTorsoTgt = xyzTorsoInit;
         // xyzDotTorsoTgt << 0.0, 0.0, 0.0;
-        xyzTorsoTgt << xyzTorsoInit(0), xyzTorsoInit(1), -0.02*sin(time/1*PI)+xyzTorsoInit(2);
-        xyzDotTorsoTgt << 0.0, 0.0, -0.02*PI*cos(time/1*PI);
+        xyzTorsoTgt << xyzTorsoInit(0), xyzTorsoInit(1), xyzTorsoInit(2)-0.02*sin(time/1*PI);
+        xyzDotTorsoTgt <<  0.0, 0.0, -0.02*PI*cos(time/1*PI);
         rpyTorsoTgt << 0.0, 0.0, 0.0;
         rpyDotTorsoTgt << 0.0, 0.0, 0.0;
 
         //Up torso
         // xyzUpTorsoTgt = xyzUpTorsoInit;
         // xyzDotUpTorsoTgt << 0.0, 0.0, 0.0;
-
-        xyzUpTorsoTgt << xyzUpTorsoInit(0), xyzUpTorsoInit(1), -0.02*sin(time/1*PI)+xyzUpTorsoInit(2);
+        xyzUpTorsoTgt << xyzUpTorsoInit(0), xyzUpTorsoInit(1), xyzUpTorsoInit(2)-0.02*sin(time/1*PI);
         xyzDotUpTorsoTgt << 0.0, 0.0, -0.02*PI*cos(time/1*PI);
         rpyUpTorsoTgt << 0.0, 0.0, 0.0;
         rpyDotUpTorsoTgt << 0.0, 0.0, 0.0;
@@ -279,18 +278,18 @@ bool BipedController::motionPlan(){//Daniel 5.23
         rpyFootTgt[1] = rpyFootInit[1];
         rpyDotFootTgt[1] = rpyDotFootInit[1];
 
-        xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z()+0.1*sin(time/1*PI);
-        xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z()+0.1*PI*cos(time/1*PI);
-        // xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z();
-        // xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z();
+        xyzArmTgt[0] = xyzArmInit[0];
+        xyzDotArmTgt[0] = xyzDotArmInit[0];
+        // xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z()+0.1*sin(time/1*PI);
+        // xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z()+0.1*PI*cos(time/1*PI);
         rpyArmTgt[0] = rpyArmInit[0];
         rpyDotArmTgt[0] = rpyDotArmInit[0];
 
 
-        // xyzArmTgt[1] = xyzArmInit[1];
-        // xyzDotArmTgt[1] = xyzDotArmInit[1];
-        xyzArmTgt[1] << xyzArmInit[1].x(), xyzArmInit[1].y(), xyzArmInit[1].z()-0.1*sin(time/1*PI);
-        xyzDotArmTgt[1] << xyzDotArmInit[1].x(), xyzDotArmInit[1].y(), xyzDotArmInit[1].z()-0.1*PI*cos(time/1*PI);
+        xyzArmTgt[1] = xyzArmInit[1];
+        xyzDotArmTgt[1] = xyzDotArmInit[1];
+        // xyzArmTgt[1] << xyzArmInit[1].x(), xyzArmInit[1].y(), xyzArmInit[1].z()-0.1*sin(time/1*PI);
+        // xyzDotArmTgt[1] << xyzDotArmInit[1].x(), xyzDotArmInit[1].y(), xyzDotArmInit[1].z()-0.1*PI*cos(time/1*PI);
         rpyArmTgt[1] = rpyArmInit[1];
         rpyDotArmTgt[1] = rpyDotFootInit[1];
 
@@ -367,6 +366,7 @@ bool BipedController::taskControl(){
     weightUpTorsoOrientation << 300000, 300000, 3000000;
     
     weightFootArmPosition = fillVector(1000, 1000);   
+    // weightFootArmPosition.segment(12,3)<<10000,10000,10000;
     weightFootArmForceChange << 4., 4., 1., 3., 3., 0.3, 4., 4., 1., 3., 3., 0.3;
                         // 0.4, 0.4, 0.1, 0.3, 0.3, 0.003, 0.4, 0.4, 0.1, 0.3, 0.3, 0.003;
     weightFootArmForce << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1;
