@@ -179,20 +179,29 @@ bool HqpWbc::wbcSolve(){
             hqpUpdateLeveln(i);
             hqpSolveLeveln(i);      // solve QP
             getResultOptLeveln(optVarStar.at(i), i);
+
+            std::cout << "********* resulted primal opt star in level " << i << "******************" << std::endl;
+            std::cout << optVarStar.at(i).transpose() << std::endl;            
             
             if ( i != 0){        
                 optVarStar.at(i) = optVarStar.at(i - 1) + nspMat.at(i - 1) *  optVarStar.at(i);
             }           
+            std::cout << "********* optVarStar at level " << i << "************" << std::endl;
+            std::cout << optVarStar.at(i).transpose() << std::endl;
         }
     }
     return true;
 }
-
 bool HqpWbc::getResultOpt(Eigen::VectorXd &resultOpt){
-    // TODO:
+    // TODO: 
+//    for(int i = 0; i != nLevel; i++) {
+//         resultOpt += optVarStar.at(i);
+//    }
+//    std::cout << resultOpt.transpose();
    resultOpt = optVarStar.at(nLevel-1);
     return true;
 }
+
 
 
 // ======================================== private Functions ====================================================
@@ -342,6 +351,18 @@ bool HqpWbc::hqpUpdate(){
         // TODO:
         // createNewQP();
         // resizeQPMatrixVector();
+
+        // delete QP;
+        // delete cpuTimePtr;
+        // delete [] primalOptPtr;
+        // delete [] dualOptPtr;
+        // QP = nullptr;
+        // cpuTimePtr = nullptr;
+        // primalOptPtr = nullptr;
+        // dualOptPtr = nullptr;
+
+        createNewQP();
+        resizeQPMatrixVector();//directly copied from wqp at 7.6//
     }
     calcHessianGradient();          ///< tasks
     calcConstraintCoefficient();    ///< constraints
@@ -383,7 +404,7 @@ bool HqpWbc::calcConstraintCoefficient(){
     return true;
 }
 
-bool HqpWbc::nspSolve(){
+bool HqpWbc::nspSolve(){//calculate nsp matrix;
     for (int i = 0; i != nLevel; i++){
         if (nOLevel.at(i) == 0){
             if (i == 0){
@@ -393,7 +414,7 @@ bool HqpWbc::nspSolve(){
             }
         }else{
             if (i == 0){
-                taskMatHatInvLevel.at(i) = taskMatLevel.at(i).transpose() * (taskMatLevel.at(i) * taskMatLevel.at(i).transpose()).inverse();
+                taskMatHatInvLevel.at(i) = taskMatLevel.at(i).transpose() * (taskMatLevel.at(i) * taskMatLevel.at(i).transpose()).inverse();//this step takes lots of time;
                 nspMat.at(i) = Eigen::MatrixXd::Identity(nVLevel.at(i), nVLevel.at(i)) - taskMatHatInvLevel.at(i) * taskMatLevel.at(i);
             }else{
                 taskMatHatLevel.at(i) = taskMatLevel.at(i) * nspMat.at(i - 1);
@@ -406,7 +427,7 @@ bool HqpWbc::nspSolve(){
     return true;
 }
 
-bool HqpWbc::hqpUpdateLeveln(const int & iLevel){
+bool HqpWbc::hqpUpdateLeveln(const int & iLevel){//update task and constraint in each level;
     // ---------------------------- Costs/Objects --------------------------------------
     if (iLevel == 0){
         taskMatAll.at(iLevel) = taskMatLevel.at(iLevel);
@@ -441,13 +462,12 @@ bool HqpWbc::hqpUpdateLeveln(const int & iLevel){
     }else{
         lbCstrAll.at(iLevel) = lbCstrAll.at(iLevel) - cstrMatAll.at(iLevel) * optVarStar.at(iLevel - 1);
         ubCstrAll.at(iLevel) = ubCstrAll.at(iLevel) - cstrMatAll.at(iLevel) * optVarStar.at(iLevel - 1);
-        cstrMatAll.at(iLevel)  = cstrMatAll.at(iLevel) * nspMat.at(iLevel -1);
+        cstrMatAll.at(iLevel)  = cstrMatAll.at(iLevel) * nspMat.at(iLevel -1);//?? the sequence of cstrMat or cstrVec;
     }
     /// the transpose of cstrMatAll
     cstrMatAllTrans.at(iLevel) = cstrMatAll.at(iLevel).transpose();
     return true;
 }
-
 
 bool HqpWbc::hqpSolveLeveln(const int & iLevel){
     if(!initDone.at(iLevel)){
@@ -496,6 +516,8 @@ bool HqpWbc::getPrimalOptLeveln(Eigen::VectorXd & primalOpt, const int & iLevel)
     {
         primalOpt(i) = static_cast<double>(primalOptPtr.at(iLevel)[i]);
     }
+    std::cout << "********* primal opt in level " << iLevel << "******************" << std::endl;
+    std::cout << primalOpt.transpose() << std::endl;
     return true;
 }
 

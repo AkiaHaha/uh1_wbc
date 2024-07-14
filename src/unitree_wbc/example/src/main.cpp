@@ -14,8 +14,6 @@ using namespace std;
 
 bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub);
 
-
-
 // the arguments of the main() can be specified by the "controllerArgs" field of the Robot node.
 int main(int argc, char **argv) {
     ros::init(argc, argv, "webots_controller");
@@ -55,7 +53,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     
     // integrator
     Integrator integrator;
-    double flagStartCtrl{}; 
+    // double flagStartCtrl{}; 
 
     // ros init
     std_msgs::Float64MultiArray joint_pos_msg;
@@ -93,7 +91,8 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
                              robotStateSim.LeftSoleXyzRpyAct, robotStateSim.RightSoleXyzRpyAct,
                              robotStateSim.LeftArmHandXyzRpyAct, robotStateSim.RightArmHandXyzRpyAct);
             bipedCtrl.getValueTauOpt(jointTorCmd);
-            
+
+/*          
             //Integrate acc for pos
             if (flagStartCtrl == 0){
                 jointPosAtStartCtrl = robotStateSim.jointPosAct;
@@ -114,11 +113,13 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             }
             sim_info_msg.data[0] = simTime;
             sim_info_pub.publish(sim_info_msg);
-            joint_pos_pub.publish(joint_pos_msg);
+            joint_pos_pub.publish(joint_pos_msg);                            */
+
 //-----------------------------------------------------------------
 //universal set toq / pos
             // jointTorCmd(16) = 0;
             bipedWebots.setMotorTau(jointTorCmd);
+            
             // bipedWebots.setMotorPos(jointPosInteg);
 
 

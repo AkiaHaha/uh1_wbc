@@ -34,21 +34,33 @@ BipedController::BipedController(){
 
     std::cout<<"12000"<<std::endl;
     // Instantiate the Wbc instance
-    myWbc = new TAICHI::WqpWbc(nV, biped);
+    // myWbc = new TAICHI::WqpWbc(nV, biped);
+    myWbc = new TAICHI::HqpWbc(nV, biped);
     std::cout<<"12300"<<std::endl;
 
     // Add task & constraint to the instance
+    // myWbc->addTask(ptrBipedTorsoPosRpy, 0);
+    // myWbc->addTask(ptrBipedTorsoPosXyz, 0);
+    // myWbc->addTask(ptrBipedUpTorsoPosRpy, 0);
+    // myWbc->addTask(ptrBipedUpTorsoPosXyz, 0);
+    // myWbc->addTask(ptrForce, 0);
+    // myWbc->addTask(ptrForceChange, 0);
+    // myWbc->addTask(ptrPosition, 0);
+    // myWbc->addConstraint(ptrBipedDynamicConsistency, 0);
+    // myWbc->addConstraint(ptrBipedFrictionCone, 0);
+    // myWbc->addConstraint(ptrBipedCenterOfPressure, 0);
+    // myWbc->addConstraint(ptrBipedJointTorqueSaturation, 0);
     myWbc->addTask(ptrBipedTorsoPosRpy, 0);
     myWbc->addTask(ptrBipedTorsoPosXyz, 0);
     myWbc->addTask(ptrBipedUpTorsoPosRpy, 0);
     myWbc->addTask(ptrBipedUpTorsoPosXyz, 0);
-    myWbc->addTask(ptrForce, 0);
-    myWbc->addTask(ptrForceChange, 0);
-    myWbc->addTask(ptrPosition, 0);
+    myWbc->addTask(ptrForce, 3);
+    myWbc->addTask(ptrForceChange, 2);
+    myWbc->addTask(ptrPosition, 1);
     myWbc->addConstraint(ptrBipedDynamicConsistency, 0);
-    myWbc->addConstraint(ptrBipedFrictionCone, 0);
-    myWbc->addConstraint(ptrBipedCenterOfPressure, 0);
-    myWbc->addConstraint(ptrBipedJointTorqueSaturation, 0);
+    myWbc->addConstraint(ptrBipedFrictionCone, 3);
+    myWbc->addConstraint(ptrBipedCenterOfPressure, 2);
+    myWbc->addConstraint(ptrBipedJointTorqueSaturation, 1);
 
     std::cout<<"12340"<<std::endl;
     // Initialize the instance
@@ -403,6 +415,7 @@ bool BipedController::taskControl(){
     // get some data from solved wbc //
     myWbc->getAuxiliaryDataInt(intData);
     nWsrRes = intData.at(0);
+    // simpleStatus = intData.at(1);
     simpleStatus = intData.at(1);
 
     myWbc->getAuxiliaryDataDouble(doubleData);
