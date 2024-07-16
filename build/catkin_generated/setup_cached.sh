@@ -8,3 +8,4 @@
 
 # modified environment variables
 export PWD='/home/ukia/wwws_uh1/build'
+export ROS_PACKAGE_PATH="/home/ukia/uh1_ws/src:/home/ukia/ws_uh1/src:$ROS_PACKAGE_PATH"

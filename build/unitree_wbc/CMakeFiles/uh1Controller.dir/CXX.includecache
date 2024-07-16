@@ -19,6 +19,8 @@ Eigen/Dense
 -
 wqpWbc.h
 /home/ukia/wwws_uh1/src/unitree_wbc/example/include/wqpWbc.h
+hqpWbc.h
+/home/ukia/wwws_uh1/src/unitree_wbc/example/include/hqpWbc.h
 robotDynamicsBiped.h
 /home/ukia/wwws_uh1/src/unitree_wbc/example/include/robotDynamicsBiped.h
 taskDefinitionBiped.h
@@ -133,6 +135,12 @@ ErrorMsg.h
 -
 robotDynamics.h
 /home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
+
+/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/hqpWbc.h
+qpOASES.hpp
+-
+wbc.h
+/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/wbc.h
 
 /home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
 iostream

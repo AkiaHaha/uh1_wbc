@@ -24,6 +24,12 @@ ErrorMsg.h
 robotDynamics.h
 /home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
 
+/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/hqpWbc.h
+qpOASES.hpp
+-
+wbc.h
+/home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/wbc.h
+
 /home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
 iostream
 -
@@ -73,6 +79,30 @@ qpOASES.hpp
 -
 wbc.h
 /home/ukia/wwws_uh1/src/unitree_wbc/include/unitree_wbc/wbc.h
+
+/home/ukia/wwws_uh1/src/unitree_wbc/src/constraint.cpp
+constraint.h
+/home/ukia/wwws_uh1/src/unitree_wbc/src/constraint.h
+
+/home/ukia/wwws_uh1/src/unitree_wbc/src/hqpWbc.cpp
+hqpWbc.h
+/home/ukia/wwws_uh1/src/unitree_wbc/src/hqpWbc.h
+
+/home/ukia/wwws_uh1/src/unitree_wbc/src/robotDynamics.cpp
+robotDynamics.h
+/home/ukia/wwws_uh1/src/unitree_wbc/src/robotDynamics.h
+ErrorMsg.h
+-
+
+/home/ukia/wwws_uh1/src/unitree_wbc/src/task.cpp
+task.h
+/home/ukia/wwws_uh1/src/unitree_wbc/src/task.h
+ErrorMsg.h
+-
+
+/home/ukia/wwws_uh1/src/unitree_wbc/src/wbc.cpp
+wbc.h
+/home/ukia/wwws_uh1/src/unitree_wbc/src/wbc.h
 
 /home/ukia/wwws_uh1/src/unitree_wbc/src/wqpWbc.cpp
 wqpWbc.h

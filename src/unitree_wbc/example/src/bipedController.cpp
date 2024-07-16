@@ -32,7 +32,8 @@ BipedController::BipedController(){
 
     std::cout<<"12000"<<std::endl;
     // Instantiate the Wbc instance
-    myWbc = new TAICHI::WqpWbc(nV, biped);
+    myWbc = new TAICHI::HqpWbc(nV, biped);
+    // myWbc = new TAICHI::WqpWbc(nV, biped);
     std::cout<<"12300"<<std::endl;
 
     // Add task & constraint to the instance
