@@ -8,6 +8,7 @@
 #include <Eigen/Dense>
 
 #include "wqpWbc.h"
+#include "hqpWbc.h"
 #include "robotDynamicsBiped.h"
 #include "taskDefinitionBiped.h"
 #include "constraintDefinitionBiped.h"

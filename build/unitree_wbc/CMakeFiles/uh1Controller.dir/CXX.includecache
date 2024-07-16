@@ -19,6 +19,8 @@ Eigen/Dense
 -
 wqpWbc.h
 /home/ukia/wws_uh1/src/unitree_wbc/example/include/wqpWbc.h
+hqpWbc.h
+/home/ukia/wws_uh1/src/unitree_wbc/example/include/hqpWbc.h
 robotDynamicsBiped.h
 /home/ukia/wws_uh1/src/unitree_wbc/example/include/robotDynamicsBiped.h
 taskDefinitionBiped.h
@@ -84,6 +86,14 @@ iostream
 Eigen/Dense
 -
 
+/home/ukia/wws_uh1/src/unitree_wbc/example/src/bipedController.cpp
+bipedController.h
+/home/ukia/wws_uh1/src/unitree_wbc/example/src/bipedController.h
+robotDynamics.h
+/home/ukia/wws_uh1/src/unitree_wbc/example/src/robotDynamics.h
+robotDynamicsBiped.h
+/home/ukia/wws_uh1/src/unitree_wbc/example/src/robotDynamicsBiped.h
+
 /home/ukia/wws_uh1/src/unitree_wbc/example/src/main.cpp
 ros/ros.h
 -
@@ -121,6 +131,12 @@ ErrorMsg.h
 -
 robotDynamics.h
 /home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
+
+/home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/hqpWbc.h
+qpOASES.hpp
+-
+wbc.h
+/home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/wbc.h
 
 /home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
 iostream

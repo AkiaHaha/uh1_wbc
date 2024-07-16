@@ -9,6 +9,7 @@ unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/bipedController.cpp.o: /hom
 unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/bipedController.cpp.o: /home/ukia/wws_uh1/src/unitree_wbc/example/src/bipedController.cpp
 unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/bipedController.cpp.o: /home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/ErrorMsg.h
 unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/bipedController.cpp.o: /home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/constraint.h
+unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/bipedController.cpp.o: /home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/hqpWbc.h
 unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/bipedController.cpp.o: /home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
 unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/bipedController.cpp.o: /home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/task.h
 unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/bipedController.cpp.o: /home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/wbc.h
@@ -443,6 +444,7 @@ unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/main.cpp.o: /home/ukia/wws_
 unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/main.cpp.o: /home/ukia/wws_uh1/src/unitree_wbc/example/src/main.cpp
 unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/main.cpp.o: /home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/ErrorMsg.h
 unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/main.cpp.o: /home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/constraint.h
+unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/main.cpp.o: /home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/hqpWbc.h
 unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/main.cpp.o: /home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/robotDynamics.h
 unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/main.cpp.o: /home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/task.h
 unitree_wbc/CMakeFiles/uh1Controller.dir/example/src/main.cpp.o: /home/ukia/wws_uh1/src/unitree_wbc/include/unitree_wbc/wbc.h
