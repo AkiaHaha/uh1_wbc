@@ -64,7 +64,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     sim_info_msg.data.resize(10);
 
     // simulation loopsim_information_msg
-    std::cout << "Program started dd40." << std::endl << endl;
+    std::cout << "Program started dd90." << std::endl << endl;
     while (bipedWebots.robot->step(TIME_STEP) != -1)
     {
         // read data from Webots

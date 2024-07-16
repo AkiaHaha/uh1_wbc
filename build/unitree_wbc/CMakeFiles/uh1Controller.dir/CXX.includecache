@@ -84,14 +84,6 @@ iostream
 Eigen/Dense
 -
 
-/home/ukia/wws_uh1/src/unitree_wbc/example/src/bipedController.cpp
-bipedController.h
-/home/ukia/wws_uh1/src/unitree_wbc/example/src/bipedController.h
-robotDynamics.h
-/home/ukia/wws_uh1/src/unitree_wbc/example/src/robotDynamics.h
-robotDynamicsBiped.h
-/home/ukia/wws_uh1/src/unitree_wbc/example/src/robotDynamicsBiped.h
-
 /home/ukia/wws_uh1/src/unitree_wbc/example/src/main.cpp
 ros/ros.h
 -
