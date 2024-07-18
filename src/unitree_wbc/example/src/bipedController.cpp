@@ -7,21 +7,20 @@ using namespace std;
 
 BipedController::BipedController(){
     // -------------------- robot dynamics ------------------
-    std::cout<<"12000"<<std::endl;
+    std::cout<<"---init robot dynamics---"<<std::endl;
     biped = new RobotDynamicsBiped();
-    std::cout<<"12000"<<std::endl;
+    std::cout<<"done 1"<<std::endl;
     // -------------------- task control --------------------
     // Instantiate task & constraint (Create Task Library )
     TAICHI::Task * ptrBipedTorsoPosRpy = new BipedTorsoPosRpy("BipedTorsoPosRpy", 3, nV);
     TAICHI::Task * ptrBipedTorsoPosXyz = new BipedTorsoPosXyz("BipedTorsoPosXyz", 3, nV);
     TAICHI::Task * ptrBipedUpTorsoPosRpy = new BipedUpTorsoPosRpy("BipedUpTorsoPosRpy", 3, nV);
     TAICHI::Task * ptrBipedUpTorsoPosXyz = new BipedUpTorsoPosXyz("BipedUpTorsoPosXyz", 3, nV);
-    // TAICHI::Task * ptrForce = new BipedFootForce("Force", nFc, nV);
-    // TAICHI::Task * ptrForceChange = new BipedFootForceChange("ForceChange", nFc, nV);
-    // TAICHI::Task * ptrPosition = new BipedFootPosition("Position", nFc, nV);
     TAICHI::Task * ptrForce = new QuadSoleForce("Force", NFCC2, nV);
     TAICHI::Task * ptrForceChange = new QuadSoleForceChange("ForceChange", NFCC2, nV);
     TAICHI::Task * ptrPosition = new QuadSolePosition("Position", NFCC4, nV);
+    TAICHI::Task * ptrDynamic = new BipedFloatingBaseDynamics("BipedFloatingBaseDynamics", 6, nV);
+
 
     TAICHI::Constraint * ptrBipedDynamicConsistency = new BipedDynamicConsistency("BipedDynamicConsistency", 6, nV);
     TAICHI::Constraint * ptrBipedFrictionCone = new BipedFrictionCone("BipedFrictionCone", 8, nV);
@@ -32,11 +31,11 @@ BipedController::BipedController(){
     ptrBipedJointTorqueSaturation->setParameter(std::vector<double>{jointTauLimit});
     ptrBipedCenterOfPressure->setParameter(std::vector<double>{soleFront, soleBack, soleLeft, soleRight, CopFactor, myInfinity});
 
-    std::cout<<"12000"<<std::endl;
+    std::cout<<"---init hqp solver---"<<std::endl;
     // Instantiate the Wbc instance
     // myWbc = new TAICHI::WqpWbc(nV, biped);
     myWbc = new TAICHI::HqpWbc(nV, biped);
-    std::cout<<"12300"<<std::endl;
+    std::cout<<"done 2"<<std::endl;
 
     // Add task & constraint to the instance
     // myWbc->addTask(ptrBipedTorsoPosRpy, 0);
@@ -46,26 +45,29 @@ BipedController::BipedController(){
     // myWbc->addTask(ptrForce, 0);
     // myWbc->addTask(ptrForceChange, 0);
     // myWbc->addTask(ptrPosition, 0);
+    // myWbc->addTask(ptrDynamic, 0);
     // myWbc->addConstraint(ptrBipedDynamicConsistency, 0);
     // myWbc->addConstraint(ptrBipedFrictionCone, 0);
     // myWbc->addConstraint(ptrBipedCenterOfPressure, 0);
     // myWbc->addConstraint(ptrBipedJointTorqueSaturation, 0);
+
     myWbc->addTask(ptrBipedTorsoPosRpy, 0);
     myWbc->addTask(ptrBipedTorsoPosXyz, 0);
     myWbc->addTask(ptrBipedUpTorsoPosRpy, 0);
     myWbc->addTask(ptrBipedUpTorsoPosXyz, 0);
-    myWbc->addTask(ptrForce, 3);
-    myWbc->addTask(ptrForceChange, 2);
-    myWbc->addTask(ptrPosition, 1);
+    myWbc->addTask(ptrForce, 0);
+    myWbc->addTask(ptrForceChange, 0);
+    myWbc->addTask(ptrPosition, 0);
+    myWbc->addTask(ptrDynamic, 0);
     myWbc->addConstraint(ptrBipedDynamicConsistency, 0);
-    myWbc->addConstraint(ptrBipedFrictionCone, 3);
-    myWbc->addConstraint(ptrBipedCenterOfPressure, 2);
-    myWbc->addConstraint(ptrBipedJointTorqueSaturation, 1);
+    myWbc->addConstraint(ptrBipedFrictionCone, 0);
+    myWbc->addConstraint(ptrBipedCenterOfPressure, 0);
+    myWbc->addConstraint(ptrBipedJointTorqueSaturation, 0);
 
-    std::cout<<"12340"<<std::endl;
+    std::cout<<"---init wbc solver---"<<std::endl;
     // Initialize the instance
     myWbc->wbcInit();
-    std::cout<<"12345"<<std::endl;
+    std::cout<<"done 3"<<std::endl;
     
     myWbc->displayWbcInformation(); // optional
     myWbc->displayResultInformation();// show qp parameter informations //
@@ -304,7 +306,6 @@ bool BipedController::motionPlan(){//Daniel 5.23
         // xyzDotArmTgt[1] << xyzDotArmInit[1].x(), xyzDotArmInit[1].y(), xyzDotArmInit[1].z()-0.1*PI*cos(time/1*PI);
         rpyArmTgt[1] = rpyArmInit[1];
         rpyDotArmTgt[1] = rpyDotFootInit[1];
-
     return true;
 }
 
@@ -360,9 +361,6 @@ bool BipedController::taskControl(){
 
     // force
     footArmforceRef = forceOpt;
-    footArmforceChangeRef = Eigen::VectorXd::Zero(NFCC2);
-    // footArmforceRef = forceOpt;
-
 
     cout << "foot force ref" << endl;
     akiaPrint1(forceOpt, NFCC2, 4, 6, 6, 6, 6);
@@ -383,6 +381,7 @@ bool BipedController::taskControl(){
                         // 0.4, 0.4, 0.1, 0.3, 0.3, 0.003, 0.4, 0.4, 0.1, 0.3, 0.3, 0.003;
     weightFootArmForce << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1;
                         // 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01;
+    weightFloatBaseDynamic << 1.f, 1.f, 1.f, 1.f, 1.f, 1.f;
     // ------------------------------ Update task & constraint -------------------------                 
     myWbc->updateTask("BipedTorsoPosRpy", torsoRpyRef, weightTorsoOrientation);
     myWbc->updateTask("BipedTorsoPosXyz", torsoXyzRef, weightTorsoPosition);
@@ -391,6 +390,7 @@ bool BipedController::taskControl(){
     myWbc->updateTask("Position", footArmPosRef, weightFootArmPosition);
     myWbc->updateTask("ForceChange", footArmforceChangeRef, weightFootArmForceChange);
     myWbc->updateTask("Force", footArmforceRef, weightFootArmForce);
+    // myWbc->updateTask("BipedFloatingBaseDynamics", floatBaseDynamicRef, weightFootArmForce);
     
     myWbc->updateConstraint("BipedDynamicConsistency");
     myWbc->updateConstraint("BipedFrictionCone");
@@ -406,6 +406,8 @@ bool BipedController::taskControl(){
     lowerbounds(16) = 0;
     upperbounds(16) = 0;
 
+    cout << lowerbounds.transpose() << endl;
+    cout << upperbounds.transpose() << endl;
     myWbc->updateBound(lowerbounds, upperbounds);
 
     // ------------------------------ WBC solve ------------------------------------------

@@ -30,7 +30,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     // timing
     int simCnt = 0;
     double simTime = 0;
-    const int goStandCnt = 300;
+    const int goStandCnt = 1;
     const double goStandTime = goStandCnt * SAMPLE_TIME;
     const int simStopCnt  = goStandCnt + 1000000;
     const double simStopTime = simStopCnt * SAMPLE_TIME;
@@ -65,11 +65,11 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     std::cout << "Program started dd81." << std::endl << endl;
     while (bipedWebots.robot->step(TIME_STEP) != -1)
     {
-        // read data from Webots
+        // read data from Webots //
         simTime = bipedWebots.robot->getTime();
         bipedWebots.readData(simTime, robotStateSim);
 
-        // control robot
+        // control robot //
         if (simCnt < goStandCnt){
             standPosCmd << 0, 0, -0.3, 0.8, -0.46, //left leg--RYP
                            0, 0, -0.3, 0.8, -0.46,//right leg

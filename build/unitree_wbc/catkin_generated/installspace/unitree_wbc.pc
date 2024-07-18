@@ -1,8 +1,0 @@
-prefix=/home/ukia/wwwws_uh1/install
-
-Name: unitree_wbc
-Description: Description of unitree_wbc
-Version: 0.0.0
-Cflags: -I${prefix}/include -I/usr/include/eigen3
-Libs: -L${prefix}/lib -lunitree_wbc
-Requires: roscpp rospy std_msgs

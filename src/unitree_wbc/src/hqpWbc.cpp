@@ -1,13 +1,14 @@
 #include "hqpWbc.h"
 
 namespace TAICHI {
-
+using namespace std;
 // ======================================== public Functions ====================================================
 
 HqpWbc::HqpWbc(int dimVar, RobotDynamics * roDy):Wbc(dimVar, roDy){
     createNewQP();
     resizeQPMatrixVector();
 }
+
 
 HqpWbc::HqpWbc(const Wbc & wbcInstance):Wbc(wbcInstance){
     createNewQP();
@@ -30,6 +31,16 @@ HqpWbc::~HqpWbc(){
 }
 
 bool HqpWbc::wbcInit(){
+    for (int i = 0; i != nLevel; i++) {
+        delete QP.at(i);
+        delete cpuTimePtr.at(i);
+        delete [] primalOptPtr.at(i);
+        delete [] dualOptPtr.at(i);
+        QP.at(i) = nullptr;
+        cpuTimePtr.at(i) = nullptr;
+        primalOptPtr.at(i) = nullptr;
+        dualOptPtr.at(i) = nullptr;
+    }
     createNewQP();
     resizeQPMatrixVector();
     return true;
@@ -136,7 +147,7 @@ bool HqpWbc::getAuxiliaryDataDouble(std::vector<double> &auxiliaryData){
     return true;
 }
 
-// ---------------------- implement pure virtual functions -----------------
+// ---------------------- implement pure virtual functions ----------------- //
 
 bool HqpWbc::updateBound(const Eigen::VectorXd &lb, const Eigen::VectorXd &ub){
 
@@ -151,6 +162,9 @@ bool HqpWbc::updateBound(const Eigen::VectorXd &lb, const Eigen::VectorXd &ub){
         }else{
             return false;
         }
+    // cout << "------------update bound hqp---------" << endl;
+    // cout << lowerBoundVec.at(i).transpose() << endl;
+    // cout << upperBoundVec.at(i).transpose() << endl<<endl;
     }
     return true;
 }
@@ -165,11 +179,11 @@ bool HqpWbc::updateRobotDynamics(const Eigen::VectorXd &q, const Eigen::VectorXd
 }
 
 bool HqpWbc::wbcSolve(){
-  
+
     hqpUpdate();     // update QP solver
     nspSolve();
     for (int i = 0; i !=nLevel; i++){
-        if (nOLevel.at(i)  == 0){
+        if (nOLevel.at(i) == 0){
             if ( i == 0){        
                 optVarStar.at(i) = Eigen::VectorXd::Zero(nVLevel.at(i));
             }else{
@@ -177,28 +191,23 @@ bool HqpWbc::wbcSolve(){
             }
         }else{
             hqpUpdateLeveln(i);
-            hqpSolveLeveln(i);      // solve QP
+            hqpSolveLeveln(i);
             getResultOptLeveln(optVarStar.at(i), i);
 
-            std::cout << "********* resulted primal opt star in level " << i << "******************" << std::endl;
-            std::cout << optVarStar.at(i).transpose() << std::endl;            
+            // std::cout << "********* resulted primal opt star in level " << i << "******************" << std::endl;
+            // std::cout << optVarStar.at(i).transpose() << std::endl;            
             
             if ( i != 0){        
                 optVarStar.at(i) = optVarStar.at(i - 1) + nspMat.at(i - 1) *  optVarStar.at(i);
             }           
-            std::cout << "********* optVarStar at level " << i << "************" << std::endl;
-            std::cout << optVarStar.at(i).transpose() << std::endl;
+            // std::cout << "********* optVarStar at level " << i << "************" << std::endl;
+            // std::cout << optVarStar.at(i).transpose() << std::endl;
         }
     }
     return true;
 }
 bool HqpWbc::getResultOpt(Eigen::VectorXd &resultOpt){
-    // TODO: 
-//    for(int i = 0; i != nLevel; i++) {
-//         resultOpt += optVarStar.at(i);
-//    }
-//    std::cout << resultOpt.transpose();
-   resultOpt = optVarStar.at(nLevel-1);
+    resultOpt = optVarStar.at(nLevel-1);
     return true;
 }
 
@@ -218,10 +227,13 @@ bool HqpWbc::createNewQP(){
 
     int iLevel = 0;
     for(auto level : priorityTaskNames){
+        cout << "level: " << iLevel << endl;
         for(auto item : level){
             auto iter = tasks.find(item);
             nVLevel.at(iLevel) = iter->second->varDof;
             nOLevel.at(iLevel) += iter->second->dim;
+            // cout << "task dim: " << iter->second->dim << endl;
+            // cout << "nO Level: " << nOLevel.at(iLevel) << endl;
         }
     iLevel++;
     }    
@@ -230,10 +242,13 @@ bool HqpWbc::createNewQP(){
     for(auto level : priorityConstraintNames){
         for(auto item : level){
             auto iter = constraints.find(item);
+            // cout << "item dim: " << iter->second->dim << endl;
             nCLevel.at(iLevel) += iter->second->dim;
+            // cout << "nC Level: " << nCLevel.at(0) << endl;
         }
     iLevel++;
     }    
+
 
     QP.resize(nLevel);
     qpOption.resize(nLevel);
@@ -272,12 +287,16 @@ bool HqpWbc::createNewQP(){
         dualOptPtr.at(i) = new qpOASES::real_t[nVLevel.at(i) + sumNCLevel];
 
         initDone.at(i) = false;
-        nWSRDes.at(i) = 100;
-        cpuTimeDes.at(i) = 10;
+        nWSRDes.at(i) = 200;
+        cpuTimeDes.at(i) = 20;
 
         nWSR.at(i) = nWSRDes.at(i);
         cpuTimePtr.at(i) = new double(cpuTimeDes.at(i));
     }
+
+    nOChange = false;
+    nCChange = false;
+    nVChange = false;
 
     return true;
 }
@@ -348,19 +367,16 @@ bool HqpWbc::resizeQPMatrixVector(){
 
 bool HqpWbc::hqpUpdate(){
     if(nCChange || nVChange){
-        // TODO:
-        // createNewQP();
-        // resizeQPMatrixVector();
-
-        // delete QP;
-        // delete cpuTimePtr;
-        // delete [] primalOptPtr;
-        // delete [] dualOptPtr;
-        // QP = nullptr;
-        // cpuTimePtr = nullptr;
-        // primalOptPtr = nullptr;
-        // dualOptPtr = nullptr;
-
+        for (int i = 0; i != nLevel; i++) {
+            delete QP.at(i);
+            delete cpuTimePtr.at(i);
+            delete [] primalOptPtr.at(i);
+            delete [] dualOptPtr.at(i);
+            QP.at(i) = nullptr;
+            cpuTimePtr.at(i) = nullptr;
+            primalOptPtr.at(i) = nullptr;
+            dualOptPtr.at(i) = nullptr;
+        }
         createNewQP();
         resizeQPMatrixVector();//directly copied from wqp at 7.6//
     }
@@ -372,7 +388,6 @@ bool HqpWbc::hqpUpdate(){
 bool HqpWbc::calcHessianGradient(){
     int startRow = 0;
     int iLevel = 0;
-    
     for(auto level : priorityTaskNames){
         for(auto item : level){
             auto iter = tasks.find(item);
@@ -394,9 +409,23 @@ bool HqpWbc::calcConstraintCoefficient(){
         for(auto item : level){
             auto iter = constraints.find(item);
             cstrMatLevel.at(iLevel).block(startRow, 0, iter->second->dim, nVLevel.at(iLevel)) = iter->second->cstrMatC;
+
+            cout << "cstrMatC*******************************" << endl;
+            cout << "rows: " << iter->second->cstrMatC.rows() << "cols: " << iter->second->cstrMatC.cols() << endl;
+
             lbCstrLevel.at(iLevel).segment(startRow, iter->second->dim) = iter->second->lbC;
             ubCstrLevel.at(iLevel).segment(startRow, iter->second->dim) = iter->second->ubC;
             startRow += iter->second->dim;
+            cout << "dim=> " << iter->second->dim << endl;
+            
+            cout << "cstrMatLevel*******************************" << endl;
+            cout << "rows: " << cstrMatLevel.at(0).rows() << "cols: " << cstrMatLevel.at(0).cols() << endl;
+
+            cout << "lbCstrLevel*******************************" << endl;
+            cout << "rows: " << lbCstrLevel.at(0).rows() << "cols: " << lbCstrLevel.at(0).cols() << endl;
+
+            cout << "ubCstrLevel*******************************" << endl;
+            cout << "rows: " << ubCstrLevel.at(0).rows() << "cols: " << ubCstrLevel.at(0).cols() << endl;
         }
         startRow = 0;
         iLevel++;
@@ -448,22 +477,22 @@ bool HqpWbc::hqpUpdateLeveln(const int & iLevel){//update task and constraint in
 
     // ------------------------ Bounds & Constraints -----------------------------------
     int  startRow = 0;
-    for (int i = 0; i != iLevel + 1; i++){
+    for (int i = 0; i != (iLevel + 1); i++){
         cstrMatAll.at(iLevel).block(startRow, 0, nCLevel.at(i), nVLevel.at(i)) = cstrMatLevel.at(i);
         lbCstrAll.at(iLevel).segment(startRow, nCLevel.at(i)) = lbCstrLevel.at(i);
         ubCstrAll.at(iLevel).segment(startRow, nCLevel.at(i)) = ubCstrLevel.at(i);
         startRow += nCLevel.at(i);
     }
 
-    if (iLevel == 0){
-        lbCstrAll.at(iLevel) = lbCstrAll.at(iLevel);
-        ubCstrAll.at(iLevel) = ubCstrAll.at(iLevel);
-        cstrMatAll.at(iLevel)  = cstrMatAll.at(iLevel);
-    }else{
-        lbCstrAll.at(iLevel) = lbCstrAll.at(iLevel) - cstrMatAll.at(iLevel) * optVarStar.at(iLevel - 1);
-        ubCstrAll.at(iLevel) = ubCstrAll.at(iLevel) - cstrMatAll.at(iLevel) * optVarStar.at(iLevel - 1);
-        cstrMatAll.at(iLevel)  = cstrMatAll.at(iLevel) * nspMat.at(iLevel -1);//?? the sequence of cstrMat or cstrVec;
-    }
+    // if (iLevel == 0){
+    //     lbCstrAll.at(iLevel) = lbCstrAll.at(iLevel);
+    //     ubCstrAll.at(iLevel) = ubCstrAll.at(iLevel);
+    //     cstrMatAll.at(iLevel)  = cstrMatAll.at(iLevel);
+    // }else{
+    //     lbCstrAll.at(iLevel) = lbCstrAll.at(iLevel) - cstrMatAll.at(iLevel) * optVarStar.at(iLevel - 1);
+    //     ubCstrAll.at(iLevel) = ubCstrAll.at(iLevel) - cstrMatAll.at(iLevel) * optVarStar.at(iLevel - 1);
+    //     cstrMatAll.at(iLevel)  = cstrMatAll.at(iLevel) * nspMat.at(iLevel -1);//?? the sequence of cstrMat or cstrVec;
+    // }
     /// the transpose of cstrMatAll
     cstrMatAllTrans.at(iLevel) = cstrMatAll.at(iLevel).transpose();
     return true;
@@ -474,10 +503,32 @@ bool HqpWbc::hqpSolveLeveln(const int & iLevel){
         nWSR.at(iLevel) = nWSRDes.at(iLevel);
         * cpuTimePtr.at(iLevel) = cpuTimeDes.at(iLevel);
         statusCodeSolving.at(iLevel) = QP.at(iLevel)->init(hessianMat.at(iLevel).data(), gradientVec.at(iLevel).data(),
-                                      cstrMatAllTrans.at(iLevel).data(),
-                                      lowerBoundVec.at(iLevel).data(), upperBoundVec.at(iLevel).data(),
-                                      lbCstrAll.at(iLevel).data(), ubCstrAll.at(iLevel).data(),
+                                      cstrMatAllTrans.at(0).data(),
+                                      lowerBoundVec.at(0).data(), upperBoundVec.at(0).data(),
+                                      lbCstrAll.at(0).data(), ubCstrAll.at(0).data(),
                                       nWSR.at(iLevel), cpuTimePtr.at(iLevel));
+
+        // cout << "------Hessian Matrix------" << endl;
+        // cout << hessianMat.at(iLevel).transpose() << endl;
+
+        // cout << "------gradient Vector------" << endl;
+        // cout << gradientVec.at(iLevel).transpose() << endl;
+
+        // cout << "------cstr Mat AllTrans------" << endl;
+        // cout << cstrMatAllTrans.at(0).transpose() << endl;
+
+        // cout << "------lower Bound Vec------" << endl;
+        // cout << lowerBoundVec.at(0).transpose() << endl;
+
+        // cout << "------upper Bound Vec------" << endl;
+        // cout << upperBoundVec.at(0).transpose() << endl;
+
+        // cout << "------lb CstrAll------" << endl;
+        // cout << lbCstrAll.at(0).transpose() << endl;
+
+        // cout << "------ub CstrAll------" << endl;
+        // cout << ubCstrAll.at(0).transpose() << endl;
+
         if(statusCodeSolving.at(iLevel) > 0){
             std::cout << "init QP : " << qpOASES::MessageHandling::getErrorCodeMessage(statusCodeSolving.at(iLevel)) << std::endl;
             qpResetLeveln(iLevel);
@@ -488,9 +539,9 @@ bool HqpWbc::hqpSolveLeveln(const int & iLevel){
         nWSR.at(iLevel) = nWSRDes.at(iLevel);
         * cpuTimePtr.at(iLevel) = cpuTimeDes.at(iLevel);
         statusCodeSolving.at(iLevel) = QP.at(iLevel)->hotstart(hessianMat.at(iLevel).data(), gradientVec.at(iLevel).data(),
-                                          cstrMatAllTrans.at(iLevel).data(),
-                                          lowerBoundVec.at(iLevel).data(), upperBoundVec.at(iLevel).data(),
-                                          lbCstrAll.at(iLevel).data(), ubCstrAll.at(iLevel).data(),
+                                          cstrMatAllTrans.at(0).data(),
+                                          lowerBoundVec.at(0).data(), upperBoundVec.at(0).data(),
+                                          lbCstrAll.at(0).data(), ubCstrAll.at(0).data(),
                                           nWSR.at(iLevel), cpuTimePtr.at(iLevel));
         if(statusCodeSolving.at(iLevel) > 0){
             std::cout << "hotstart QP : " << qpOASES::MessageHandling::getErrorCodeMessage(statusCodeSolving.at(iLevel)) << std::endl;
@@ -516,8 +567,8 @@ bool HqpWbc::getPrimalOptLeveln(Eigen::VectorXd & primalOpt, const int & iLevel)
     {
         primalOpt(i) = static_cast<double>(primalOptPtr.at(iLevel)[i]);
     }
-    std::cout << "********* primal opt in level " << iLevel << "******************" << std::endl;
-    std::cout << primalOpt.transpose() << std::endl;
+    // std::cout << "********* primal opt in level " << iLevel << "******************" << std::endl;
+    // std::cout << primalOpt.transpose() << std::endl;
     return true;
 }
 

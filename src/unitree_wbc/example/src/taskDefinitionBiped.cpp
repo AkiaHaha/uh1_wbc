@@ -1,5 +1,4 @@
 #include "taskDefinitionBiped.h"
-
 bool BipedFloatingBaseDynamics::update(const TAICHI::RobotDynamics &robot){
     taskMatA << robot.selMatFloatingBase * robot.inertiaMat,
                 -robot.selMatFloatingBase * robot.biContactJacoTc.J.transpose();

@@ -146,6 +146,7 @@ private:
     Eigen::VectorXd footArmPosRef = Eigen::VectorXd::Zero(NFCC4);//Daniel
     Eigen::VectorXd footArmforceRef = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd footArmforceChangeRef = Eigen::VectorXd::Zero(NFCC2);
+    Eigen::VectorXd floatBaseDynamicRef = Eigen::VectorXd::Zero(6);
 
     // result of QP-WBC
     int nV{NV};
@@ -193,6 +194,7 @@ private:
     Eigen::VectorXd weightFootArmPosition = Eigen::VectorXd::Zero(NFCC4);//Daniel 24.5.21
     Eigen::VectorXd weightFootArmForce = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd weightFootArmForceChange = Eigen::VectorXd::Zero(NFCC2);
+    Eigen::VectorXd weightFloatBaseDynamic = Eigen::VectorXd::Zero(6);
 
     // bounds
     Eigen::VectorXd lowerbounds = -jointQddotLimit * Eigen::VectorXd::Ones(nV);

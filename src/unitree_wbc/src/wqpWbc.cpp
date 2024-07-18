@@ -1,7 +1,7 @@
 #include "wqpWbc.h"
 
 namespace TAICHI {
-
+using namespace std;
 // ======================================== public Functions ====================================================
 
 WqpWbc::WqpWbc(int dimVar, RobotDynamics * roDy):Wbc(dimVar, roDy){
@@ -253,6 +253,27 @@ bool WqpWbc::qpSolve(){
                                       lowerBoundVec.data(), upperBoundVec.data(),
                                       lbCstrAll.data(), ubCstrAll.data(),
                                       nWSR, cpuTimePtr);
+        cout << "------Hessian Matrix------" << endl;
+        cout << hessianMat.transpose() << endl;
+
+        cout << "------gradient Vector------" << endl;
+        cout << gradientVec.transpose() << endl;
+
+        cout << "------cstr Mat AllTrans------" << endl;
+        cout << cstrMatAllTrans.transpose() << endl;
+
+        cout << "------lower Bound Vec------" << endl;
+        cout << lowerBoundVec.transpose() << endl;
+
+        cout << "------upper Bound Vec------" << endl;
+        cout << upperBoundVec.transpose() << endl;
+
+        cout << "------lb CstrAll------" << endl;
+        cout << lbCstrAll.transpose() << endl;
+
+        cout << "------ub CstrAll------" << endl;
+        cout << ubCstrAll.transpose() << endl;
+
         if(statusCodeSolving > 0){
             std::cout << "init QP yy: " << qpOASES::MessageHandling::getErrorCodeMessage(statusCodeSolving) << std::endl;
             qpReset();

@@ -114,7 +114,9 @@
     "thread": "cpp",
     "cinttypes": "cpp",
     "typeinfo": "cpp",
-    "bit": "cpp"
+    "bit": "cpp",
+    "*.txx": "cpp",
+    "*.ipp": "cpp"
   },
   "python.autoComplete.extraPaths": [
     "/home/ukia/ustc_ws/devel/lib/python3/dist-packages",
