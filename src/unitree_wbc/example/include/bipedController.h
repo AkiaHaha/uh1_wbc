@@ -95,6 +95,7 @@ private:
     // ----------------------- robot state ---------------------------
 
     // ----------------------- plan desired --------------------------
+    double dsp{};
     Eigen::Vector3d xyzTorsoTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d xyzDotTorsoTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTorsoTgt = Eigen::Vector3d::Zero();

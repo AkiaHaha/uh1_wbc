@@ -2,17 +2,17 @@
     "height": 0.25,
     "kp------------":0,
     "kpTorsoR": 10.0,
-    "kpTorsoP": 10.0,
+    "kpTorsoP": 600.0,
     "kpTorsoY": 20.0,
     "kpUpTorsoR": 6.0,
-    "kpUpTorsoP": 6.0,
+    "kpUpTorsoP": 600.0,
     "kpUpTorsoY": 100.0,
     "kd------------":0,
     "kdTorsoR": 100.0,
     "kdTorsoP": 100.0,
     "kdTorsoY": 1200.0,
     "kdUpTorsoR": 60,
-    "kdUpTorsoP": 60,
+    "kdUpTorsoP": 100,
     "kdUpTorsoY": 800,
     "FootPD------------":0,
     "kpFootR": 50.0,
@@ -37,5 +37,9 @@
     "wei EE Pos------------":0,
     "weightFootPos": 120000,
     "weightFootYaw": 200000,
-    "weightArmPos": 1000
+    "weightArmPos": 1000,
+    "-----------------------":0,
+    "pitchApt": 0.38,
+    "pitchFrq": 1
+
 }

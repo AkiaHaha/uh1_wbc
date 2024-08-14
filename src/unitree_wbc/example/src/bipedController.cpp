@@ -260,8 +260,11 @@ bool BipedController::motionPlan(){//Daniel 5.23
         std::ifstream inputFile("/home/ukia/wwwws_uh1/src/unitree_wbc/config/controller.json");
         json jsonData;
         inputFile >> jsonData;
-
         double height = jsonData["height"];
+        double pitchApt = jsonData["pitchApt"];
+        double pitchFrq = jsonData["pitchFrq"];
+
+
         // if (flagTimeSetZero == 0){
         //     time = 0.0;
         //     flagTimeSetZero = 1;
@@ -273,23 +276,27 @@ bool BipedController::motionPlan(){//Daniel 5.23
         // std::cout << "plan stage 2"  << std::endl;
 
         //torso
+        if(time <= 1000){
+            dsp = rpyTorsoInit(1)-pitchApt*(sin((pitchFrq*time+0.5)*PI)-1);
+        }
         // xyzTorsoTgt = xyzTorsoInit;
         // xyzDotTorsoTgt << 0.0, 0.0, 0.0;
         xyzTorsoTgt << xyzTorsoInit(0), xyzTorsoInit(1), xyzTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
         // xyzTorsoTgt << comx, comy, xyzTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
         // xyzTorsoTgt << CoM(0), CoM(1), xyzTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
         xyzDotTorsoTgt <<  0.0, 0.0, height*PI*cos((time+0.5)*PI);
-        rpyTorsoTgt << 0.0, 0.0, 0.0;
+
+        rpyTorsoTgt << 0.0, dsp, 0.0;
         rpyDotTorsoTgt << 0.0, 0.0, 0.0;
 
-        //Up torso
+        // Up torso
         // xyzUpTorsoTgt = xyzUpTorsoInit;
         // xyzDotUpTorsoTgt << 0.0, 0.0, 0.0;
         xyzUpTorsoTgt << xyzUpTorsoInit(0), xyzUpTorsoInit(1), xyzUpTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
         // xyzUpTorsoTgt << comx, comy, xyzUpTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
         // xyzUpTorsoTgt << CoM(0), CoM(1), xyzUpTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
         xyzDotUpTorsoTgt << 0.0, 0.0, height*PI*cos((time+0.5)*PI);
-        rpyUpTorsoTgt << 0.0, 0.0, 0.0;
+        rpyUpTorsoTgt << 0.0, dsp, 0.0;
         rpyDotUpTorsoTgt << 0.0, 0.0, 0.0;
         
         //foot
