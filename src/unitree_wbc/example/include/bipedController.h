@@ -147,6 +147,7 @@ private:
     Eigen::VectorXd footArmforceRef = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd footArmforceChangeRef = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd floatBaseDynamicRef = Eigen::VectorXd::Zero(6);
+    Eigen::VectorXd GlobalVelocityLimitationRef = Eigen::VectorXd::Zero(19);
 
     // result of QP-WBC
     int nV{NV};
@@ -195,6 +196,7 @@ private:
     Eigen::VectorXd weightFootArmForce = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd weightFootArmForceChange = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd weightFloatBaseDynamic = Eigen::VectorXd::Zero(6);
+    Eigen::VectorXd weightGlobalVelLimitation = Eigen::VectorXd::Zero(19);
 
     // bounds
     Eigen::VectorXd lowerbounds = -jointQddotLimit * Eigen::VectorXd::Ones(nV);

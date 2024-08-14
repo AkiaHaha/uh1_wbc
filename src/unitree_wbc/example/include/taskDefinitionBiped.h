@@ -202,4 +202,17 @@ public:
     bool update(const TAICHI::RobotDynamics &robot) override;
 };
 
+class GlobalVelocityLimitation : public TAICHI::Task{
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     */
+    GlobalVelocityLimitation(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~GlobalVelocityLimitation() = default;
+    bool update(const TAICHI::RobotDynamics &robot) override;
+};
+
 #endif // TAICHI_EXAMPLE_TASKDEFINITION_BIPED_H

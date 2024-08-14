@@ -87,3 +87,10 @@ bool QuadSolePosition::update(const TAICHI::RobotDynamics &robot){
     taskVecB = ref - robot.quadContactJacoTc.JdotQdot;
     return true;
 }
+
+bool GlobalVelocityLimitation::update(const TAICHI::RobotDynamics &robot){
+    taskMatA.block(0,6,19,19) = 0.001*Eigen::MatrixXd::Identity(19,19);
+    taskVecB = ref;
+    return true;
+}
+

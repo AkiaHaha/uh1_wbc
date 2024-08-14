@@ -212,10 +212,10 @@ bool WqpWbc::calcHessianGradient(){
     gradientVec = - taskMatAll.transpose() * taskVecAll;
 
     //<---output test Daniel 5.23---//
-    // Displaying Hessian matrix dimensions
+    // Displaying Hessian matrix dimensions //
     // std::cout << "hessianMat dimensions: " << hessianMat.rows() << "x" << hessianMat.cols() << std::endl;
 
-    // Display the matrix in the requested format
+    // Display the matrix in the requested format //
     // std::cout << "hessianMat contents:" << std::endl;
     // for (int i = 0; i < hessianMat.rows(); ++i) {
     //     for (int j = 0; j < hessianMat.cols(); ++j) {
