@@ -225,6 +225,9 @@ bool Wbc::updateTask(const std::string & taskName,
     #endif
 
     if (params == nullptr){
+        // std::cout << iter->second->name << " ref: " << iter->second->updateRefence(ref) << std::endl;
+        // std::cout << iter->second->name << " wei: " << iter->second->updateWeight(wei) << std::endl;
+
         if (iter->second->updateRefence(ref) && iter->second->updateWeight(wei)){
             iter->second->update(* robot);
         }else{
@@ -409,6 +412,11 @@ bool Wbc::getAuxiliaryDataInt(std::vector<int> &auxiliaryData){
 
 bool Wbc::getAuxiliaryDataDouble(std::vector<double> &auxiliaryData){
     auxiliaryData.clear();
+    std::cout << "Nothing to be output, you should rewrite this function, if you want to use it."<< std::endl;
+    return true;
+}
+
+int Wbc::getNlevel(){
     std::cout << "Nothing to be output, you should rewrite this function, if you want to use it."<< std::endl;
     return true;
 }

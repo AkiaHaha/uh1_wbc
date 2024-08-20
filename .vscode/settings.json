@@ -116,7 +116,9 @@
     "typeinfo": "cpp",
     "bit": "cpp",
     "*.txx": "cpp",
-    "*.ipp": "cpp"
+    "*.ipp": "cpp",
+    "forward_list": "cpp",
+    "valarray": "cpp"
   },
   "python.autoComplete.extraPaths": [
     "/home/ukia/ustc_ws/devel/lib/python3/dist-packages",

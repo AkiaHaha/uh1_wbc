@@ -1,7 +1,7 @@
 #include "taskDefinitionBiped.h"
 bool BipedFloatingBaseDynamics::update(const TAICHI::RobotDynamics &robot){
     taskMatA << robot.selMatFloatingBase * robot.inertiaMat,
-                -robot.selMatFloatingBase * robot.biContactJacoTc.J.transpose();
+                -robot.selMatFloatingBase * robot.quadContactJacoTc.J.transpose();
     taskVecB = - robot.selMatFloatingBase * robot.nonlinearBias;
     return true;
 }
@@ -90,7 +90,7 @@ bool QuadSolePosition::update(const TAICHI::RobotDynamics &robot){
 
 bool GlobalVelocityLimitation::update(const TAICHI::RobotDynamics &robot){
     taskMatA.block(0,6,19,19) = 0.001*Eigen::MatrixXd::Identity(19,19);
+    // taskMatA.block(0,6,19,19) = 6*Eigen::MatrixXd::Identity(19,19);
     taskVecB = ref;
     return true;
 }
-

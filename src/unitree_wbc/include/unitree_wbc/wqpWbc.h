@@ -94,6 +94,8 @@ private:
     bool initDone{false};
     int nWSRDes{200};
     double cpuTimeDes{20};
+    // int nWSRDes{9000};
+    // double cpuTimeDes{900};
 
     // ---------------------------- Costs/Objects --------------------------------------
 

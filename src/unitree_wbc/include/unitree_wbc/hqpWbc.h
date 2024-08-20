@@ -140,6 +140,8 @@ private:
     bool getSimpleStatusInt(std::vector<int> & simpleStatus);
     bool getOptCost(std::vector<double> & costOpt);
 
+    int getNlevel();
+
     int nLevel{0};
     int nLevelTask{0};
     int nLevelConstraint{0};

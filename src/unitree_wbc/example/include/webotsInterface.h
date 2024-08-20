@@ -108,6 +108,7 @@ private:
     Eigen::Vector3d getWaistAcc();
     Eigen::VectorXd getFootForce(const int& footFlag);
     Eigen::VectorXd getFootForce2D();
+    Eigen::VectorXd getFootArmForce4D();
     Eigen::Vector3d rotm2Rpy(const Eigen::Matrix3d & rotm);
     std::vector<Motor*> legMotor;
     std::vector<PositionSensor*> legSensor;

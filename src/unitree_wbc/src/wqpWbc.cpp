@@ -202,6 +202,15 @@ bool WqpWbc::calcHessianGradient(){
             taskVecAll.segment(startRow, iter->second->dim) = iter->second->taskVecB;
             weiVecAll.segment(startRow, iter->second->dim) = iter->second->wei;
             startRow += iter->second->dim;
+
+            cout << "------taskMatLevel Matrix------ " << "dim: " << iter->second->dim << "  " << iter->second->name << endl;
+            cout << iter->second->taskMatA.transpose() << endl;
+
+            cout << "------taskVecLevel Matrix------ " << iter->second->dim << endl;
+            cout << iter->second->taskVecB.transpose() << endl;
+
+            cout << "------weiVecLevel Matrix------ " << iter->second->dim << endl;
+            cout << iter->second->wei.transpose() << endl;            
         }
     }
     taskMatAll = weiVecAll.asDiagonal() * taskMatAll;
@@ -233,6 +242,9 @@ bool WqpWbc::calcConstraintCoefficient(){
     for(auto level : priorityConstraintNames){
         for(auto item : level){
             auto iter = constraints.find(item);
+            // cout << "--------------dim: " << iter->second->dim << endl;
+            // cout << "--------------rows: " << iter->second->cstrMatC.rows() << endl;
+            // cout << "--------------cols: " << iter->second->cstrMatC.cols() << endl;
             cstrMatAll.block(startRow, 0, iter->second->dim, nV) = iter->second->cstrMatC;
             lbCstrAll.segment(startRow, iter->second->dim) = iter->second->lbC;
             ubCstrAll.segment(startRow, iter->second->dim) = iter->second->ubC;

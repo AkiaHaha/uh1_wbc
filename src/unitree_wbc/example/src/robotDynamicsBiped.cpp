@@ -11,7 +11,7 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     NJJ = NJ;  ///< Number of non-floating-base Joints, including actuated & underactuated(paissive) joints. NJJ = NJA + NJP
     NJA = NJ;   ///< Number of Joints Actuated (torque_actuated)
     NJP = 0;  ///< Number of Passive joints that do not contain the DoFs of floating base
-    NFC = NFCC2;  ///< Number of Forces describing Contact
+    NFC = NFCC4;  ///< Number of Forces describing Contact
  
     jntPositions = VectorNd :: Zero(NJG);
     jntVelocities = VectorNd :: Zero(NJG);
@@ -250,9 +250,9 @@ bool RobotDynamicsBiped::calcWbcDependence(){
     upTorsoJacoTc.JdotQdot = upTorsoJDotQDot;
     eqCstrMatTau << selMatActuated * inertiaMat, //A*G * G*G
                 -selMatActuated * leftLegSoleJacob.transpose(),//A*F * G*F()
-                -selMatActuated * rightLegSoleJacob.transpose();//A*F * G*F   ====>A*(G+2F)   {TauActuated = eqCstrMatTau * x^T + eqCstrMatTauBias}  ===> X = (G+2F) * 1  = (g+fc)*1=nv*1
-                // -selMatActuated * leftArmSoleJacob.transpose(),
-                // -selMatActuated * rightArmSoleJacob.transpose();
+                -selMatActuated * rightLegSoleJacob.transpose(),//A*F * G*F   ====>A*(G+2F)   {TauActuated = eqCstrMatTau * x^T + eqCstrMatTauBias}  ===> X = (G+2F) * 1  = (g+fc)*1=nv*1
+                -selMatActuated * leftArmSoleJacob.transpose(),
+                -selMatActuated * rightArmSoleJacob.transpose();//Force @@
     eqCstrMatTauBias = selMatActuated * nonlinearBias;//A*G * G*1 = A*1
     // ------------------------- public members of Base class -------------------
     return true;

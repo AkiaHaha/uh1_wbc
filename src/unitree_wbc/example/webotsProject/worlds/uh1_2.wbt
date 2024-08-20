@@ -29,8 +29,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.1691030749342499 0.16390162645597228 0.9718746868258625 1.630549003215581
-  position 0.14884470917109338 -10.40788781056284 3.665732581618391
+  orientation -0.15470529320719664 0.1560672207770858 0.9755558901736956 1.586798081834948
+  position -0.2358684840843413 -9.169040528310365 3.2684854657488702
 }
 TexturedBackground {
 }
@@ -42,15 +42,15 @@ RectangleArena {
   floorSize 50 50
 }
 SolidBox {
-  translation 4.68 -4.91 1
+  translation 3.23 -5.01 1
 }
 CardboardBox {
-  translation -0.314356 -5.06716 1.29339
+  translation -0.034356 -5.06716 1.29339
   rotation 0.6766716123582155 -0.6977465755522724 0.23508561277460108 7.16444104593247e-18
   mass 5
 }
 AdvertisingBoard {
-  translation 0.09305 -1.9633 -3.01981e-14
+  translation -0.44695 -1.9633 -3.01981e-14
   rotation 0 0 1 1.5708
 }
 Table {
@@ -122,7 +122,7 @@ DEF UnitreeH1 Robot {
               }
             ]
             endPoint Solid {
-              translation 0.039467999999999975 5.551130398098682e-17 -6.661338020459022e-16
+              translation 0.039467999999999975 5.551130398098817e-17 -6.661338020459131e-16
               rotation 1 0 0 2.289159818848554e-07
               children [
                 DEF left_hip_roll_link_visual CadShape {
@@ -149,7 +149,7 @@ DEF UnitreeH1 Robot {
                     }
                   ]
                   endPoint Solid {
-                    translation 3.4694486692760296e-17 0.11535999999999996 2.2204460224173445e-16
+                    translation 3.469448669276107e-17 0.11535999999999996 2.2204460224173955e-16
                     rotation 0 -1 0 0.29999992265868775
                     children [
                       DEF left_hip_pitch_link_visual CadShape {
@@ -203,7 +203,7 @@ DEF UnitreeH1 Robot {
                                 }
                               ]
                               endPoint DEF LeftFootSole Solid {
-                                translation 0.07201792979191995 -5.551115123125237e-17 -0.42011909015054605
+                                translation 0.07201792979191995 -5.551115123125102e-17 -0.42011909015054605
                                 rotation 0 -1 0 0.46000027740934885
                                 children [
                                   DEF left_ankle_torque_sensor HingeJoint {
@@ -383,7 +383,7 @@ DEF UnitreeH1 Robot {
               }
             ]
             endPoint Solid {
-              translation 0.03946800000000001 2.7755422096055923e-17 -6.661338211718294e-16
+              translation 0.03946800000000001 2.7755422096055246e-17 -6.661338211718186e-16
               rotation -1 0 0 2.3084779657169695e-07
               children [
                 DEF right_hip_roll_link_visual CadShape {
@@ -410,7 +410,7 @@ DEF UnitreeH1 Robot {
                     }
                   ]
                   endPoint Solid {
-                    translation 1.387780775081966e-17 -0.11536000000000002 2.2204460367858986e-16
+                    translation 1.387780775081977e-17 -0.11536000000000002 2.2204460367859403e-16
                     rotation 0 -1 0 0.29999991018468836
                     children [
                       DEF right_hip_pitch_link_visual CadShape {
@@ -618,8 +618,8 @@ DEF UnitreeH1 Robot {
         }
       ]
       endPoint Solid {
-        translation -4.66638110008575e-05 6.134767452993123e-05 -0.0011463259148002292
-        rotation -0.9182800735683294 0.3865187110467934 0.0858195344782809 0.00012244815757742202
+        translation -4.666381251821943e-05 6.134767337575702e-05 -0.0011463259148002292
+        rotation -0.9182640160212066 0.3865119386961082 0.08602161429536888 0.00012245047867727647
         children [
           DEF torso_link_visual CadShape {
             url [
@@ -672,7 +672,7 @@ DEF UnitreeH1 Robot {
                   ]
                   endPoint Solid {
                     translation -0.005499999999999988 0.056500000000000106 -0.01649999999999996
-                    rotation -1 0 0 0.43633004281602705
+                    rotation -0.9999999999999999 0 0 0.43633007361789194
                     children [
                       DEF left_shoulder_roll_link_visual CadShape {
                         url [
@@ -698,7 +698,7 @@ DEF UnitreeH1 Robot {
                           }
                         ]
                         endPoint Solid {
-                          translation 4.9737771473773764e-18 -8.326672686593693e-17 -0.13429999999999964
+                          translation 4.973776808468195e-18 -8.32667268861812e-17 -0.13429999999999964
                           children [
                             DEF left_shoulder_yaw_link_visual CadShape {
                               url [
@@ -869,7 +869,7 @@ DEF UnitreeH1 Robot {
                   ]
                   endPoint Solid {
                     translation -0.005499999999999983 -0.05650000000000033 -0.016499999999999293
-                    rotation 1 0 0 0.4363300870820735
+                    rotation 1 0 0 0.4363301274660185
                     children [
                       DEF right_shoulder_roll_link_visual CadShape {
                         url [
@@ -895,7 +895,7 @@ DEF UnitreeH1 Robot {
                           }
                         ]
                         endPoint Solid {
-                          translation 2.8189281379736392e-18 -5.551115110483757e-17 -0.1343000000000003
+                          translation 2.818928065828993e-18 -5.551115110850109e-17 -0.1343000000000003
                           children [
                             DEF right_shoulder_yaw_link_visual CadShape {
                               url [

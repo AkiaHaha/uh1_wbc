@@ -4,7 +4,8 @@ using namespace std;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 bool BipedDynamicConsistency::update(const TAICHI::RobotDynamics &robot){
     cstrMatC.leftCols(robot.NJG) = robot.selMatFloatingBase * robot.inertiaMat;
-    cstrMatC.rightCols(robot.NFC) = -robot.selMatFloatingBase * robot.biContactJacoTc.J.transpose();
+    // cstrMatC.rightCols(robot.NFC) = -robot.selMatFloatingBase * robot.biContactJacoTc.J.transpose();//Force@@
+    cstrMatC.rightCols(robot.NFC) = -robot.selMatFloatingBase * robot.quadContactJacoTc.J.transpose();//Force@@
     lbC = - robot.selMatFloatingBase * robot.nonlinearBias;
     ubC = - robot.selMatFloatingBase * robot.nonlinearBias; 
     return true; 

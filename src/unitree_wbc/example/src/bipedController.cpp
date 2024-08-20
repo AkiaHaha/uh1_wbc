@@ -8,25 +8,26 @@
 
 using namespace std;
 using json = nlohmann::json;
+// #define USING_HQP
+// #define USING_UNIT_WEI
 
 BipedController::BipedController(){
     // -------------------- robot dynamics ------------------
-    std::cout<<"---init robot dynamics---"<<std::endl;
     biped = new RobotDynamicsBiped();
-    std::cout<<"done 1"<<std::endl;
     // -------------------- task control --------------------
     // Instantiate task & constraint (Create Task Library )
     TAICHI::Task * ptrBipedTorsoPosRpy = new BipedTorsoPosRpy("BipedTorsoPosRpy", 3, nV);
     TAICHI::Task * ptrBipedTorsoPosXyz = new BipedTorsoPosXyz("BipedTorsoPosXyz", 3, nV);
     TAICHI::Task * ptrBipedUpTorsoPosRpy = new BipedUpTorsoPosRpy("BipedUpTorsoPosRpy", 3, nV);
     TAICHI::Task * ptrBipedUpTorsoPosXyz = new BipedUpTorsoPosXyz("BipedUpTorsoPosXyz", 3, nV);
-    TAICHI::Task * ptrForce = new QuadSoleForce("Force", NFCC2, nV);
-    TAICHI::Task * ptrForceChange = new QuadSoleForceChange("ForceChange", NFCC2, nV);
+    TAICHI::Task * ptrForce4 = new QuadSoleForce("Force4", NFCC4, nV);
+    TAICHI::Task * ptrForceChange4 = new QuadSoleForceChange("ForceChange4", NFCC4, nV);
     TAICHI::Task * ptrPosition = new QuadSolePosition("Position", NFCC4, nV);
-    TAICHI::Task * ptrDynamic = new BipedFloatingBaseDynamics("BipedFloatingBaseDynamics", 6, nV);
-    TAICHI::Task * ptrGblVelLimits = new GlobalVelocityLimitation("GlobalVelocityLimitation", 19, nV);
-
-
+    TAICHI::Task * ptrDynamic = new BipedFloatingBaseDynamics("Dynamics", 6, nV);
+    TAICHI::Task * ptrGblVelLimits = new GlobalVelocityLimitation("GlobalVelocityLimitation", 19, nV); 
+    //-----------------------------------------------------
+    // TAICHI::Task * ptrForce = new QuadSoleForce("Force", NFCC2, nV);
+    // TAICHI::Task * ptrForceChange = new QuadSoleForceChange("ForceChange", NFCC2, nV);
     TAICHI::Constraint * ptrBipedDynamicConsistency = new BipedDynamicConsistency("BipedDynamicConsistency", 6, nV);
     TAICHI::Constraint * ptrBipedFrictionCone = new BipedFrictionCone("BipedFrictionCone", 8, nV);
     TAICHI::Constraint * ptrBipedJointTorqueSaturation = new BipedJointTorqueSaturation("BipedJointTorqueSaturation", NJ, nV);
@@ -36,32 +37,31 @@ BipedController::BipedController(){
     ptrBipedJointTorqueSaturation->setParameter(std::vector<double>{jointTauLimit});
     ptrBipedCenterOfPressure->setParameter(std::vector<double>{soleFront, soleBack, soleLeft, soleRight, CopFactor, myInfinity});
 
-    std::cout<<"---init hqp solver---"<<std::endl;
-    // Instantiate the Wbc instance
-    myWbc = new TAICHI::WqpWbc(nV, biped);
-    // myWbc = new TAICHI::HqpWbc(nV, biped);
-    std::cout<<"done 2"<<std::endl;
-
-    // Add task & constraint to the instance
-    // myWbc->addTask(ptrBipedTorsoPosRpy, 0);
-    // myWbc->addTask(ptrBipedTorsoPosXyz, 0);
-    // myWbc->addTask(ptrBipedUpTorsoPosRpy, 0);
-    // myWbc->addTask(ptrBipedUpTorsoPosXyz, 0);
-    // myWbc->addTask(ptrForce, 0);
-    // myWbc->addTask(ptrForceChange, 0);
-    // myWbc->addTask(ptrPosition, 0);
+    // Instantiate the Wbc instance && Add task & constraint to the instance
+    // ---Hqp
+#ifdef USING_HQP
+    myWbc = new TAICHI::HqpWbc(nV, biped);
+    // myWbc->addTask(ptrGblVelLimits, 2);
+    myWbc->addTask(ptrForce4, 2);
+    // myWbc->addTask(ptrBipedUpTorsoPosRpy, 1);
+    // myWbc->addTask(ptrBipedUpTorsoPosXyz, 1);
+    myWbc->addTask(ptrPosition, 1);
+    myWbc->addTask(ptrBipedTorsoPosRpy, 0);
+    myWbc->addTask(ptrBipedTorsoPosXyz, 0);
     // myWbc->addTask(ptrDynamic, 0);
-    // myWbc->addConstraint(ptrBipedDynamicConsistency, 0);
-    // myWbc->addConstraint(ptrBipedFrictionCone, 0);
-    // myWbc->addConstraint(ptrBipedCenterOfPressure, 0);
-    // myWbc->addConstraint(ptrBipedJointTorqueSaturation, 0);
-
+    myWbc->addConstraint(ptrBipedDynamicConsistency, 0);
+    myWbc->addConstraint(ptrBipedFrictionCone, 0);
+    myWbc->addConstraint(ptrBipedCenterOfPressure, 0);
+    myWbc->addConstraint(ptrBipedJointTorqueSaturation, 0);
+#else
+    // ---Wqp
+    myWbc = new TAICHI::WqpWbc(nV, biped);
     myWbc->addTask(ptrBipedTorsoPosRpy, 0);
     myWbc->addTask(ptrBipedTorsoPosXyz, 0);
     myWbc->addTask(ptrBipedUpTorsoPosRpy, 0);
     myWbc->addTask(ptrBipedUpTorsoPosXyz, 0);
-    myWbc->addTask(ptrForce, 0);
-    myWbc->addTask(ptrForceChange, 0);
+    myWbc->addTask(ptrForce4, 0);
+    myWbc->addTask(ptrForceChange4, 0);
     myWbc->addTask(ptrPosition, 0);
     myWbc->addTask(ptrDynamic, 0);
     myWbc->addTask(ptrGblVelLimits, 0);
@@ -69,12 +69,9 @@ BipedController::BipedController(){
     myWbc->addConstraint(ptrBipedFrictionCone, 0);
     myWbc->addConstraint(ptrBipedCenterOfPressure, 0);
     myWbc->addConstraint(ptrBipedJointTorqueSaturation, 0);
-
-    std::cout<<"---init wbc solver---"<<std::endl;
+#endif
     // Initialize the instance
     myWbc->wbcInit();
-    std::cout<<"done 3"<<std::endl;
-    
     myWbc->displayWbcInformation(); // optional
     myWbc->displayResultInformation();// show qp parameter informations //
 }
@@ -310,18 +307,18 @@ bool BipedController::motionPlan(){//Daniel 5.23
         rpyFootTgt[1] = rpyFootInit[1];
         rpyDotFootTgt[1] = Eigen::Vector3d::Zero();
 
-        xyzArmTgt[0] = xyzArmInit[0];
-        xyzDotArmTgt[0] = Eigen::Vector3d::Zero();
-        // xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z()+0.1*sin(time/1*PI);
-        // xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z()+0.1*PI*cos(time/1*PI);
+        // xyzArmTgt[0] = xyzArmInit[0];
+        // xyzDotArmTgt[0] = Eigen::Vector3d::Zero();
+        xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z()+height*(sin((time+0.5)*PI)-1);
+        xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z()+height*PI*cos((time+0.5)*PI);
         rpyArmTgt[0] = rpyArmInit[0];
         rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
 
 
-        xyzArmTgt[1] = xyzArmInit[1];
-        xyzDotArmTgt[1] = Eigen::Vector3d::Zero();
-        // xyzArmTgt[1] << xyzArmInit[1].x(), xyzArmInit[1].y(), xyzArmInit[1].z()-0.1*sin(time/1*PI);
-        // xyzDotArmTgt[1] << xyzDotArmInit[1].x(), xyzDotArmInit[1].y(), xyzDotArmInit[1].z()-0.1*PI*cos(time/1*PI);
+        // xyzArmTgt[1] = xyzArmInit[1];
+        // xyzDotArmTgt[1] = Eigen::Vector3d::Zero();
+        xyzArmTgt[1] << xyzArmInit[1].x(), xyzArmInit[1].y(), xyzArmInit[1].z()+height*(sin((time+0.5)*PI)-1);
+        xyzDotArmTgt[1] << xyzDotArmInit[1].x(), xyzDotArmInit[1].y(), xyzDotArmInit[1].z()+height*PI*cos((time+0.5)*PI);
         rpyArmTgt[1] = rpyArmInit[1];
         rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
     return true;
@@ -342,12 +339,26 @@ bool BipedController::taskControl(){
     double kdTorsoP = jsonData["kdTorsoP"];
     double kdTorsoY = jsonData["kdTorsoY"];
 
+    double kpTorsoX = jsonData["kpTorsoX"];
+    double kpTorsoYY = jsonData["kpTorsoYY"];
+    double kpTorsoZ = jsonData["kpTorsoZ"];
+    double kdTorsoX = jsonData["kdTorsoX"];
+    double kdTorsoYY = jsonData["kdTorsoYY"];
+    double kdTorsoZ = jsonData["kdTorsoZ"];
+
     double kpUpTorsoR = jsonData["kpUpTorsoR"];
     double kpUpTorsoP = jsonData["kpUpTorsoP"];
     double kpUpTorsoY = jsonData["kpUpTorsoY"];
     double kdUpTorsoR = jsonData["kdUpTorsoR"];
     double kdUpTorsoP = jsonData["kdUpTorsoP"];
     double kdUpTorsoY = jsonData["kdUpTorsoY"];
+
+    double kpUpTorsoX = jsonData["kpUpTorsoX"];
+    double kpUpTorsoYY = jsonData["kpUpTorsoYY"];
+    double kpUpTorsoZ = jsonData["kpUpTorsoZ"];
+    double kdUpTorsoX = jsonData["kdUpTorsoX"];
+    double kdUpTorsoYY = jsonData["kdUpTorsoYY"];
+    double kdUpTorsoZ = jsonData["kdUpTorsoZ"];
 
     double kpFootR = jsonData["kpFootR"];
     double kpFootP = jsonData["kpFootP"];
@@ -368,14 +379,42 @@ bool BipedController::taskControl(){
     double weightFootForceY = jsonData["weightFootForceY"];
     double weightFootForceZ = jsonData["weightFootForceZ"];
 
+    double weightArmForceR = jsonData["weightArmForceR"];
+    double weightArmForceP = jsonData["weightArmForceP"];
+    double weightArmForceYaw = jsonData["weightArmForceYaw"];
+    double weightArmForceX = jsonData["weightArmForceX"];
+    double weightArmForceY = jsonData["weightArmForceY"];
+    double weightArmForceZ = jsonData["weightArmForceZ"];
+
     double weightFBD = jsonData["weightFBD"];
 
     double weightFootPos = jsonData["weightFootPos"];
     double weightFootYaw = jsonData["weightFootYaw"];
     double weightArmPos = jsonData["weightArmPos"];
+    double weightArmRPY = jsonData["weightArmRPY"];
+    double weightArmZ = jsonData["weightArmZ"];
 
+    double weightTorsoPos = jsonData["weightTorsoPos"];
+    double weightTorsoRPY = jsonData["weightTorsoRPY"];
 
     // ------------------------------ set weights --------------------------------------
+#ifdef USING_UNIT_WEI
+    weightTorsoPosition = fillVector3(weightTorsoPos);                                           
+    weightTorsoOrientation = fillVector3(weightTorsoPos); 
+    weightUpTorsoPosition = fillVector3(1);                                        
+    weightUpTorsoOrientation << 1, 1, 1;
+    weightFootArmPosition = fillVector(weightFootPos, weightArmPos);   
+    weightFootArmPosition(2) = weightFootYaw;
+    weightFootArmPosition(8) = weightFootYaw;
+    weightFootArmPosition(17) = weightArmZ;
+    weightFootArmPosition(23) = weightArmZ;
+    weightFootArmPosition.segment(12,3) = Eigen::VectorXd::Constant(3,weightArmRPY);
+    weightFootArmPosition.segment(18,3) = Eigen::VectorXd::Constant(3,weightArmRPY);
+    weightFootArmForce = Eigen::VectorXd::Constant(24,1);
+    weightFootArmForceChange = Eigen::VectorXd::Constant(24,1);
+    weightFloatBaseDynamic = Eigen::VectorXd::Constant(6,1);
+    weightGlobalVelLimitation = Eigen::VectorXd::Constant(19,1);
+#else
     weightTorsoPosition = fillVector3(600000);                                           
     weightTorsoOrientation = fillVector3(600000); 
     weightUpTorsoPosition = fillVector3(300000);                                        
@@ -384,15 +423,31 @@ bool BipedController::taskControl(){
     weightFootArmPosition = fillVector(weightFootPos, weightArmPos);   
     weightFootArmPosition(2) = weightFootYaw;
     weightFootArmPosition(8) = weightFootYaw;
+    weightFootArmPosition(17) = weightArmZ;
+    weightFootArmPosition(23) = weightArmZ;
+    weightFootArmPosition.segment(12,3) = Eigen::VectorXd::Constant(3,weightArmRPY);
+    weightFootArmPosition.segment(18,3) = Eigen::VectorXd::Constant(3,weightArmRPY);
+    
+    weightFootArmForce <<   weightFootForceR, weightFootForceP, weightFootForceYaw, 
+                            weightFootForceX, weightFootForceY, weightFootForceZ, 
+                            weightFootForceR, weightFootForceP, weightFootForceYaw, 
+                            weightFootForceX, weightFootForceY, weightFootForceZ,
+                            weightArmForceR, weightArmForceP, weightArmForceYaw, 
+                            weightArmForceX, weightArmForceY, weightArmForceZ, 
+                            weightArmForceR, weightArmForceP, weightArmForceYaw, 
+                            weightArmForceX, weightArmForceY, weightArmForceZ;
+                            // 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 
+                            // 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01;
 
     weightFootArmForceChange << weightFootForceR, weightFootForceP, weightFootForceYaw, 
                                 weightFootForceX, weightFootForceY, weightFootForceZ, 
                                 weightFootForceR, weightFootForceP, weightFootForceYaw, 
-                                weightFootForceX, weightFootForceY, weightFootForceZ;
-                            // 4., 4., 1., 3., 3., 0.3, 4., 4., 1., 3., 3., 0.3;
-                        // 0.4, 0.4, 0.1, 0.3, 0.3, 0.003, 0.4, 0.4, 0.1, 0.3, 0.3, 0.003;
-    weightFootArmForce << 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1;
-                        // 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01;
+                                weightFootForceX, weightFootForceY, weightFootForceZ,
+                                weightArmForceR, weightArmForceP, weightArmForceYaw, 
+                                weightArmForceX, weightArmForceY, weightArmForceZ, 
+                                weightArmForceR, weightArmForceP, weightArmForceYaw, 
+                                weightArmForceX, weightArmForceY, weightArmForceZ;
+
     weightFloatBaseDynamic = Eigen::VectorXd::Constant(6,weightFBD);
 
     weightGlobalVelLimitation = Eigen::VectorXd::Constant(19,weightGVL);
@@ -401,17 +456,19 @@ bool BipedController::taskControl(){
     weightGlobalVelLimitation(8) = weightGVLKnee;
     weightGlobalVelLimitation(4) = weightGVLAnkle;
     weightGlobalVelLimitation(9) = weightGVLAnkle;
+#endif
 
-    // ------------------------------ Set PD gains ------------------------------------
+    // ------------------------------ Set PD gains ------------------------------------ //
     kpTorsoRpy = {kpTorsoR, kpTorsoP, kpTorsoY};
     kdTorsoRpy = {kdTorsoR, kdTorsoP, kdTorsoY};
-    kpTorsoXyz = {600., 600., 600.};
-    kdTorsoXyz = {30., 30., 30.};
+    kpTorsoXyz = {kpTorsoX, kpTorsoYY, kpTorsoZ};
+    kdTorsoXyz = {kdTorsoX, kdTorsoYY, kdTorsoZ};
 
     kpUpTorsoRpy = {kpUpTorsoR, kpUpTorsoP, kpUpTorsoY};
     kdUpTorsoRpy = {kdUpTorsoR, kdUpTorsoP, kdUpTorsoY};
-    kpUpTorsoXyz = fillVector2(1200, 3);
-    kdUpTorsoXyz = fillVector2(60, 3);
+    kpUpTorsoXyz = {kpUpTorsoX, kpUpTorsoYY, kpUpTorsoZ};
+    kdUpTorsoXyz = {kdUpTorsoX, kdUpTorsoYY, kdUpTorsoZ};
+
 
     kpFootXyz = {800., 800., 800.};
     kdFootXyz = {15., 15., 15.};
@@ -422,11 +479,10 @@ bool BipedController::taskControl(){
     kdArmXyz = fillVector2(120, 3);
     kpArmRpy = fillVector2(1000, 3);
     kdArmRpy = fillVector2(100, 3);
-    // ------------------------------ Calculate Reference ------------------------------
+    // ------------------------------ Calculate Reference ------------------------------//
     // torso
     torsoRpyRef = diag(kpTorsoRpy)*(rpyTorsoTgt - rpyTorsoEst) + diag(kdTorsoRpy)*(rpyDotTorsoTgt - rpyDotTorsoEst);
     torsoXyzRef = diag(kpTorsoXyz)*(xyzTorsoTgt - xyzTorsoEst) + diag(kdTorsoXyz)*(xyzDotTorsoTgt - xyzDotTorsoEst);
-
     //up torso
     upTorsoRpyRef = diag(kpUpTorsoRpy)*(rpyUpTorsoTgt - rpyUpTorsoEst) + diag(kdUpTorsoRpy)*(rpyDotUpTorsoTgt - rpyDotUpTorsoEst);
     upTorsoXyzRef = diag(kpUpTorsoXyz)*(xyzUpTorsoTgt - xyzUpTorsoEst) + diag(kdUpTorsoXyz)*(xyzDotUpTorsoTgt - xyzDotUpTorsoEst);
@@ -442,18 +498,13 @@ bool BipedController::taskControl(){
     //right arm 
     footArmPosRef.segment(18,3) = diag(kpArmRpy)*(rpyArmTgt[1] - rpyArmEst[1]) + diag(kdArmRpy)*(rpyDotArmTgt[1] - rpyDotArmEst[1]);
     footArmPosRef.segment(21,3) = diag(kpArmXyz)*(xyzArmTgt[1] - xyzArmEst[1]) + diag(kdArmXyz)*(xyzDotArmTgt[1] - xyzDotArmEst[1]);  
-    // footArmPosRef.tail(12).setZero();
-    // cout << "********************" << endl;
-    // cout << footArmPosRef.head(12).transpose() << endl;
-    // cout << footArmPosRef.tail(12).transpose() << endl<<endl;
     
     GlobalVelocityLimitationRef = -qDotActuated;
-    cout << qDotActuated << endl;
-    // force
-    footArmforceRef = forceOpt;
+    footArmForceRef = forceOpt;
+    // footArmForceRef.tail(12) = Eigen::VectorXd::Zero(12);
 
     cout << "foot force ref" << endl;
-    akiaPrint1(forceOpt, NFCC2, 4, 6, 6, 6, 6);
+    akiaPrint1(forceOpt, NFCC4, 4, 6, 6, 6, 6);
     // cout<<endl;
     // akiaPrint1(footArmforceChangeRef, NFCC2, 4, 6, 6, 6, 6);
 
@@ -463,11 +514,15 @@ bool BipedController::taskControl(){
     myWbc->updateTask("BipedUpTorsoPosRpy", upTorsoRpyRef, weightUpTorsoOrientation);
     myWbc->updateTask("BipedUpTorsoPosXyz", upTorsoXyzRef, weightUpTorsoPosition);
     myWbc->updateTask("Position", footArmPosRef, weightFootArmPosition);
-    myWbc->updateTask("ForceChange", footArmforceChangeRef, weightFootArmForceChange);
-    myWbc->updateTask("Force", footArmforceRef, weightFootArmForce);
+    myWbc->updateTask("Force4", footArmForceRef, weightFootArmForce);
+    // myWbc->updateTask("ForceChange4", footArmForceChangeRef, weightFootArmForceChange);
     myWbc->updateTask("GlobalVelocityLimitation", GlobalVelocityLimitationRef, weightGlobalVelLimitation);
-    // myWbc->updateTask("BipedFloatingBaseDynamics", floatBaseDynamicRef, weightFootArmForce);
-    
+    myWbc->updateTask("Dynamics", floatBaseDynamicRef, weightFloatBaseDynamic);
+
+
+    // myWbc->updateTask("ForceChange4", footArmForceChangeRef, weightFootArmForceChange);
+    // myWbc->updateTask("ForceChange", footForceChangeRef, weightFootForceChange);
+    // myWbc->updateTask("Force", footForceRef, weightFootForce);
     myWbc->updateConstraint("BipedDynamicConsistency");
     myWbc->updateConstraint("BipedFrictionCone");
     myWbc->updateConstraint("BipedCenterOfPressure");
@@ -479,11 +534,8 @@ bool BipedController::taskControl(){
     lowerbounds(NG+11) = 0.0;
     upperbounds(NG+11) = 1000.0*GRAVITY;
 
-    // lowerbounds(16) = 0;
-    // upperbounds(16) = 0;
-
-    cout << lowerbounds.transpose() << endl;
-    cout << upperbounds.transpose() << endl;
+    // cout << lowerbounds.transpose() << endl;
+    // cout << upperbounds.transpose() << endl;
     myWbc->updateBound(lowerbounds, upperbounds);
 
     // ------------------------------ WBC solve ------------------------------------------
@@ -493,9 +545,10 @@ bool BipedController::taskControl(){
     // get some data from solved wbc //
     myWbc->getAuxiliaryDataInt(intData);
     nWsrRes = intData.at(0);
-    // simpleStatus = intData.at(1);
-    simpleStatus = intData.at(1);
-
+    double Nlevel = myWbc->getNlevel();
+    for (int i = Nlevel; i < Nlevel*2; i++){
+        simpleStatus += intData.at(i);
+    }
     myWbc->getAuxiliaryDataDouble(doubleData);
     costOpt = doubleData.at(0);
     cpuTimeRes = doubleData.at(1);
@@ -508,21 +561,18 @@ bool BipedController::taskControl(){
         forceOpt = varOpt.tail(nFc);
         tauOpt = biped->eqCstrMatTau * varOpt + biped->eqCstrMatTauBias;
     }else{
-        cout<<endl  << "QP failed";
-        varOpt.setZero();
-        qDDotOpt = varOpt.head(nJg);
-        forceOpt = varOpt.tail(nFc);
-        tauOpt = biped->eqCstrMatTau * varOpt + biped->eqCstrMatTauBias;
+        std::cerr << "QP failed; Exiting the program at time of: " << timeCs << "  simpleStatus: " << simpleStatus << std::endl;
+        exit(EXIT_FAILURE); 
     }
-        cout << endl << "output*** " << timeCs << endl;
-        cout << endl << "qDDotOpt-----------------" << endl;
-        akiaPrint1(qDDotOpt, NJ, 5, 5, 5, 1, 4, 4);
-        cout << endl << "forceOpt-----------------" << endl;
-        akiaPrint1(forceOpt, NFCC2, 2, 6, 6);
-        cout << endl << "tauOpt-----------------" << endl;
+        // cout << endl << "output*** " << timeCs << endl;
+        // cout << endl << "qDDotOpt-----------------" << endl;
+        // akiaPrint1(qDDotOpt, NJ, 5, 5, 5, 1, 4, 4);
+        // cout << endl << "forceOpt-----------------" << endl;
+        // akiaPrint1(forceOpt, NFCC2, 2, 6, 6);
+        cout << endl << "tauOpt at timeCs of " << timeCs << endl;
         akiaPrint1(tauOpt, NJ, 5, 5, 5, 1, 4, 4);
-        cout << endl << "varOpt-----------------" << endl;
-        akiaPrint1(varOpt, NV, 5, 6, 11, 8, 6, 6);
+        // cout << endl << "varOpt-----------------" << endl;
+        // akiaPrint1(varOpt, NV, 5, 6, 11, 8, 6, 6);
     return true;
 }
 

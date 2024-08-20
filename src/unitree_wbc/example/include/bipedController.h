@@ -70,7 +70,7 @@ private:
     double time{0.0};                       // run time (sec) for current behavior
     int nJg{NG};
     int nJa{NJ};
-    int nFc{NFCC2};//Daniel 24.5.21
+    int nFc{NFCC4};//Daniel 24.5.21 //Force
     
     Eigen::VectorXd qActuated = Eigen::VectorXd::Zero(nJa); ;
     Eigen::VectorXd qDotActuated = Eigen::VectorXd::Zero(nJa);
@@ -145,8 +145,10 @@ private:
     // Eigen::VectorXd forceRef = Eigen::VectorXd::Zero(nFc);
     // Eigen::VectorXd forceChangeRef = Eigen::VectorXd::Zero(nFc);
     Eigen::VectorXd footArmPosRef = Eigen::VectorXd::Zero(NFCC4);//Daniel
-    Eigen::VectorXd footArmforceRef = Eigen::VectorXd::Zero(NFCC2);
-    Eigen::VectorXd footArmforceChangeRef = Eigen::VectorXd::Zero(NFCC2);
+    Eigen::VectorXd footForceRef = Eigen::VectorXd::Zero(NFCC2);
+    Eigen::VectorXd footForceChangeRef = Eigen::VectorXd::Zero(NFCC2);
+    Eigen::VectorXd footArmForceRef = Eigen::VectorXd::Zero(NFCC4);
+    Eigen::VectorXd footArmForceChangeRef = Eigen::VectorXd::Zero(NFCC4);
     Eigen::VectorXd floatBaseDynamicRef = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd GlobalVelocityLimitationRef = Eigen::VectorXd::Zero(19);
 
@@ -154,7 +156,7 @@ private:
     int nV{NV};
     Eigen::VectorXd varOpt = Eigen::VectorXd::Zero(nV);
     Eigen::VectorXd qDDotOpt = Eigen::VectorXd::Zero(nJg);
-    Eigen::VectorXd forceOpt = Eigen::VectorXd::Zero(NFCC2);
+    Eigen::VectorXd forceOpt = Eigen::VectorXd::Zero(NFCC4);//Force@@
     Eigen::VectorXd tauOpt = Eigen::VectorXd::Zero(nJa);
     int simpleStatus{0};       // 0: solve; 1: fail
     int nWsrRes{0};            // the number of working set recalculations actually performed
@@ -194,8 +196,10 @@ private:
     Eigen::Vector3d weightUpTorsoPosition = Eigen::Vector3d::Zero();
     Eigen::Vector3d weightUpTorsoOrientation = Eigen::Vector3d::Zero();
     Eigen::VectorXd weightFootArmPosition = Eigen::VectorXd::Zero(NFCC4);//Daniel 24.5.21
-    Eigen::VectorXd weightFootArmForce = Eigen::VectorXd::Zero(NFCC2);
-    Eigen::VectorXd weightFootArmForceChange = Eigen::VectorXd::Zero(NFCC2);
+    Eigen::VectorXd weightFootForce = Eigen::VectorXd::Zero(NFCC2);
+    Eigen::VectorXd weightFootForceChange = Eigen::VectorXd::Zero(NFCC2);
+    Eigen::VectorXd weightFootArmForce = Eigen::VectorXd::Zero(NFCC4);
+    Eigen::VectorXd weightFootArmForceChange = Eigen::VectorXd::Zero(NFCC4);
     Eigen::VectorXd weightFloatBaseDynamic = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd weightGlobalVelLimitation = Eigen::VectorXd::Zero(19);
 

@@ -216,6 +216,9 @@ public:
      */
     virtual bool getAuxiliaryDataDouble(std::vector<double> & auxiliaryData);
 
+    virtual int getNlevel();
+
+
 
     // ================================================== pure virtual funcions =================================================
 
