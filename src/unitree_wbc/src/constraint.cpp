@@ -1,6 +1,6 @@
 #include "constraint.h"
 
-namespace TAICHI {
+namespace HUMANOID {
 
 Constraint::Constraint(const std::string & constrName, int constrDim, int varDim){
     name = constrName;
@@ -62,4 +62,4 @@ bool Constraint::check(const Eigen::VectorXd & v, int row){
     return true;
 }
 
-} // namespace TAICHI
+} // namespace HUMANOID

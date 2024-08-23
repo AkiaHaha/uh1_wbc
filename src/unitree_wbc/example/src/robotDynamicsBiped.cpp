@@ -41,6 +41,9 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     floatBaseJacoTc.J = MatrixNd :: Zero(NJF, NJG);///< JacobianTc of floating-base.
     floatBaseJacoTc.JdotQdot = VectorNd :: Zero(NJF);
 
+    comJacoTc.J = MatrixNd :: Zero(NJF, NJG);///< JacobianTc of floating-base.
+    comJacoTc.JdotQdot = VectorNd :: Zero(NJF);
+
     upTorsoJacoTc.J = MatrixNd :: Zero(NJF, NJG);///< JacobianTc of floating-base.
     upTorsoJacoTc.JdotQdot = VectorNd :: Zero(NJF);
 
@@ -198,6 +201,8 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
   
     waistJacob = MatrixNd::Zero(NJF, NJG);
     waistJDotQDot = VectorNd::Zero(NJF);
+    comJacob = MatrixNd::Zero(NJF, NJG);
+    comJDotQDot = VectorNd::Zero(NJF);
     upTorsoJacob = MatrixNd::Zero(NJF, NJG);
     upTorsoJDotQDot = VectorNd::Zero(NJF);
 
@@ -223,7 +228,7 @@ RobotDynamicsBiped::~RobotDynamicsBiped(){
 }
 
 bool RobotDynamicsBiped::setJntStates(const Eigen::VectorXd &q, const Eigen::VectorXd &qdot){
-    TAICHI::RobotDynamics::setJntStates(q, qdot);
+    HUMANOID::RobotDynamics::setJntStates(q, qdot);
     isPosVelUpdated = false;
     calcWbcDependenceDone = false;
     return true;
@@ -246,6 +251,9 @@ bool RobotDynamicsBiped::calcWbcDependence(){
     biContactJacoTc.JdotQdot = dualSoleJDotQDot;
     floatBaseJacoTc.J = waistJacob;
     floatBaseJacoTc.JdotQdot = waistJDotQDot;
+    comJacoTc.J = comJacob;
+    comJacoTc.JdotQdot = comJDotQDot;
+
     upTorsoJacoTc.J = upTorsoJacob;
     upTorsoJacoTc.JdotQdot = upTorsoJDotQDot;
     eqCstrMatTau << selMatActuated * inertiaMat, //A*G * G*G
@@ -321,6 +329,8 @@ VectorNd RobotDynamicsBiped::estBodyPosInWorldAkia(const VectorNd& jointPos, con
             break;
     }
     calcWbcDependenceDone = false;
+
+
     return bodyPos;
 }
 
@@ -394,12 +404,10 @@ VectorNd RobotDynamicsBiped::getRootXyzRpy(const Eigen::VectorXd & q){//Daniel 5
 VectorNd RobotDynamicsBiped::getRootXyzRpyDot(const Eigen::VectorXd &q, const Eigen::VectorXd &qDot) {//Daniel 5.27
     Eigen::VectorXd rootPoseDot(6);
 
-    // 获取根节点的速度
     VectorNd velocity = CalcPointVelocity6D(*model, q, qDot, idPelvis, Vector3d(0.0, 0.0, 0.0), false);
 
-    // 分离线速度和角速度
-    Vector3d linearVelocity = velocity.segment<3>(3);  // 后三个分量是线速度
-    Vector3d angularVelocity = velocity.segment<3>(0); // 前三个分量是角速度
+    Vector3d linearVelocity = velocity.segment<3>(3);  
+    Vector3d angularVelocity = velocity.segment<3>(0); 
 
     rootPoseDot.segment<3>(0) = linearVelocity;
     rootPoseDot.segment<3>(3) = angularVelocity;
@@ -422,6 +430,29 @@ bool RobotDynamicsBiped::updateKinematicsAcc() {
 bool RobotDynamicsBiped::calcWaistJacob() {
     CalcPointJacobian6D(*model, jntPositions, idPelvis, Vector3d::Zero(), waistJacob, false);
     return true;
+}
+
+bool RobotDynamicsBiped::calcComJacobJdotQdot(){
+
+    VectorNd q = VectorNd::Zero(model->q_size); 
+
+    for (unsigned int i = 0; i < model->mBodies.size(); ++i) {
+        Vector3d body_CoM = CalcBodyToBaseCoordinates(*model, jntPositions, i, model->mBodies[i].mCenterOfMass);
+        MatrixNd body_Jacobian = MatrixNd::Zero(6, model->q_size);
+        VectorNd body_JDotQDOt = VectorNd::Zero(6);
+
+        CalcPointJacobian6D(*model, jntPositions, i, body_CoM, body_Jacobian);
+        body_JDotQDOt = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), i, model->mBodies[i].mCenterOfMass, false);
+
+
+        double body_mass = model->mBodies[i].mMass;
+        comJacob += body_mass * body_Jacobian;
+        comJDotQDot += body_mass * body_JDotQDOt;
+    }
+
+    comJacob /= massAll;
+    comJDotQDot /= massAll;
+    return 0;
 }
 
 bool RobotDynamicsBiped::calcWaistJDotQDot() {
@@ -508,7 +539,6 @@ bool RobotDynamicsBiped::calcCentroidalDynamicsDescriptors() {
 
     //step: 1  Solve H Matrix
     //step: 2  Solve C Bias
-
     //step: 3  Solve pG Vector
     //0R1(3x3)  and waistJacob
     waistPosXYZ = CalcBodyToBaseCoordinates(*model, jntPositions, idPelvis, Vector3d::Zero(), false);
@@ -572,6 +602,7 @@ bool RobotDynamicsBiped::calcWaistTask() {
     calcUpTorsoJacob();
     calcUpTorsoJDotQDot();  
     calcWaistJacob();
+    calcComJacobJdotQdot();
     calcWaistJDotQDot(); 
     return true;
 }
@@ -621,4 +652,4 @@ Matrix3d RobotDynamicsBiped::skew(const Vector3d& omg) {
             -omg(1), omg(0), 0;
     return matRes;
 }
-// ------------------------- Math function ----------------------------------------
+// ------------------------- Math function ---------------------------------------- //

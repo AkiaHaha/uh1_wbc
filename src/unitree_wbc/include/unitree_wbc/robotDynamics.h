@@ -1,5 +1,5 @@
-#ifndef TAICHI_ROBOTDYNAMICS_H
-#define TAICHI_ROBOTDYNAMICS_H
+#ifndef HUMANOID_ROBOTDYNAMICS_H
+#define HUMANOID_ROBOTDYNAMICS_H
 
 #include <iostream>
 #include <vector>
@@ -8,10 +8,10 @@
 #include <Eigen/Dense>
 #include <rbdl/rbdl.h>
 
-namespace TAICHI {
+namespace HUMANOID {
 
 /**
- * @brief The JacobianTc struct: Jacobian structure in TAICHI.
+ * @brief The JacobianTc struct: Jacobian structure in HUMANOID.
  *  This structure is used to characterize the task coefficient matrix of acceleration-level tasks:
  *      xDDot = J * qDDot + JDot * qDot,
  *  here JdotQdot denotes JDot * qDot.
@@ -114,6 +114,7 @@ public:
     JacobianTc quadContactJacoTc;                                          ///< JacobianTc of contact point(s)
 
     JacobianTc floatBaseJacoTc;                                        ///< JacobianTc of floating-base.
+    JacobianTc comJacoTc;                                        ///< JacobianTc of floating-base.
     JacobianTc upTorsoJacoTc;                                          ///< JacobianTc of floating-base.
 
     std::vector<JacobianTc> tasksJacoTc;                               ///< tasks JacobianTc, e.g. knee, elbow, etc.
@@ -128,6 +129,6 @@ protected:
 
 };
 
-} // namespace TAICHI
+} // namespace HUMANOID
 
-#endif // TAICHI_ROBOTDYNAMICS_H
+#endif // HUMANOID_ROBOTDYNAMICS_H

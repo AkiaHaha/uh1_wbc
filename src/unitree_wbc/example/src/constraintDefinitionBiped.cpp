@@ -1,8 +1,7 @@
 #include "constraintDefinitionBiped.h"
 using namespace std;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////
-bool BipedDynamicConsistency::update(const TAICHI::RobotDynamics &robot){
+bool BipedDynamicConsistency::update(const HUMANOID::RobotDynamics &robot){
     cstrMatC.leftCols(robot.NJG) = robot.selMatFloatingBase * robot.inertiaMat;
     // cstrMatC.rightCols(robot.NFC) = -robot.selMatFloatingBase * robot.biContactJacoTc.J.transpose();//Force@@
     cstrMatC.rightCols(robot.NFC) = -robot.selMatFloatingBase * robot.quadContactJacoTc.J.transpose();//Force@@
@@ -10,7 +9,6 @@ bool BipedDynamicConsistency::update(const TAICHI::RobotDynamics &robot){
     ubC = - robot.selMatFloatingBase * robot.nonlinearBias; 
     return true; 
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////
 BipedFrictionCone::BipedFrictionCone(const std::string & constrName, int constrDim, int varDim) : Constraint(constrName, constrDim, varDim){
     fricMat = Eigen::MatrixXd::Zero(4, 6);
 }
@@ -26,7 +24,7 @@ bool BipedFrictionCone::setParameter(const std::vector<double> &params){
     return true;
 }
 
-bool BipedFrictionCone::update(const TAICHI::RobotDynamics &robot){
+bool BipedFrictionCone::update(const HUMANOID::RobotDynamics &robot){
     fricMat <<  0.0, 0.0, 0.0, 1.0, 0.0, -muStaticFriction,
                 0.0, 0.0, 0.0, -1.0, 0.0, -muStaticFriction,
                 0.0, 0.0, 0.0, 0.0, 1.0, -muStaticFriction,
@@ -37,7 +35,6 @@ bool BipedFrictionCone::update(const TAICHI::RobotDynamics &robot){
     ubC  = Eigen::VectorXd::Zero(8);
     return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////
 BipedCenterOfPressure::BipedCenterOfPressure(const std::string & constrName, int constrDim, int varDim) : Constraint(constrName, constrDim, varDim){
     copMat = Eigen::MatrixXd::Zero(4, 6);
 }
@@ -57,7 +54,7 @@ bool BipedCenterOfPressure::setParameter(const std::vector<double> &params){
     return true;
 }
 
-bool BipedCenterOfPressure::update(const TAICHI::RobotDynamics &robot){
+bool BipedCenterOfPressure::update(const HUMANOID::RobotDynamics &robot){
     copMat <<   0.0, -1.0, 0.0, 0.0, 0.0, -sole2Front * copFactor,
                 0.0, 1.0, 0.0, 0.0, 0.0, -sole2Back * copFactor,
                 1.0, 0.0, 0.0, 0.0, 0.0, -sole2Left * copFactor,
@@ -68,7 +65,6 @@ bool BipedCenterOfPressure::update(const TAICHI::RobotDynamics &robot){
     ubC  = Eigen::VectorXd::Zero(8);
     return true;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////DONE
 bool BipedJointTorqueSaturation::setParameter(const std::vector<double> &params){
     if(params.size() >= 1){
         jointTauLimit = params.at(0);
@@ -79,7 +75,7 @@ bool BipedJointTorqueSaturation::setParameter(const std::vector<double> &params)
     return true;
 }
 
-bool BipedJointTorqueSaturation::update(const TAICHI::RobotDynamics &robot){
+bool BipedJointTorqueSaturation::update(const HUMANOID::RobotDynamics &robot){
     cstrMatC = robot.eqCstrMatTau;//NJA, NJG+NFC
     lbC = - jointTauLimit * Eigen::VectorXd::Ones(robot.NJA) - robot.eqCstrMatTauBias;
     ubC = jointTauLimit * Eigen::VectorXd::Ones(robot.NJA) - robot.eqCstrMatTauBias;

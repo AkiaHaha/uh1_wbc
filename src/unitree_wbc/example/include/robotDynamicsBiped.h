@@ -1,5 +1,5 @@
-#ifndef TAICHI_EXAMPLE_ROBOTDYNAMICS_BIPED_H
-#define TAICHI_EXAMPLE_ROBOTDYNAMICS_BIPED_H
+#ifndef HUMANOID_EXAMPLE_ROBOTDYNAMICS_BIPED_H
+#define HUMANOID_EXAMPLE_ROBOTDYNAMICS_BIPED_H
 
 #define TYPELEFTSOLE 0
 #define TYPERIGHTSOLE 1
@@ -16,7 +16,7 @@ using namespace RigidBodyDynamics::Math;
  * @brief The RobotDynamicsBiped class
  */
 
-class RobotDynamicsBiped : public TAICHI::RobotDynamics{
+class RobotDynamicsBiped : public HUMANOID::RobotDynamics{
 public:
 
     /**
@@ -72,6 +72,9 @@ public:
 
     VectorNd estBodyPosInWorldAkia(const VectorNd& jointPos, const VectorNd& jointVel, const unsigned int& bodyId);//Daniel 5.27
 
+    Vector3d comPos2World;
+    Vector3d comVel2World;
+
 private:
 
     bool isPosVelUpdated{false};
@@ -97,13 +100,14 @@ private:
     // -------- for Centroidal Dynamics -------
 
     Vector3d comPos2Waist;
-    Vector3d comPos2World;
-    Vector3d comVel2World;
     Vector3d linearMomentum;
     Vector3d angularMomentum;
 
     MatrixNd waistJacob;
     VectorNd waistJDotQDot;
+
+    MatrixNd comJacob;
+    VectorNd comJDotQDot;
 
     MatrixNd upTorsoJacob;
     VectorNd upTorsoJDotQDot;
@@ -128,6 +132,7 @@ private:
 
     bool calcWaistJacob();
     bool calcWaistJDotQDot();
+    bool calcComJacobJdotQdot();
     bool calcUpTorsoJacob();
     bool calcUpTorsoJDotQDot();
     bool calcSoleJacob();
@@ -150,4 +155,4 @@ private:
     Matrix3d skew(const Vector3d& omg);
 };
 
-#endif //TAICHI_EXAMPLE_ROBOTDYNAMICS_BIPED_H
+#endif //HUMANOID_EXAMPLE_ROBOTDYNAMICS_BIPED_H

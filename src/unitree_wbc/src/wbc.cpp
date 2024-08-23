@@ -1,6 +1,6 @@
 #include "wbc.h"
 
-namespace TAICHI {
+namespace HUMANOID {
 
 // ======================================== public Functions ====================================================
 
@@ -465,4 +465,4 @@ bool Wbc::check(const Eigen::VectorXd & v, int row){
     return true;
 }
 
-} // namespace TAICHI
+} // namespace HUMANOID

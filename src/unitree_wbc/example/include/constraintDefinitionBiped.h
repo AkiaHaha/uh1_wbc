@@ -1,12 +1,12 @@
-#ifndef TAICHI_EXAMPLE_CONSTRAINTDEFINITION_BIPED_H
-#define TAICHI_EXAMPLE_CONSTRAINTDEFINITION_BIPED_H
+#ifndef HUMANOID_EXAMPLE_CONSTRAINTDEFINITION_BIPED_H
+#define HUMANOID_EXAMPLE_CONSTRAINTDEFINITION_BIPED_H
 
 #include "constraint.h"
 #include "operation.h"
 //#include "taichi/constraint.h"
 
 
-class BipedDynamicConsistency : public TAICHI::Constraint{
+class BipedDynamicConsistency : public HUMANOID::Constraint{
 public:
     /**
      * @brief Constructor
@@ -16,10 +16,10 @@ public:
      */
     BipedDynamicConsistency(const std::string & constrName, int constrDim, int varDim) : Constraint(constrName, constrDim, varDim){}
     ~BipedDynamicConsistency() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const HUMANOID::RobotDynamics &robot) override;
 };
 
-class BipedFrictionCone : public TAICHI::Constraint{
+class BipedFrictionCone : public HUMANOID::Constraint{
 public:
     /**
      * @brief Constructor
@@ -36,14 +36,14 @@ public:
      * @return
      */
     bool setParameter(const std::vector<double> & params) override;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const HUMANOID::RobotDynamics &robot) override;
 private:
     double muStaticFriction{0.6};
     double myInfinity{1e9};
     Eigen::MatrixXd fricMat;
 };
 
-class BipedCenterOfPressure : public TAICHI::Constraint{
+class BipedCenterOfPressure : public HUMANOID::Constraint{
 public:
     /**
      * @brief Constructor
@@ -65,7 +65,7 @@ public:
      * @return
      */
     bool setParameter(const std::vector<double> & params) override;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const HUMANOID::RobotDynamics &robot) override;
 private:
     double sole2Front{0.1};
     double sole2Back{0.1};
@@ -76,7 +76,7 @@ private:
     Eigen::MatrixXd copMat;
 };
 
-class BipedJointTorqueSaturation : public TAICHI::Constraint{
+class BipedJointTorqueSaturation : public HUMANOID::Constraint{
 public:
     /**
      * @brief Constructor
@@ -93,9 +93,9 @@ public:
      * @return
      */
     bool setParameter(const std::vector<double> & params) override;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const HUMANOID::RobotDynamics &robot) override;
 private:
     double jointTauLimit{100.};
 };
 
-#endif //TAICHI_EXAMPLE_CONSTRAINTDEFINITION_BIPED_H
+#endif //HUMANOID_EXAMPLE_CONSTRAINTDEFINITION_BIPED_H

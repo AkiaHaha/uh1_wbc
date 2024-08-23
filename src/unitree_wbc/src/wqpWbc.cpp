@@ -1,6 +1,6 @@
 #include "wqpWbc.h"
 
-namespace TAICHI {
+namespace HUMANOID {
 using namespace std;
 // ======================================== public Functions ====================================================
 
@@ -203,14 +203,14 @@ bool WqpWbc::calcHessianGradient(){
             weiVecAll.segment(startRow, iter->second->dim) = iter->second->wei;
             startRow += iter->second->dim;
 
-            cout << "------taskMatLevel Matrix------ " << "dim: " << iter->second->dim << "  " << iter->second->name << endl;
-            cout << iter->second->taskMatA.transpose() << endl;
+            // cout << "------taskMatLevel Matrix------ " << "dim: " << iter->second->dim << "  " << iter->second->name << endl;
+            // cout << iter->second->taskMatA.transpose() << endl;
 
-            cout << "------taskVecLevel Matrix------ " << iter->second->dim << endl;
-            cout << iter->second->taskVecB.transpose() << endl;
+            // cout << "------taskVecLevel Matrix------ " << iter->second->dim << endl;
+            // cout << iter->second->taskVecB.transpose() << endl;
 
-            cout << "------weiVecLevel Matrix------ " << iter->second->dim << endl;
-            cout << iter->second->wei.transpose() << endl;            
+            // cout << "------weiVecLevel Matrix------ " << iter->second->dim << endl;
+            // cout << iter->second->wei.transpose() << endl;            
         }
     }
     taskMatAll = weiVecAll.asDiagonal() * taskMatAll;
@@ -265,29 +265,29 @@ bool WqpWbc::qpSolve(){
                                       lowerBoundVec.data(), upperBoundVec.data(),
                                       lbCstrAll.data(), ubCstrAll.data(),
                                       nWSR, cpuTimePtr);
-        cout << "------Hessian Matrix------" << endl;
-        cout << hessianMat.transpose() << endl;
+        // cout << "------Hessian Matrix------" << endl;
+        // cout << hessianMat.transpose() << endl;
 
-        cout << "------gradient Vector------" << endl;
-        cout << gradientVec.transpose() << endl;
+        // cout << "------gradient Vector------" << endl;
+        // cout << gradientVec.transpose() << endl;
 
-        cout << "------cstr Mat AllTrans------" << endl;
-        cout << cstrMatAllTrans.transpose() << endl;
+        // cout << "------cstr Mat AllTrans------" << endl;
+        // cout << cstrMatAllTrans.transpose() << endl;
 
-        cout << "------lower Bound Vec------" << endl;
-        cout << lowerBoundVec.transpose() << endl;
+        // cout << "------lower Bound Vec------" << endl;
+        // cout << lowerBoundVec.transpose() << endl;
 
-        cout << "------upper Bound Vec------" << endl;
-        cout << upperBoundVec.transpose() << endl;
+        // cout << "------upper Bound Vec------" << endl;
+        // cout << upperBoundVec.transpose() << endl;
 
-        cout << "------lb CstrAll------" << endl;
-        cout << lbCstrAll.transpose() << endl;
+        // cout << "------lb CstrAll------" << endl;
+        // cout << lbCstrAll.transpose() << endl;
 
-        cout << "------ub CstrAll------" << endl;
-        cout << ubCstrAll.transpose() << endl;
+        // cout << "------ub CstrAll------" << endl;
+        // cout << ubCstrAll.transpose() << endl;
 
         if(statusCodeSolving > 0){
-            std::cout << "init QP yy: " << qpOASES::MessageHandling::getErrorCodeMessage(statusCodeSolving) << std::endl;
+            std::cout << "init QP : " << qpOASES::MessageHandling::getErrorCodeMessage(statusCodeSolving) << std::endl;
             qpReset();
         }else {
             initDone = true;
@@ -357,4 +357,4 @@ bool WqpWbc::getOptCost(double & costOpt){
     return true;
 }
 
-} // namespace TAICHI
+} // namespace HUMANOID

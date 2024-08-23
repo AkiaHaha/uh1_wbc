@@ -1,5 +1,5 @@
-#ifndef TAICHI_CONSTRAINT_H
-#define TAICHI_CONSTRAINT_H
+#ifndef HUMANOID_CONSTRAINT_H
+#define HUMANOID_CONSTRAINT_H
 
 #include <iostream>
 #include <vector>
@@ -10,7 +10,7 @@
 
 #include "robotDynamics.h"
 
-namespace TAICHI {
+namespace HUMANOID {
 
 /**
  * @class Constraint
@@ -62,6 +62,6 @@ protected:
 
 };
 
-} // namespace TAICHI
+} // namespace HUMANOID
 
-#endif // TAICHI_CONSTRAINT_H
+#endif // HUMANOID_CONSTRAINT_H

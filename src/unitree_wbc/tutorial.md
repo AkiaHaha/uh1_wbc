@@ -1,6 +1,6 @@
-# TAICHI使用说明
+# HUMANOID使用说明
 
-TAICHI是基于二次规划(QP)的任务处理和求解工具，所以我们最终会将任务的求解写为QP的形式
+HUMANOID是基于二次规划(QP)的任务处理和求解工具，所以我们最终会将任务的求解写为QP的形式
 
 <img src="https://latex.codecogs.com/gif.latex?\min_{\mathbf{x}}||\mathbf{A}\mathbf{x}-\mathbf{b}||_2^2"/>
 
@@ -73,7 +73,7 @@ TAICHI是基于二次规划(QP)的任务处理和求解工具，所以我们最�
 
 ### 任务求解
 
-任务的求解需要使用TAICHI中提供的wqpWbc或hqpWbc求解器来调用前述构建的动力学、任务和约束来进行求解。Biped例子中在‘bipedController.cpp’中使用wqpWbc进行任务的求解。
+任务的求解需要使用HUMANOID中提供的wqpWbc或hqpWbc求解器来调用前述构建的动力学、任务和约束来进行求解。Biped例子中在‘bipedController.cpp’中使用wqpWbc进行任务的求解。
 
 首先在BipedController的构建函数BipedController::BipedController()中，使用addTask, addConstraint添加控制任务和约束然后来实例化一个wqpWbc求解器。然后具体每个控制周期执行的函数为BipedController::update，其中包含的主要步骤为状态估计(stateEstimation)，任务规划(motionPlan)以及控制任务求解(taskControl)。状态估计和任务规划函数需要用户自己根据需求构建，在biped例子中，stateEstimation中调用robotDynamicsBiped进行了躯干位姿和其速度，摆动脚的位姿和其速度的反馈，motionPlan中给了简单的躯干高度、摆动脚高度和姿态的正余弦轨迹规划。
 

@@ -1,5 +1,5 @@
-#ifndef TAICHI_EXAMPLE_BIPEDCONTROLLER_H
-#define TAICHI_EXAMPLE_BIPEDCONTROLLER_H
+#ifndef HUMANOID_EXAMPLE_BIPEDCONTROLLER_H
+#define HUMANOID_EXAMPLE_BIPEDCONTROLLER_H
 
 #include <iostream>
 #include <string>
@@ -59,11 +59,10 @@ private:
 
     // ----------------------- pointers ------------------------------
     RobotDynamicsBiped * biped;
-    TAICHI::Wbc * myWbc;
+    HUMANOID::Wbc * myWbc;
     // ----------------------- pointers ------------------------------
 
     // ----------------------- robot state ---------------------------
-    // NOTE: in this example, we set the right leg as the stance leg.
     int stanceLeg{1};                       // 1: right; 0:left
     double timeCs{0.0};                     // time of CS (Control System)
     int tick{0};                            // the tick-tack for time accumulation
@@ -79,6 +78,8 @@ private:
     Eigen::VectorXd qDotGen = Eigen::VectorXd::Zero(nJg);
     Eigen::Vector3d xyzTorsoEst = Eigen::Vector3d::Zero(), xyzDotTorsoEst = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTorsoEst = Eigen::Vector3d::Zero(), rpyDotTorsoEst = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzComEst = Eigen::Vector3d::Zero(), xyzDotComEst = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyComEst = Eigen::Vector3d::Zero(), rpyDotComEst = Eigen::Vector3d::Zero();
     Eigen::Vector3d xyzUpTorsoEst = Eigen::Vector3d::Zero(), xyzDotUpTorsoEst = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyUpTorsoEst = Eigen::Vector3d::Zero(), rpyDotUpTorsoEst = Eigen::Vector3d::Zero();
     // Eigen::Vector3d xyzFootEst = Eigen::Vector3d::Zero(), xyzDotFootEst = Eigen::Vector3d::Zero();
@@ -100,6 +101,11 @@ private:
     Eigen::Vector3d xyzDotTorsoTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTorsoTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyDotTorsoTgt = Eigen::Vector3d::Zero();
+
+    Eigen::Vector3d xyzComTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzDotComTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyComTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyDotComTgt = Eigen::Vector3d::Zero();
 
     Eigen::Vector3d xyzUpTorsoTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d xyzDotUpTorsoTgt = Eigen::Vector3d::Zero();
@@ -138,17 +144,16 @@ private:
     // reference
     Eigen::Vector3d torsoXyzRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d torsoRpyRef = Eigen::Vector3d::Zero();
+    Eigen::Vector3d comXyzRef = Eigen::Vector3d::Zero();
+    Eigen::Vector3d comRpyRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d upTorsoXyzRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d upTorsoRpyRef = Eigen::Vector3d::Zero();
-    // Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(nFc);//Daniel 24.5.21
-    // Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(12);//Daniel
-    // Eigen::VectorXd forceRef = Eigen::VectorXd::Zero(nFc);
-    // Eigen::VectorXd forceChangeRef = Eigen::VectorXd::Zero(nFc);
     Eigen::VectorXd footArmPosRef = Eigen::VectorXd::Zero(NFCC4);//Daniel
+    Eigen::VectorXd footPoseRef = Eigen::VectorXd::Zero(NFCC2);//Daniel
+    Eigen::VectorXd armPoseRef = Eigen::VectorXd::Zero(NFCC2);//Daniel
     Eigen::VectorXd footForceRef = Eigen::VectorXd::Zero(NFCC2);
-    Eigen::VectorXd footForceChangeRef = Eigen::VectorXd::Zero(NFCC2);
+    Eigen::VectorXd armForceRef = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd footArmForceRef = Eigen::VectorXd::Zero(NFCC4);
-    Eigen::VectorXd footArmForceChangeRef = Eigen::VectorXd::Zero(NFCC4);
     Eigen::VectorXd floatBaseDynamicRef = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd GlobalVelocityLimitationRef = Eigen::VectorXd::Zero(19);
 
@@ -193,13 +198,16 @@ private:
     // weights
     Eigen::Vector3d weightTorsoPosition = Eigen::Vector3d::Zero();
     Eigen::Vector3d weightTorsoOrientation = Eigen::Vector3d::Zero();
+    Eigen::Vector3d weightComPosition = Eigen::Vector3d::Zero();
+    Eigen::Vector3d weightComOrientation = Eigen::Vector3d::Zero();
     Eigen::Vector3d weightUpTorsoPosition = Eigen::Vector3d::Zero();
     Eigen::Vector3d weightUpTorsoOrientation = Eigen::Vector3d::Zero();
     Eigen::VectorXd weightFootArmPosition = Eigen::VectorXd::Zero(NFCC4);//Daniel 24.5.21
+    Eigen::VectorXd weightFootPose = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd weightArmPose = Eigen::VectorXd::Zero(12);
     Eigen::VectorXd weightFootForce = Eigen::VectorXd::Zero(NFCC2);
-    Eigen::VectorXd weightFootForceChange = Eigen::VectorXd::Zero(NFCC2);
+    Eigen::VectorXd weightArmForce = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd weightFootArmForce = Eigen::VectorXd::Zero(NFCC4);
-    Eigen::VectorXd weightFootArmForceChange = Eigen::VectorXd::Zero(NFCC4);
     Eigen::VectorXd weightFloatBaseDynamic = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd weightGlobalVelLimitation = Eigen::VectorXd::Zero(19);
 
@@ -216,9 +224,13 @@ private:
     Eigen::Vector3d xyzUpTorsoInit = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTorsoInit = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyUpTorsoInit = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzComInit = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyComInit = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzDotComInit = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyDotComInit = Eigen::Vector3d::Zero();
     int flagTimeSetZero{};
     int flagEstFirst{};
     //------------------------------------------------------------->//
 };
 
-#endif //TAICHI_EXAMPLE_BIPEDCONTROLLER_H
+#endif //HUMANOID_EXAMPLE_BIPEDCONTROLLER_H

@@ -1,7 +1,7 @@
 #include "robotDynamics.h"
 #include <ErrorMsg.h>
 
-namespace TAICHI {
+namespace HUMANOID {
 
 bool RobotDynamics::setJntStates(const Eigen::VectorXd & q, const Eigen::VectorXd & qdot){
     if (check(q, NJG) && check(qdot, NJG)){
@@ -80,4 +80,4 @@ bool RobotDynamics::check(const Eigen::VectorXd & v, int row){
     return true;
 }
 
-} // namespace TAICHI
+} // namespace HUMANOID

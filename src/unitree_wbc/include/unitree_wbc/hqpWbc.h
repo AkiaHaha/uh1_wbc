@@ -1,11 +1,11 @@
-#ifndef TAICHI_HQPWBCSOLVER_H
-#define TAICHI_HQPWBCSOLVER_H
+#ifndef HUMANOID_HQPWBCSOLVER_H
+#define HUMANOID_HQPWBCSOLVER_H
 
 #include <qpOASES.hpp>
 
 #include "wbc.h"
 
-namespace TAICHI {
+namespace HUMANOID {
 
 /**
  * @class HqpWbc
@@ -171,6 +171,6 @@ private:
     std::vector<Eigen::VectorXd> ubCstrLevel;                           ///< nCi*1
 };
 
-} // namespace TAICHI
+} // namespace HUMANOID
 
-#endif // TAICHI_HQPWBCSOLVER_H
+#endif // HUMANOID_HQPWBCSOLVER_H

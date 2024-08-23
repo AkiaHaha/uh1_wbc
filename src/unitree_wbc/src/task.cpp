@@ -1,7 +1,7 @@
 #include "task.h"
 #include <ErrorMsg.h>
 
-namespace TAICHI {
+namespace HUMANOID {
 
 Task::Task(const std::string & taskName, int taskDim, int varDim){
     name = taskName;
@@ -108,4 +108,4 @@ bool Task::check(const Eigen::VectorXd & v, int row){
     return true;
 }
 
-} // namespace TAICHI
+} // namespace HUMANOID

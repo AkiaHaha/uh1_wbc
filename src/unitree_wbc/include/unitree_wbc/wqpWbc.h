@@ -1,11 +1,11 @@
-#ifndef TAICHI_WQPWBCSOLVER_H
-#define TAICHI_WQPWBCSOLVER_H
+#ifndef HUMANOID_WQPWBCSOLVER_H
+#define HUMANOID_WQPWBCSOLVER_H
 
 #include <qpOASES.hpp>
 
 #include "wbc.h"
 
-namespace TAICHI {
+namespace HUMANOID {
 
 /**
  * @class WqpWbc
@@ -145,6 +145,6 @@ private:
 
 };
 
-} // namespace TAICHI
+} // namespace HUMANOID
 
-#endif // TAICHI_WQPWBCSOLVER_H
+#endif // HUMANOID_WQPWBCSOLVER_H

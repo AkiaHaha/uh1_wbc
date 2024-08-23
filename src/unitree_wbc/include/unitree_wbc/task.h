@@ -1,5 +1,5 @@
-#ifndef TAICHI_TASK_H
-#define TAICHI_TASK_H
+#ifndef HUMANOID_TASK_H
+#define HUMANOID_TASK_H
 
 #include <iostream>
 #include <vector>
@@ -8,7 +8,7 @@
 
 #include "robotDynamics.h"
 
-namespace TAICHI {
+namespace HUMANOID {
 
 /**
  * @class Task
@@ -74,6 +74,6 @@ protected:
 
 };
 
-} // namespace TAICHI
+} // namespace HUMANOID
 
-#endif // TAICHI_TASK_H
+#endif // HUMANOID_TASK_H

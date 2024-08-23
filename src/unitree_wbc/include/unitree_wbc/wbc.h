@@ -1,5 +1,5 @@
-#ifndef TAICHI_WBC_H
-#define TAICHI_WBC_H
+#ifndef HUMANOID_WBC_H
+#define HUMANOID_WBC_H
 
 #include <iostream>
 #include <vector>
@@ -13,7 +13,7 @@
 #include "constraint.h"
 #include "robotDynamics.h"
 
-namespace TAICHI {
+namespace HUMANOID {
 
 /**
  * @class Wbc
@@ -280,6 +280,6 @@ protected:
 
 };
 
-} // namespace TAICHI
+} // namespace HUMANOID
 
-#endif // TAICHI_WBC_H
+#endif // HUMANOID_WBC_H
