@@ -86,6 +86,12 @@ bool BipedArmPose::update(const HUMANOID::RobotDynamics &robot){
     return true;
 }
 
+bool BipedArmPoseStatic::update(const HUMANOID::RobotDynamics &robot){
+    taskMatA.block(0,17,8,8) = Eigen::MatrixXd::Identity(8,8);
+    taskVecB = ref;
+    return true;
+}
+
 bool BipedFootForce::update(const HUMANOID::RobotDynamics &robot){
     taskMatA.rightCols(12) = Eigen::MatrixXd::Identity(12, 12);
     taskVecB = ref;
@@ -109,6 +115,7 @@ bool QuadSoleForceChange::update(const HUMANOID::RobotDynamics &robot){
     taskVecB = ref;
     return true;
 }
+
 bool QuadSoleForce::update(const HUMANOID::RobotDynamics &robot){
     taskMatA.rightCols(robot.NFC) = Eigen::MatrixXd::Identity(robot.NFC, robot.NFC);
     taskVecB = ref;

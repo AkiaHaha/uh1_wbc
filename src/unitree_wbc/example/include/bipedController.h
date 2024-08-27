@@ -71,7 +71,7 @@ private:
     int nJa{NJ};
     int nFc{NFCC4};//Daniel 24.5.21 //Force
     
-    Eigen::VectorXd qActuated = Eigen::VectorXd::Zero(nJa); ;
+    Eigen::VectorXd qActuated = Eigen::VectorXd::Zero(nJa); 
     Eigen::VectorXd qDotActuated = Eigen::VectorXd::Zero(nJa);
     Eigen::VectorXd groundReactiveForce = Eigen::VectorXd::Zero(2);//Daniel nFc->2
     Eigen::VectorXd qGen = Eigen::VectorXd::Zero(nJg);
@@ -138,6 +138,8 @@ private:
     Eigen::Vector3d xyzDotArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyDotArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+
+    Eigen::VectorXd armPoseStaticInit = Eigen::VectorXd::Zero(8);
     // ----------------------- plan desired --------------------------
 
     // ----------------------- task control --------------------------
@@ -151,6 +153,7 @@ private:
     Eigen::VectorXd footArmPosRef = Eigen::VectorXd::Zero(NFCC4);//Daniel
     Eigen::VectorXd footPoseRef = Eigen::VectorXd::Zero(NFCC2);//Daniel
     Eigen::VectorXd armPoseRef = Eigen::VectorXd::Zero(NFCC2);//Daniel
+    Eigen::VectorXd armPoseStaticRef = Eigen::VectorXd::Zero(8);//Daniel
     Eigen::VectorXd footForceRef = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd armForceRef = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd footArmForceRef = Eigen::VectorXd::Zero(NFCC4);

@@ -214,6 +214,19 @@ public:
     bool update(const HUMANOID::RobotDynamics &robot) override;
 };
 
+class BipedArmPoseStatic : public HUMANOID::Task{
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     */
+    BipedArmPoseStatic(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedArmPoseStatic() = default;
+    bool update(const HUMANOID::RobotDynamics &robot) override;
+};
+
 class BipedFootForce : public HUMANOID::Task{
 public:
     /**

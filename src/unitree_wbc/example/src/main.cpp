@@ -92,7 +92,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
                              robotStateSim.LeftArmHandXyzRpyAct, robotStateSim.RightArmHandXyzRpyAct);
             bipedCtrl.getValueTauOpt(jointTorCmd);
 
-/*          
+/*      
             //Integrate acc for pos
             if (flagStartCtrl == 0){
                 jointPosAtStartCtrl = robotStateSim.jointPosAct;

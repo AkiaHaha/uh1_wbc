@@ -147,9 +147,9 @@
     "UpTorsoXYZ":5,
     "ForceFoot":5,
     "ForceArm":4,
-    "ComRPY":3,
-    "ComXYZ":2,
-    
+    "ComRPY":0,
+    "ComXYZ":0,
+
     "PoseArm":4,
     "TorsoRPY":3,
     "TorsoXYZ":2,
@@ -157,5 +157,5 @@
     "Dynamic":0,
 
     "damp------------------------":0,
-    "damp":0.001
+    "damp":0.0001
 }

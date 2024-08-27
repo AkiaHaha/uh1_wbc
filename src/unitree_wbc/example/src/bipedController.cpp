@@ -28,6 +28,7 @@ BipedController::BipedController(){
     HUMANOID::Task * ptrForceArm = new BipedArmForce("ArmForce", 12, nV);
     HUMANOID::Task * ptrPoseFoot = new BipedFootPose("FootPose", 12, nV);
     HUMANOID::Task * ptrPoseArm = new BipedArmPose("ArmPose", 12, nV);
+    HUMANOID::Task * ptrPoseArmStatic = new BipedArmPoseStatic("ArmPoseStatic", 8, nV);
     HUMANOID::Task * ptrDynamic = new BipedFloatingBaseDynamics("Dynamics", 6, nV);
     HUMANOID::Task * ptrGblVelLimits = new GlobalVelocityLimitation("GlobalVelocityLimitation", 19, nV); 
     
@@ -62,18 +63,19 @@ BipedController::BipedController(){
     int Dynamic = jsonData["Dynamic"];
     int GVL = jsonData["GVL"];
 
-    myWbc = new HUMANOID::HqpWbc(nV, biped);
+    myWbc = new HUMANOID::WqpWbc(nV, biped);
     // myWbc->addTask(ptrGblVelLimits, GVL);
     // myWbc->addTask(ptrForceFoot, ForceFoot);
     // myWbc->addTask(ptrForceArm, ForceArm);
-    myWbc->addTask(ptrPoseFoot, PoseFoot);
-    myWbc->addTask(ptrPoseArm, PoseArm);
+    // myWbc->addTask(ptrBipedComRpy, ComRPY);
+    // myWbc->addTask(ptrBipedComXyz, ComXYZ);
+    // myWbc->addTask(ptrPoseArm, PoseArm);
     // myWbc->addTask(ptrBipedUpTorsoPosRpy, UpTorsoRPY);
     // myWbc->addTask(ptrBipedUpTorsoPosXyz,UpTorsoXYZ);
-    // myWbc->addTask(ptrBipedTorsoPosRpy, TorsoRPY);
-    // myWbc->addTask(ptrBipedTorsoPosXyz, TorsoXYZ);
-    myWbc->addTask(ptrBipedComRpy, ComRPY);
-    myWbc->addTask(ptrBipedComXyz, ComXYZ);
+    myWbc->addTask(ptrPoseFoot, PoseFoot);
+    myWbc->addTask(ptrPoseArmStatic, PoseArm);
+    myWbc->addTask(ptrBipedTorsoPosRpy, TorsoRPY);
+    myWbc->addTask(ptrBipedTorsoPosXyz, TorsoXYZ);
     myWbc->addTask(ptrDynamic, Dynamic);
     myWbc->addConstraint(ptrBipedFrictionCone, 0);
     myWbc->addConstraint(ptrBipedCenterOfPressure, 0);
@@ -82,15 +84,15 @@ BipedController::BipedController(){
 #else
     // ---Wqp
     myWbc = new HUMANOID::WqpWbc(nV, biped);
-    // myWbc->addTask(ptrBipedTorsoPosRpy, 0);
-    // myWbc->addTask(ptrBipedTorsoPosXyz, 0);
-    // myWbc->addTask(ptrBipedUpTorsoPosRpy, 0);
-    // myWbc->addTask(ptrBipedUpTorsoPosXyz, 0);
-    myWbc->addTask(ptrForce4, 0);
-    // myWbc->addTask(ptrForceChange4, 0);
-    myWbc->addTask(ptrBipedComRpy, 0);
-    myWbc->addTask(ptrBipedComXyz, 0);
-    myWbc->addTask(ptrPosition, 0);
+    myWbc->addTask(ptrBipedTorsoPosRpy, 0);
+    myWbc->addTask(ptrBipedTorsoPosXyz, 0);
+    myWbc->addTask(ptrBipedUpTorsoPosRpy, 0);
+    myWbc->addTask(ptrBipedUpTorsoPosXyz, 0);
+    // myWbc->addTask(ptrForce4, 0);
+    myWbc->addTask(ptrPoseArmStatic, 0);
+    // myWbc->addTask(ptrBipedComRpy, 0);
+    // myWbc->addTask(ptrBipedComXyz, 0);
+    myWbc->addTask(ptrPoseFoot, 0);
     myWbc->addTask(ptrDynamic, 0);
     myWbc->addTask(ptrGblVelLimits, 0);
     myWbc->addConstraint(ptrBipedDynamicConsistency, 0);
@@ -141,7 +143,6 @@ bool BipedController::getValueTauOpt(Eigen::VectorXd &jntTorOpt){
     }
     return true;
 }
-
 
 bool BipedController::getValueQdd(Eigen::VectorXd &Qdd){
     for (int i = 0; i < nJa; i++){
@@ -244,8 +245,8 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
     // cout << armStateTemp1.segment(3,3).transpose() << endl;
 
     //<<<arm ee xyzRpy from supervisor//
-    // cout << "arm ee xyzRpy from supervisor" << "-----------------------------------" << endl
-        // << "Left: " << LeftArmHandXyzRpyAct.head(3).transpose() << endl
+    // cout << "arm ee xyzRpy from supervisor" << "-----------------------------------" << endl;
+        // << "Left: " << LeftArmHandXyzRpyAct.head(3).transpose() << endl;
         // << "Right: " << RightArmHandXyzRpyAct.head(3).transpose() << endl<<endl;   
 
 
@@ -255,6 +256,8 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
 
     if(flagEstFirst == 0){
         flagEstFirst = 1;
+        
+        armPoseStaticInit = jntPos.tail(8);
 
         xyzTorsoInit = xyzTorsoEst;
         rpyTorsoInit = rpyTorsoEst;
@@ -286,6 +289,12 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
         rpyDotArmInit[1] = rpyDotArmEst[1];
         xyzDotArmInit[1] = xyzDotArmEst[1];
     }
+
+    armPoseStaticRef = 20000000 * (armPoseStaticInit - jntPos.tail(8));
+    
+
+
+
     return true;
 }
 
@@ -367,7 +376,7 @@ bool BipedController::motionPlan(){//Daniel 5.23
 
 bool BipedController::taskControl(){
 
-    // ------------------------------ Update Robot Dynamics ---------------------------
+    // ------------------------------ Update Robot Dynamics --------------------------- //
     myWbc->updateRobotDynamics(qGen, qDotGen);
     std::ifstream inputFile("/home/ukia/wwwws_uh1/src/unitree_wbc/config/controller.json");
     json jsonData;
@@ -635,17 +644,19 @@ bool BipedController::taskControl(){
     armPoseRef.segment(6,3) = diag(kpArmRpy)*(rpyArmTgt[1] - rpyArmEst[1]) + diag(kdArmRpy)*(rpyDotArmTgt[1] - rpyDotArmEst[1]);
     armPoseRef.segment(9,3) = diag(kpArmXyz)*(xyzArmTgt[1] - xyzArmEst[1]) + diag(kdArmXyz)*(xyzDotArmTgt[1] - xyzDotArmEst[1]);  
 
+
     // ------------------------------ Update task & constraint ------------------------- //                 
-    // myWbc->updateTask("BipedTorsoRpy", torsoRpyRef, weightTorsoOrientation);
-    // myWbc->updateTask("BipedTorsoXyz", torsoXyzRef, weightTorsoPosition);
-    myWbc->updateTask("BipedComRpy", comRpyRef, weightComOrientation);
-    myWbc->updateTask("BipedComXyz", comXyzRef, weightComPosition);
-    // myWbc->updateTask("BipedUpTorsoRpy", upTorsoRpyRef, weightUpTorsoOrientation);
-    // myWbc->updateTask("BipedUpTorsoXyz", upTorsoXyzRef, weightUpTorsoPosition);
-    myWbc->updateTask("Position", footArmPosRef, weightFootArmPosition);
+    myWbc->updateTask("BipedTorsoRpy", torsoRpyRef, weightTorsoOrientation);
+    myWbc->updateTask("BipedTorsoXyz", torsoXyzRef, weightTorsoPosition);
+    // myWbc->updateTask("BipedComRpy", comRpyRef, weightComOrientation);
+    // myWbc->updateTask("BipedComXyz", comXyzRef, weightComPosition);
+    myWbc->updateTask("BipedUpTorsoRpy", upTorsoRpyRef, weightUpTorsoOrientation);
+    myWbc->updateTask("BipedUpTorsoXyz", upTorsoXyzRef, weightUpTorsoPosition);
+    // myWbc->updateTask("Position", footArmPosRef, weightFootArmPosition);
     myWbc->updateTask("FootPose", footPoseRef, weightFootPose);
-    myWbc->updateTask("ArmPose", armPoseRef, weightArmPose);
-    myWbc->updateTask("Force4", footArmForceRef, weightFootArmForce);
+    // myWbc->updateTask("ArmPose", armPoseRef, weightArmPose);
+    myWbc->updateTask("ArmPoseStatic", armPoseStaticRef, weightArmPose);
+    // myWbc->updateTask("Force4", footArmForceRef, weightFootArmForce);
     // myWbc->updateTask("FootForce", footForceRef, weightFootForce);
     // myWbc->updateTask("ArmForce", armForceRef, weightArmForce);
     myWbc->updateTask("GlobalVelocityLimitation", GlobalVelocityLimitationRef, weightGlobalVelLimitation);
@@ -659,7 +670,7 @@ bool BipedController::taskControl(){
     myWbc->updateConstraint("BipedCenterOfPressure");
     myWbc->updateConstraint("BipedJointTorqueSaturation");
 
-    // ------------------------------ Update bounds -------------------------------------
+    // ------------------------------ Update bounds ------------------------------------- //
     lowerbounds(NG+5) = 0.0;
     upperbounds(NG+5) = 1000.0*GRAVITY;
     lowerbounds(NG+11) = 0.0;
@@ -669,7 +680,7 @@ bool BipedController::taskControl(){
     // cout << upperbounds.transpose() << endl;
     myWbc->updateBound(lowerbounds, upperbounds);
 
-    // ------------------------------ WBC solve ------------------------------------------
+    // ------------------------------ WBC solve ------------------------------------------ //
     // exe wbc slove
     myWbc->wbcSolve();
 
