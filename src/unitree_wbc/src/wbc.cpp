@@ -1,6 +1,6 @@
 #include "wbc.h"
 
-namespace TAICHI {
+namespace AGIROBOT {
 
 // ======================================== public Functions ====================================================
 
@@ -421,48 +421,4 @@ int Wbc::getNlevel(){
     return true;
 }
 
-// ======================================== protected Functions ====================================================
-
-bool Wbc::check(const Eigen::MatrixXd & M, int row, int col){
-    #ifdef USE_ERROR
-        if(M.rows() != row || M.cols() != col) {
-                throw InvalidDimension(
-                    "Error: In [Wbc::check], matrix dimensions do not match" );
-                }
-        }
-    #else
-        try {
-            if(M.rows() != row || M.cols() != col) {
-                throw InvalidDimension(
-                    "Error: In [Wbc::check], matrix dimensions do not match" );
-                }
-        } catch ( InvalidDimension invalidDimensionObj ) {
-            std::cout << invalidDimensionObj.what() << std::endl;
-            return false;
-        } 
-    #endif
-    return true;
-}
-
-bool Wbc::check(const Eigen::VectorXd & v, int row){
-    #ifdef USE_ERROR
-        if(v.rows() != row) {
-            throw InvalidDimension(
-                "Error : In [Wbc::check], vector dimensions do not match!" );
-            }
-    #else
-
-        try {
-            if(v.rows() != row) {
-                throw InvalidDimension(
-                    "In [Wbc::check], vector dimensions do not match!" );
-                }
-        } catch ( InvalidDimension invalidDimensionObj ) {
-            std::cout << invalidDimensionObj.what() << std::endl;
-            return false;
-        }
-    #endif
-    return true;
-}
-
-} // namespace TAICHI
+} // namespace AGIROBOT

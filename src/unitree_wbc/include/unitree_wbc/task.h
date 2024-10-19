@@ -1,5 +1,5 @@
-#ifndef TAICHI_TASK_H
-#define TAICHI_TASK_H
+#ifndef AGIROBOT_TASK_H
+#define AGIROBOT_TASK_H
 
 #include <iostream>
 #include <vector>
@@ -8,7 +8,7 @@
 
 #include "robotDynamics.h"
 
-namespace TAICHI {
+namespace AGIROBOT {
 
 /**
  * @class Task
@@ -67,13 +67,8 @@ public:
      */
     bool updateWeight(const Eigen::VectorXd & newWei);
 
-protected:
-
-    bool check(const Eigen::MatrixXd & M, int row, int col);
-    bool check(const Eigen::VectorXd & v, int row);
-
 };
 
-} // namespace TAICHI
+} // namespace AGIROBOT
 
-#endif // TAICHI_TASK_H
+#endif // AGIROBOT_TASK_H

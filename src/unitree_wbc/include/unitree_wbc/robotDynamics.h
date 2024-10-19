@@ -1,5 +1,5 @@
-#ifndef TAICHI_ROBOTDYNAMICS_H
-#define TAICHI_ROBOTDYNAMICS_H
+#ifndef AGIROBOT_ROBOTDYNAMICS_H
+#define AGIROBOT_ROBOTDYNAMICS_H
 
 #include <iostream>
 #include <vector>
@@ -8,10 +8,10 @@
 #include <Eigen/Dense>
 #include <rbdl/rbdl.h>
 
-namespace TAICHI {
+namespace AGIROBOT {
 
 /**
- * @brief The JacobianTc struct: Jacobian structure in TAICHI.
+ * @brief The JacobianTc struct: Jacobian structure in AGIROBOT.
  *  This structure is used to characterize the task coefficient matrix of acceleration-level tasks:
  *      xDDot = J * qDDot + JDot * qDot,
  *  here JdotQdot denotes JDot * qDot.
@@ -53,12 +53,6 @@ public:
      * @return
      */
     virtual bool displayDynamicInformation();
-
-    /**
-     * @brief Get a boolean flag indicating whether the function calcWbcDependence() was executed successfully.
-     * @return A boolean value
-     */
-    virtual bool isCalcWbcDependenceDone();
 
     /**
      * @brief Calculate WBC Dependence
@@ -117,17 +111,8 @@ public:
     JacobianTc upTorsoJacoTc;                                          ///< JacobianTc of floating-base.
 
     std::vector<JacobianTc> tasksJacoTc;                               ///< tasks JacobianTc, e.g. knee, elbow, etc.
-
-
-protected:
-
-    bool calcWbcDependenceDone{false};
-
-    bool check(const Eigen::MatrixXd & M, int row, int col);
-    bool check(const Eigen::VectorXd & v, int row);
-
 };
 
-} // namespace TAICHI
+} // namespace AGIROBOT
 
-#endif // TAICHI_ROBOTDYNAMICS_H
+#endif // AGIROBOT_ROBOTDYNAMICS_H

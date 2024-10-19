@@ -1,16 +1,11 @@
 #include "robotDynamics.h"
 #include <ErrorMsg.h>
 
-namespace TAICHI {
+namespace AGIROBOT {
 
 bool RobotDynamics::setJntStates(const Eigen::VectorXd & q, const Eigen::VectorXd & qdot){
-    if (check(q, NJG) && check(qdot, NJG)){
-        jntPositions = q;
-        jntVelocities = qdot;
-        calcWbcDependenceDone = false;
-    }else{
-        return false;
-    }
+    jntPositions = q;
+    jntVelocities = qdot;
     return true;
 }
 
@@ -33,51 +28,4 @@ bool RobotDynamics::displayDynamicInformation(){
     std::cout << "================ Dynamic Information End ================" << std::endl;
     return true;
 }
-
-bool RobotDynamics::isCalcWbcDependenceDone(){
-    return calcWbcDependenceDone;
-}
-
-bool RobotDynamics::check(const Eigen::MatrixXd & M, int row, int col){
-    #ifdef USE_ERROR
-        if(M.rows() != row || M.cols() != col) {
-                throw InvalidDimension(
-                    "Error: In [RobotDynamics::check], matrix dimensions do not match" );
-                }
-        }
-    #else
-        try {
-            if(M.rows() != row || M.cols() != col) {
-                throw InvalidDimension(
-                    "Error: In [RobotDynamics::check], matrix dimensions do not match" );
-                }
-        } catch ( InvalidDimension invalidDimensionObj ) {
-            std::cout << invalidDimensionObj.what() << std::endl;
-            return false;
-        } 
-    #endif
-    return true;
-}
-
-bool RobotDynamics::check(const Eigen::VectorXd & v, int row){
-    #ifdef USE_ERROR
-        if(v.rows() != row) {
-            throw InvalidDimension(
-                "Error : In [RobotDynamics::check], vector dimensions do not match!" );
-            }
-    #else
-
-        try {
-            if(v.rows() != row) {
-                throw InvalidDimension(
-                    "In [RobotDynamics::check], vector dimensions do not match!" );
-                }
-        } catch ( InvalidDimension invalidDimensionObj ) {
-            std::cout << invalidDimensionObj.what() << std::endl;
-            return false;
-        }
-    #endif
-    return true;
-}
-
-} // namespace TAICHI
+} // namespace AGIROBOT

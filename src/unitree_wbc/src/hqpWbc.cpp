@@ -2,7 +2,7 @@
 #include "json.hpp"
 #include <iostream>
 #include <fstream>
-namespace TAICHI {
+namespace AGIROBOT {
 using namespace std;
 using json = nlohmann::json;
 
@@ -159,31 +159,17 @@ int HqpWbc::getNlevel(){
 // ---------------------- implement pure virtual functions ----------------- //
 
 bool HqpWbc::updateBound(const Eigen::VectorXd &lb, const Eigen::VectorXd &ub){
-
-    for (int i = 0; i != nLevel; i++){
-        if(check(lb, nVLevel.at(i))){
-            lowerBoundVec.at(i) = lb;
-        }else{
-            return false;
-        }
-        if(check(ub, nVLevel.at(i))){
-            upperBoundVec.at(i) = ub;
-        }else{
-            return false;
-        }
-    // cout << "------------update bound hqp---------" << endl;
-    // cout << lowerBoundVec.at(i).transpose() << endl;
-    // cout << upperBoundVec.at(i).transpose() << endl<<endl;
+    for(int i = 0; i != nLevel; i++){
+        lowerBoundVec.at(i) = lb;
+        upperBoundVec.at(i) = ub;
     }
     return true;
 }
 
 bool HqpWbc::updateRobotDynamics(const Eigen::VectorXd &q, const Eigen::VectorXd &qDot){
     /// Provide opportunities for multi-threaded computing
-    if (!robot->isCalcWbcDependenceDone()){
         robot->setJntStates(q, qDot);
         robot->calcWbcDependence();
-    }
     return true;
 }
 
@@ -638,4 +624,4 @@ bool HqpWbc::getOptCost(std::vector<double> & costOpt){
     return true;
 }
 
-} // namespace TAICHI
+} // namespace AGIROBOT

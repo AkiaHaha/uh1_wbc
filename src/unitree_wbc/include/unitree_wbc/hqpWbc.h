@@ -1,11 +1,11 @@
-#ifndef TAICHI_HQPWBCSOLVER_H
-#define TAICHI_HQPWBCSOLVER_H
+#ifndef AGIROBOT_HQPWBCSOLVER_H
+#define AGIROBOT_HQPWBCSOLVER_H
 
 #include <qpOASES.hpp>
 
 #include "wbc.h"
 
-namespace TAICHI {
+namespace AGIROBOT {
 
 /**
  * @class HqpWbc
@@ -171,6 +171,6 @@ private:
     std::vector<Eigen::VectorXd> ubCstrLevel;                           ///< nCi*1
 };
 
-} // namespace TAICHI
+} // namespace AGIROBOT
 
-#endif // TAICHI_HQPWBCSOLVER_H
+#endif // AGIROBOT_HQPWBCSOLVER_H

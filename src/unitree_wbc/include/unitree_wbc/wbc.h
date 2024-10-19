@@ -1,5 +1,5 @@
-#ifndef TAICHI_WBC_H
-#define TAICHI_WBC_H
+#ifndef AGIROBOT_WBC_H
+#define AGIROBOT_WBC_H
 
 #include <iostream>
 #include <vector>
@@ -13,7 +13,7 @@
 #include "constraint.h"
 #include "robotDynamics.h"
 
-namespace TAICHI {
+namespace AGIROBOT {
 
 /**
  * @class Wbc
@@ -274,12 +274,8 @@ protected:
     bool nOChange{false};
     bool nVChange{false};
     bool nCChange{false};
-
-    bool check(const Eigen::MatrixXd & M, int row, int col);
-    bool check(const Eigen::VectorXd & v, int row);
-
 };
 
-} // namespace TAICHI
+} // namespace AGIROBOT
 
-#endif // TAICHI_WBC_H
+#endif // AGIROBOT_WBC_H

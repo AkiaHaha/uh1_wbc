@@ -1,11 +1,11 @@
-#ifndef TAICHI_EXAMPLE_ROBOTDYNAMICS_BIPED_H
-#define TAICHI_EXAMPLE_ROBOTDYNAMICS_BIPED_H
+#ifndef AGIROBOT_EXAMPLE_ROBOTDYNAMICS_BIPED_H
+#define AGIROBOT_EXAMPLE_ROBOTDYNAMICS_BIPED_H
 
 #define TYPELEFTSOLE 0
 #define TYPERIGHTSOLE 1
 #define GRAVITY_CONST 9.81
 
-//#include "taichi/robotDynamics.h"
+//#include "AGIROBOT/robotDynamics.h"
 #include "robotDynamics.h"
 #include "operation.h"
 
@@ -16,7 +16,7 @@ using namespace RigidBodyDynamics::Math;
  * @brief The RobotDynamicsBiped class
  */
 
-class RobotDynamicsBiped : public TAICHI::RobotDynamics{
+class RobotDynamicsBiped : public AGIROBOT::RobotDynamics{
 public:
 
     /**
@@ -150,4 +150,4 @@ private:
     Matrix3d skew(const Vector3d& omg);
 };
 
-#endif //TAICHI_EXAMPLE_ROBOTDYNAMICS_BIPED_H
+#endif //AGIROBOT_EXAMPLE_ROBOTDYNAMICS_BIPED_H

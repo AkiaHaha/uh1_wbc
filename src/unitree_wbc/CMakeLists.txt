@@ -89,8 +89,8 @@ if(COMPILE_EXAMPLE)
 
   # Custom command for the example
   add_custom_command(TARGET uh1Controller POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_SOURCE_DIR}/example/webotsProject/controllers/uh1Controller/"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_SOURCE_DIR}/executables"
     COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:uh1Controller>"
-    "${CMAKE_SOURCE_DIR}/example/webotsProject/controllers/uh1Controller/uh1Controller"
+    "${CMAKE_SOURCE_DIR}/executables"
   )
 endif(COMPILE_EXAMPLE)

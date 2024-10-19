@@ -14,7 +14,7 @@ using namespace std;
 
 bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub);
 
-// the arguments of the main() can be specified by the "controllerArgs" field of the Robot node.
+// The arguments of the main() can be specified by the "controllerArgs" field of the Robot node.
 int main(int argc, char **argv) {
     ros::init(argc, argv, "webots_controller");
     ros::NodeHandle nh;
@@ -24,6 +24,10 @@ int main(int argc, char **argv) {
     runWebots(joint_pos_pub, sim_info_pub);
     return 0;
 }
+
+// =======================================================================
+// ksajdoijsaiodjsajdsaoijd
+// =======================================================================
 
 
 bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
@@ -92,28 +96,28 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
                              robotStateSim.LeftArmHandXyzRpyAct, robotStateSim.RightArmHandXyzRpyAct);
             bipedCtrl.getValueTauOpt(jointTorCmd);
 
-/*          
+         
             //Integrate acc for pos
-            if (flagStartCtrl == 0){
-                jointPosAtStartCtrl = robotStateSim.jointPosAct;
-                flagStartCtrl = 1;
-            }
-            bipedCtrl.getValueQdd(jointPosAcc);
-            for (size_t i = 0; i < NJ; i++){
-                 jointPosInteg[i] = integrator.Integrate(jointPosAcc[i]);
-            }
-            jointPosInteg += jointPosAtStartCtrl;
+            // if (flagStartCtrl == 0){
+            //     jointPosAtStartCtrl = robotStateSim.jointPosAct;
+            //     flagStartCtrl = 1;
+            // }
+            // bipedCtrl.getValueQdd(jointPosAcc);
+            // for (size_t i = 0; i < NJ; i++){
+            //      jointPosInteg[i] = integrator.Integrate(jointPosAcc[i]);
+            // }
+            // jointPosInteg += jointPosAtStartCtrl;
 
-            //set data for ROS topic
-            for (size_t i = 0; i < NJ; i++){
-                // joint_pos_msg.data[i] = 10;
-                // joint_pos_msg.data[i] = jointPosAcc[i];
-                // joint_pos_msg.data[i] = jointTorCmd[i];
-                joint_pos_msg.data[i] = robotStateSim.jointPosAct[i];
-            }
-            sim_info_msg.data[0] = simTime;
-            sim_info_pub.publish(sim_info_msg);
-            joint_pos_pub.publish(joint_pos_msg);                */
+            // //set data for ROS topic
+            // for (size_t i = 0; i < NJ; i++){
+            //     // joint_pos_msg.data[i] = 10;
+            //     // joint_pos_msg.data[i] = jointPosAcc[i];
+            //     // joint_pos_msg.data[i] = jointTorCmd[i];
+            //     joint_pos_msg.data[i] = robotStateSim.jointPosAct[i];
+            // }
+            // sim_info_msg.data[0] = simTime;
+            // sim_info_pub.publish(sim_info_msg);
+            // joint_pos_pub.publish(joint_pos_msg);                
 
 //-----------------------------------------------------------------
 //universal set toq / pos
@@ -156,6 +160,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
 
     // Free memory
     bipedWebots.deleteRobot();
+    
     std::cout << "Program ended." << std::endl;
     return true;
 }

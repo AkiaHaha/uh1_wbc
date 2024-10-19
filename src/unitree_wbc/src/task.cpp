@@ -1,7 +1,7 @@
 #include "task.h"
 #include <ErrorMsg.h>
 
-namespace TAICHI {
+namespace AGIROBOT {
 
 Task::Task(const std::string & taskName, int taskDim, int varDim){
     name = taskName;
@@ -20,11 +20,7 @@ bool Task::setParameter(const std::vector<double> & params){
 }
 
 bool Task::updateRefence(const Eigen::VectorXd & newRef){
-    if (check(newRef, dim)){
-        ref = newRef;
-    }else{
-        return false;
-    }
+    ref = newRef;
     return true;
 }
 
@@ -56,56 +52,8 @@ bool Task::updateWeight(const Eigen::VectorXd & newWei){
         }
     #endif
 
-    if (check(newWei, dim)){
-        wei = newWei;
-    }else{
-        return false;
-    }
+    wei = newWei;
     return true;
 }
 
-bool Task::check(const Eigen::MatrixXd & M, int row, int col){
-    
-    #ifdef USE_ERROR
-        if(M.rows() != row || M.cols() != col) {
-                throw InvalidDimension(
-                    "Error: In [Task::check], Matrix dimensions do not match" );
-                }
-        }
-    #else
-        try {
-            if(M.rows() != row || M.cols() != col) {
-                throw InvalidDimension(
-                    "Error: In [Task::check], matrix dimensions do not match" );
-                }
-        } catch ( InvalidDimension invalidDimensionObj ) {
-            std::cout << invalidDimensionObj.what() << std::endl;
-            return false;
-        } 
-    #endif
-    return true;
-}
-
-bool Task::check(const Eigen::VectorXd & v, int row){
-    #ifdef USE_ERROR
-        if(v.rows() != row) {
-            throw InvalidDimension(
-                "Error : In [Task::check], vector dimensions do not match!" );
-            }
-    #else
-
-        try {
-            if(v.rows() != row) {
-                throw InvalidDimension(
-                    "`" );
-                }
-        } catch ( InvalidDimension invalidDimensionObj ) {
-            std::cout << invalidDimensionObj.what() << std::endl;
-            return false;
-        }
-    #endif
-
-    return true;
-}
-
-} // namespace TAICHI
+} // namespace AGIROBOT

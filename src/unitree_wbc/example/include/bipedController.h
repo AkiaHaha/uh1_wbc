@@ -1,5 +1,5 @@
-#ifndef TAICHI_EXAMPLE_BIPEDCONTROLLER_H
-#define TAICHI_EXAMPLE_BIPEDCONTROLLER_H
+#ifndef AGIROBOT_EXAMPLE_BIPEDCONTROLLER_H
+#define AGIROBOT_EXAMPLE_BIPEDCONTROLLER_H
 
 #include <iostream>
 #include <string>
@@ -59,7 +59,7 @@ private:
 
     // ----------------------- pointers ------------------------------
     RobotDynamicsBiped * biped;
-    TAICHI::Wbc * myWbc;
+    AGIROBOT::Wbc * myWbc;
     // ----------------------- pointers ------------------------------
 
     // ----------------------- robot state ---------------------------
@@ -221,4 +221,4 @@ private:
     //------------------------------------------------------------->//
 };
 
-#endif //TAICHI_EXAMPLE_BIPEDCONTROLLER_H
+#endif //AGIROBOT_EXAMPLE_BIPEDCONTROLLER_H

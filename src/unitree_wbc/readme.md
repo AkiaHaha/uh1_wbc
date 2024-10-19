@@ -1,9 +1,9 @@
-clee# TAICHI : Task Arrangement In Control HIerarchy
+clee# AGIROBOT : Task Arrangement In Control HIerarchy
 
-TAICHI is a robot whole-body control toolbox, originated from an internal project of Beijing Research Institute of UBTECH Robotics. It aims to arrange and solve tasks with changing control hierarchy automatically, which allows users to modify the control hierarchy freely online according to their needs. TAICHI provides interfaces to define robot dynamics, tasks and constraints in the form of abstract classes. Quadratic Programming (QP) based whole-body control solvers are provided for task solving.
+AGIROBOT is a robot whole-body control toolbox, originated from an internal project of Beijing Research Institute of UBTECH Robotics. It aims to arrange and solve tasks with changing control hierarchy automatically, which allows users to modify the control hierarchy freely online according to their needs. AGIROBOT provides interfaces to define robot dynamics, tasks and constraints in the form of abstract classes. Quadratic Programming (QP) based whole-body control solvers are provided for task solving.
 
-To illustrate the usage of TAICHI, a 12 DoF biped example is provided, along with its task and constraint libraries. Users can directly use these libraries to control similar robots. 
-Detailed guide to this toolbox can be seen in the tutorial [biped_example](http://10.10.1.70/TAICHI/TAICHI/wikis/TAICHI:-Biped-Example).
+To illustrate the usage of AGIROBOT, a 12 DoF biped example is provided, along with its task and constraint libraries. Users can directly use these libraries to control similar robots. 
+Detailed guide to this toolbox can be seen in the tutorial [biped_example](http://10.10.1.70/AGIROBOT/AGIROBOT/wikis/AGIROBOT:-Biped-Example).
 ## Features
 In the current version of TACHI, two types of whole-body control solvers are provided:
 - WQP: Weighted Quadratic Programming, where tasks are solved in one QP, weighting coefficients are used to adjust the priority of tasks.
@@ -27,7 +27,7 @@ In the future release, two more features will be added
   1.  *USE_ERROR* : The Error Message displays as a warning (OFF) or catch it yourself (ON), default 'ON'
   2.  *COMPILE_EXAMPLE* : Compile the biped example (ON) or not (OFF), default 'ON'
 
-**Compile and install TAICHI:**
+**Compile and install AGIROBOT:**
 
 - Enter the project directory, make build directory, cmake, compile, install STATIC library
 
@@ -39,7 +39,7 @@ make
 make install
 ```
 
-This will generate a sub-folder 'taichi' in the 'build' folder, it contains the header files and static libraries for TAICHI, users can copy this folder to their project directory.
+This will generate a sub-folder 'AGIROBOT' in the 'build' folder, it contains the header files and static libraries for AGIROBOT, users can copy this folder to their project directory.
 
 **Generate the documentation：**
 
@@ -53,7 +53,7 @@ This will generate a 'doc' folder with a html documentation.
 
 ## Example
 A 12 DoF biped example is provided, where the biped is controlled to stand on one leg. The torso height, swing foot height and its roll, pitch and yaw angles are controlled to follow sinusoidal trajectories. Detailed 
-guide to this toolbox can be seen in the tutorial [biped_example](http://10.10.1.70/TAICHI/TAICHI/wikis/TAICHI:-Biped-Example).
+guide to this toolbox can be seen in the tutorial [biped_example](http://10.10.1.70/AGIROBOT/AGIROBOT/wikis/AGIROBOT:-Biped-Example).
 
 **Run the example:**
 
@@ -66,9 +66,9 @@ guide to this toolbox can be seen in the tutorial [biped_example](http://10.10.1
     make
    ```
    
-3. Open the world 'Biped.wbt' in Webots and run, it is located in "TAICHI/example/Biped/WebotsProject/worlds" (Note: if your webots version is under R2021b, you may need to change the gravity direction to 'z' in WorldInfo of 'Biped.wbt')
+3. Open the world 'Biped.wbt' in Webots and run, it is located in "AGIROBOT/example/Biped/WebotsProject/worlds" (Note: if your webots version is under R2021b, you may need to change the gravity direction to 'z' in WorldInfo of 'Biped.wbt')
 
-<img src="http://10.10.1.70/TAICHI/TAICHI/raw/gif/biped.gif"/>
+<img src="http://10.10.1.70/AGIROBOT/AGIROBOT/raw/gif/biped.gif"/>
 
 ## Contributors
 

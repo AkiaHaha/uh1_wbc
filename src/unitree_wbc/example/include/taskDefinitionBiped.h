@@ -1,11 +1,11 @@
-#ifndef TAICHI_EXAMPLE_TASKDEFINITION_BIPED_H
-#define TAICHI_EXAMPLE_TASKDEFINITION_BIPED_H
+#ifndef AGIROBOT_EXAMPLE_TASKDEFINITION_BIPED_H
+#define AGIROBOT_EXAMPLE_TASKDEFINITION_BIPED_H
 
-//#include "taichi/task.h"
+//#include "AGIROBOT/task.h"
 #include "task.h"
 #include "operation.h"
 
-class BipedFloatingBaseDynamics: public TAICHI::Task{
+class BipedFloatingBaseDynamics: public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -15,10 +15,10 @@ public:
      */
     BipedFloatingBaseDynamics(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~BipedFloatingBaseDynamics() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedCentroidalMomentum : public TAICHI::Task{
+class BipedCentroidalMomentum : public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -28,10 +28,10 @@ public:
      */
     BipedCentroidalMomentum(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~BipedCentroidalMomentum() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedLinearMomentum : public TAICHI::Task{
+class BipedLinearMomentum : public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -41,10 +41,10 @@ public:
      */
     BipedLinearMomentum(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~BipedLinearMomentum() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedAngularMomentum : public TAICHI::Task{
+class BipedAngularMomentum : public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -54,10 +54,10 @@ public:
      */
     BipedAngularMomentum(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~BipedAngularMomentum() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedTorsoPosition: public TAICHI::Task{
+class BipedTorsoPosition: public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -67,10 +67,10 @@ public:
      */
     BipedTorsoPosition(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~BipedTorsoPosition() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedTorsoPosRpy: public TAICHI::Task{
+class BipedTorsoPosRpy: public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -80,10 +80,10 @@ public:
      */
     BipedTorsoPosRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~BipedTorsoPosRpy() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedTorsoPosXyz: public TAICHI::Task{
+class BipedTorsoPosXyz: public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -93,10 +93,10 @@ public:
      */
     BipedTorsoPosXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~BipedTorsoPosXyz() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedUpTorsoPosRpy: public TAICHI::Task{
+class BipedUpTorsoPosRpy: public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -106,10 +106,10 @@ public:
      */
     BipedUpTorsoPosRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~BipedUpTorsoPosRpy() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedUpTorsoPosXyz: public TAICHI::Task{
+class BipedUpTorsoPosXyz: public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -119,10 +119,10 @@ public:
      */
     BipedUpTorsoPosXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~BipedUpTorsoPosXyz() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class QuadSolePosition : public TAICHI::Task{
+class QuadSolePosition : public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -132,11 +132,11 @@ public:
      */
     QuadSolePosition(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~QuadSolePosition() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
 
-class QuadSoleForce : public TAICHI::Task{
+class QuadSoleForce : public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -146,10 +146,10 @@ public:
      */
     QuadSoleForce(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~QuadSoleForce() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class QuadSoleForceChange : public TAICHI::Task{
+class QuadSoleForceChange : public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -159,10 +159,10 @@ public:
      */
     QuadSoleForceChange(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~QuadSoleForceChange() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedFootPosition : public TAICHI::Task{
+class BipedFootPosition : public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -172,11 +172,11 @@ public:
      */
     BipedFootPosition(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~BipedFootPosition() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
 
-class BipedFootForce : public TAICHI::Task{
+class BipedFootForce : public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -186,10 +186,10 @@ public:
      */
     BipedFootForce(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~BipedFootForce() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedFootForceChange : public TAICHI::Task{
+class BipedFootForceChange : public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -199,10 +199,10 @@ public:
      */
     BipedFootForceChange(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~BipedFootForceChange() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class GlobalVelocityLimitation : public TAICHI::Task{
+class GlobalVelocityLimitation : public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -212,7 +212,7 @@ public:
      */
     GlobalVelocityLimitation(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~GlobalVelocityLimitation() = default;
-    bool update(const TAICHI::RobotDynamics &robot) override;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-#endif // TAICHI_EXAMPLE_TASKDEFINITION_BIPED_H
+#endif // AGIROBOT_EXAMPLE_TASKDEFINITION_BIPED_H

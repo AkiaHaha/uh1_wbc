@@ -1,11 +1,11 @@
-#ifndef TAICHI_WQPWBCSOLVER_H
-#define TAICHI_WQPWBCSOLVER_H
+#ifndef AGIROBOT_WQPWBCSOLVER_H
+#define AGIROBOT_WQPWBCSOLVER_H
 
 #include <qpOASES.hpp>
 
 #include "wbc.h"
 
-namespace TAICHI {
+namespace AGIROBOT {
 
 /**
  * @class WqpWbc
@@ -145,6 +145,6 @@ private:
 
 };
 
-} // namespace TAICHI
+} // namespace AGIROBOT
 
-#endif // TAICHI_WQPWBCSOLVER_H
+#endif // AGIROBOT_WQPWBCSOLVER_H

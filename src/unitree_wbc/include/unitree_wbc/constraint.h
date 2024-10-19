@@ -1,5 +1,5 @@
-#ifndef TAICHI_CONSTRAINT_H
-#define TAICHI_CONSTRAINT_H
+#ifndef AGIROBOT_CONSTRAINT_H
+#define AGIROBOT_CONSTRAINT_H
 
 #include <iostream>
 #include <vector>
@@ -10,7 +10,7 @@
 
 #include "robotDynamics.h"
 
-namespace TAICHI {
+namespace AGIROBOT {
 
 /**
  * @class Constraint
@@ -54,14 +54,8 @@ public:
      * @return
      */
     virtual bool update(const RobotDynamics & robot) = 0;
-
-protected:
-
-    bool check(const Eigen::MatrixXd & M, int row, int col);
-    bool check(const Eigen::VectorXd & v, int row);
-
 };
 
-} // namespace TAICHI
+} // namespace AGIROBOT
 
-#endif // TAICHI_CONSTRAINT_H
+#endif // AGIROBOT_CONSTRAINT_H

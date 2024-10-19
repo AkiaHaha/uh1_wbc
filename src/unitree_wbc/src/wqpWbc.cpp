@@ -1,6 +1,6 @@
 #include "wqpWbc.h"
 
-namespace TAICHI {
+namespace AGIROBOT {
 using namespace std;
 // ======================================== public Functions ====================================================
 
@@ -96,25 +96,15 @@ bool WqpWbc::getAuxiliaryDataDouble(std::vector<double> &auxiliaryData){
 // ---------------------- implement pure virtual functions -----------------
 
 bool WqpWbc::updateBound(const Eigen::VectorXd &lb, const Eigen::VectorXd &ub){
-    if(check(lb, nV)){
         lowerBoundVec = lb;
-    }else{
-        return false;
-    }
-    if(check(ub, nV)){
         upperBoundVec = ub;
-    }else{
-        return false;
-    }
     return true;
 }
 
 bool WqpWbc::updateRobotDynamics(const Eigen::VectorXd &q, const Eigen::VectorXd &qDot){
     // Provide opportunities for multi-threaded computing
-    if (!robot->isCalcWbcDependenceDone()){
         robot->setJntStates(q, qDot);
         robot->calcWbcDependence();
-    }
     return true;
 }
 
@@ -357,4 +347,4 @@ bool WqpWbc::getOptCost(double & costOpt){
     return true;
 }
 
-} // namespace TAICHI
+} // namespace AGIROBOT

@@ -16,22 +16,22 @@ BipedController::BipedController(){
     biped = new RobotDynamicsBiped();
     // -------------------- task control --------------------
     // Instantiate task & constraint (Create Task Library )
-    TAICHI::Task * ptrBipedTorsoPosRpy = new BipedTorsoPosRpy("BipedTorsoPosRpy", 3, nV);
-    TAICHI::Task * ptrBipedTorsoPosXyz = new BipedTorsoPosXyz("BipedTorsoPosXyz", 3, nV);
-    TAICHI::Task * ptrBipedUpTorsoPosRpy = new BipedUpTorsoPosRpy("BipedUpTorsoPosRpy", 3, nV);
-    TAICHI::Task * ptrBipedUpTorsoPosXyz = new BipedUpTorsoPosXyz("BipedUpTorsoPosXyz", 3, nV);
-    TAICHI::Task * ptrForce4 = new QuadSoleForce("Force4", NFCC4, nV);
-    TAICHI::Task * ptrForceChange4 = new QuadSoleForceChange("ForceChange4", NFCC4, nV);
-    TAICHI::Task * ptrPosition = new QuadSolePosition("Position", NFCC4, nV);
-    TAICHI::Task * ptrDynamic = new BipedFloatingBaseDynamics("Dynamics", 6, nV);
-    TAICHI::Task * ptrGblVelLimits = new GlobalVelocityLimitation("GlobalVelocityLimitation", 19, nV); 
+    AGIROBOT::Task * ptrBipedTorsoPosRpy = new BipedTorsoPosRpy("BipedTorsoPosRpy", 3, nV);
+    AGIROBOT::Task * ptrBipedTorsoPosXyz = new BipedTorsoPosXyz("BipedTorsoPosXyz", 3, nV);
+    AGIROBOT::Task * ptrBipedUpTorsoPosRpy = new BipedUpTorsoPosRpy("BipedUpTorsoPosRpy", 3, nV);
+    AGIROBOT::Task * ptrBipedUpTorsoPosXyz = new BipedUpTorsoPosXyz("BipedUpTorsoPosXyz", 3, nV);
+    AGIROBOT::Task * ptrForce4 = new QuadSoleForce("Force4", NFCC4, nV);
+    AGIROBOT::Task * ptrForceChange4 = new QuadSoleForceChange("ForceChange4", NFCC4, nV);
+    AGIROBOT::Task * ptrPosition = new QuadSolePosition("Position", NFCC4, nV);
+    AGIROBOT::Task * ptrDynamic = new BipedFloatingBaseDynamics("Dynamics", 6, nV);
+    AGIROBOT::Task * ptrGblVelLimits = new GlobalVelocityLimitation("GlobalVelocityLimitation", 19, nV); 
     //-----------------------------------------------------
-    // TAICHI::Task * ptrForce = new QuadSoleForce("Force", NFCC2, nV);
-    // TAICHI::Task * ptrForceChange = new QuadSoleForceChange("ForceChange", NFCC2, nV);
-    TAICHI::Constraint * ptrBipedDynamicConsistency = new BipedDynamicConsistency("BipedDynamicConsistency", 6, nV);
-    TAICHI::Constraint * ptrBipedFrictionCone = new BipedFrictionCone("BipedFrictionCone", 8, nV);
-    TAICHI::Constraint * ptrBipedJointTorqueSaturation = new BipedJointTorqueSaturation("BipedJointTorqueSaturation", NJ, nV);
-    TAICHI::Constraint * ptrBipedCenterOfPressure = new BipedCenterOfPressure("BipedCenterOfPressure", 8, nV);
+    // AGIROBOT::Task * ptrForce = new QuadSoleForce("Force", NFCC2, nV);
+    // AGIROBOT::Task * ptrForceChange = new QuadSoleForceChange("ForceChange", NFCC2, nV);
+    AGIROBOT::Constraint * ptrBipedDynamicConsistency = new BipedDynamicConsistency("BipedDynamicConsistency", 6, nV);
+    AGIROBOT::Constraint * ptrBipedFrictionCone = new BipedFrictionCone("BipedFrictionCone", 8, nV);
+    AGIROBOT::Constraint * ptrBipedJointTorqueSaturation = new BipedJointTorqueSaturation("BipedJointTorqueSaturation", NJ, nV);
+    AGIROBOT::Constraint * ptrBipedCenterOfPressure = new BipedCenterOfPressure("BipedCenterOfPressure", 8, nV);
 
     ptrBipedFrictionCone->setParameter(std::vector<double>{muStatic, myInfinity});
     ptrBipedJointTorqueSaturation->setParameter(std::vector<double>{jointTauLimit});
@@ -40,7 +40,7 @@ BipedController::BipedController(){
     // Instantiate the Wbc instance && Add task & constraint to the instance
     // ---Hqp
 #ifdef USING_HQP
-    myWbc = new TAICHI::HqpWbc(nV, biped);
+    myWbc = new AGIROBOT::HqpWbc(nV, biped);
     // myWbc->addTask(ptrGblVelLimits, 2);
     myWbc->addTask(ptrForce4, 2);
     // myWbc->addTask(ptrBipedUpTorsoPosRpy, 1);
@@ -55,7 +55,7 @@ BipedController::BipedController(){
     myWbc->addConstraint(ptrBipedJointTorqueSaturation, 0);
 #else
     // ---Wqp
-    myWbc = new TAICHI::WqpWbc(nV, biped);
+    myWbc = new AGIROBOT::WqpWbc(nV, biped);
     myWbc->addTask(ptrBipedTorsoPosRpy, 0);
     myWbc->addTask(ptrBipedTorsoPosXyz, 0);
     myWbc->addTask(ptrBipedUpTorsoPosRpy, 0);

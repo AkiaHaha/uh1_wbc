@@ -223,9 +223,8 @@ RobotDynamicsBiped::~RobotDynamicsBiped(){
 }
 
 bool RobotDynamicsBiped::setJntStates(const Eigen::VectorXd &q, const Eigen::VectorXd &qdot){
-    TAICHI::RobotDynamics::setJntStates(q, qdot);
+    AGIROBOT::RobotDynamics::setJntStates(q, qdot);
     isPosVelUpdated = false;
-    calcWbcDependenceDone = false;
     return true;
 }
 
@@ -238,7 +237,6 @@ bool RobotDynamicsBiped::calcWbcDependence(){
     updateKinematicsAcc();
     calcSoleTask();
     calcWaistTask();
-    calcWbcDependenceDone = true;
     // ------------------------- public members of Base class -------------------
     quadContactJacoTc.J = quadSoleJacob;
     quadContactJacoTc.JdotQdot = quadSoleJDotQDot;
@@ -287,7 +285,6 @@ VectorNd RobotDynamicsBiped::estWaistPosVelInWorld(const VectorNd& jointPos, con
     }
     posVelRes.head(3) = qTemp.head(3)-sole2WaistPos;
     posVelRes.tail(3) = qDotTemp.head(3)-sole2WaistVel;
-    calcWbcDependenceDone = false;
     return posVelRes;
 }
 
@@ -320,7 +317,6 @@ VectorNd RobotDynamicsBiped::estBodyPosInWorldAkia(const VectorNd& jointPos, con
         default:
             break;
     }
-    calcWbcDependenceDone = false;
     return bodyPos;
 }
 
@@ -371,7 +367,6 @@ VectorNd RobotDynamicsBiped::estFootArmPosVelInWorld(const VectorNd& jointPos, c
     posVelRes.segment(3,3) = sole2WorldPos;
     posVelRes.segment(6,3) = angleDot2EulerDot(sole2WorldVel.head(3), sole2WorldRPY);
     posVelRes.tail(3) = sole2WorldVel.tail(3);
-    calcWbcDependenceDone = false;
     return posVelRes;
 }
 
