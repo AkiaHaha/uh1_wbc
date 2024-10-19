@@ -1,7 +1,7 @@
 #include "bipedController.h"
 #include "robotDynamics.h"
 #include "robotDynamicsBiped.h"
-#include "nlohmann/json.hpp"
+#include "json.hpp"
 #include <iostream>
 #include <fstream>
 
@@ -254,7 +254,7 @@ bool BipedController::stateEstimation(const Eigen::VectorXd & imuData,
 
 
 bool BipedController::motionPlan(){//Daniel 5.23
-        std::ifstream inputFile("/home/ukia/wwwws_uh1/src/unitree_wbc/config/controller.json");
+        std::ifstream inputFile("/home/ukia/gitRepo/uh1_wbc/src/unitree_wbc/config/controller.json");
         json jsonData;
         inputFile >> jsonData;
         double height = jsonData["height"];
@@ -328,7 +328,7 @@ bool BipedController::taskControl(){
 
     // ------------------------------ Update Robot Dynamics ---------------------------
     myWbc->updateRobotDynamics(qGen, qDotGen);
-    std::ifstream inputFile("/home/ukia/wwwws_uh1/src/unitree_wbc/config/controller.json");
+    std::ifstream inputFile("/home/ukia/gitRepo/uh1_wbc/src/unitree_wbc/config/controller.json");
     json jsonData;
     inputFile >> jsonData;
 

@@ -1,5 +1,5 @@
 #include "hqpWbc.h"
-#include "nlohmann/json.hpp"
+#include "json.hpp"
 #include <iostream>
 #include <fstream>
 namespace TAICHI {
@@ -503,7 +503,7 @@ bool HqpWbc::hqpUpdateLeveln(const int & iLevel){//update task and constraint in
     cout << "------Hessian Matrix------ " << iLevel << endl;
     cout << hessianMat.at(iLevel).transpose() << endl;
     
-    std::ifstream inputFile("/home/ukia/wwwws_uh1/src/unitree_wbc/config/controller.json");
+    std::ifstream inputFile("/home/ukia/gitRepo/uh1_wbc/src/unitree_wbc/config/controller.json");
     json jsonData;
     inputFile >> jsonData;
     double damp = jsonData["damp"];
