@@ -7,7 +7,7 @@
 #include <stdexcept> 
 
 #include "webotsInterface.h"
-#include "bipedController.h"
+#include "robotController.h"
 #include "operation.h"
 
 using namespace std;
@@ -45,7 +45,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     webotState robotStateSim;
  
     // controller
-    BipedController bipedCtrl;
+    RobotController RobotController;
 
     // vector //
     Eigen::VectorXd standPosCmd = Eigen::VectorXd::Zero(NJ);
@@ -90,11 +90,11 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
 
         }else if (simCnt < simStopCnt){
             //dynamic control get torque
-            bipedCtrl.update(simTime-goStandTime, robotStateSim.imu9DAct,
+            RobotController.update(simTime-goStandTime, robotStateSim.imu9DAct,
                              robotStateSim.jointPosAct, robotStateSim.jointVelAct, robotStateSim.footGrfAct,
                              robotStateSim.LeftSoleXyzRpyAct, robotStateSim.RightSoleXyzRpyAct,
                              robotStateSim.LeftArmHandXyzRpyAct, robotStateSim.RightArmHandXyzRpyAct);
-            bipedCtrl.getValueTauOpt(jointTorCmd);
+            RobotController.getValueTauOpt(jointTorCmd);
 
          
             //Integrate acc for pos
@@ -102,7 +102,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             //     jointPosAtStartCtrl = robotStateSim.jointPosAct;
             //     flagStartCtrl = 1;
             // }
-            // bipedCtrl.getValueQdd(jointPosAcc);
+            // RobotController.getValueQdd(jointPosAcc);
             // for (size_t i = 0; i < NJ; i++){
             //      jointPosInteg[i] = integrator.Integrate(jointPosAcc[i]);
             // }
@@ -147,7 +147,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
 
         }else{
             // keep current position
-            bipedCtrl.getValuePosCurrent(standPosCmd);
+            RobotController.getValuePosCurrent(standPosCmd);
             bipedWebots.setMotorPos(standPosCmd);
         }
 

@@ -2,8 +2,6 @@
 
 namespace AGIROBOT {
 
-// ======================================== public Functions ====================================================
-
 Wbc::Wbc(int dimVar, RobotDynamics * roDy){
     nV = dimVar;
     robot = roDy;
@@ -13,39 +11,7 @@ Wbc::Wbc(int dimVar, RobotDynamics * roDy){
     priorityConstraintNames.clear();
 }
 
-Wbc::Wbc(const Wbc & wbcInstance){
-    copyFromWbc(wbcInstance);
-}
-
 bool Wbc::addTask(Task * const taskPtr, int priority, bool mandatory){
-
-    #ifdef USE_ERROR
-        if(taskPtr == nullptr) {
-            throw IsNullptr(
-                "Error : In [Wbc::addTask], taskPtr = nullptr!" );
-            }
-    #else
-
-        try {
-            if(taskPtr == nullptr) {
-                throw IsNullptr(
-                    "Error : In [Wbc::addTask], taskPtr = nullptr!" );
-                }
-        } catch ( IsNullptr isNullptr ) {
-            std::cout << isNullptr.what() << std::endl;
-            return false;
-        }
-    #endif
-
-    if (tasks.find(taskPtr->name) != tasks.end()){
-        if (mandatory){
-            std::cout << "Note : the name of Task already exists. We will remove the former and add this new one!" << std::endl;
-            removeTask(taskPtr->name);
-        }else{
-            std::cout << "Note : the name of Task already exists. We will maintain the former and ignore this new one!" << std::endl;
-            return true;
-        }
-    }
 
     taskPtr->priority = priority;
     tasks.insert({taskPtr->name, taskPtr});
@@ -64,34 +30,6 @@ bool Wbc::addTask(Task * const taskPtr, int priority, bool mandatory){
 }
 
 bool Wbc::addConstraint(Constraint * const cstrPtr, int priority, bool mandatory){
-    #ifdef USE_ERROR
-        if(cstrPtr == nullptr) {
-            throw IsNullptr(
-                "Error : In [Wbc::addConstraint], constrPtr = nullptr!" );
-            }
-    #else
-
-        try {
-            if(cstrPtr == nullptr) {
-                throw IsNullptr(
-                    "Error : In [Wbc::addConstraint], constrPtr = nullptr!" );
-                }
-        } catch ( IsNullptr isNullptr ) {
-            std::cout << isNullptr.what() << std::endl;
-            return false;
-        }
-    #endif
-
-    if (tasks.find(cstrPtr->name) != tasks.end()){
-        if (mandatory){
-            std::cout << "Note : the name of Constraint already exists. We will remove the former and add this new one!" << std::endl;
-            removeConstraint(cstrPtr->name);
-        }else{
-            std::cout << "Note : the name of Constraint already exists. We will maintain the former and ignore this new one!" << std::endl;
-            return true;
-        }
-    }
-
     cstrPtr->priority = priority;
     constraints.insert({cstrPtr->name, cstrPtr});
     nC += cstrPtr->dim;
@@ -105,97 +43,6 @@ bool Wbc::addConstraint(Constraint * const cstrPtr, int priority, bool mandatory
     }
     priorityConstraintNames.at(priority).emplace_back(cstrPtr->name);
 
-    return true;
-}
-
-bool Wbc::removeTask(const std::string &taskName){
-
-    auto iter = tasks.find(taskName);
-
-    if (iter == tasks.end()){
-        std::cout << "Warning : the Task name : " << taskName << " NOT FOUND!" << std::endl;
-    }else {
-        std::cout << std::endl;
-        auto name_iter = std::find(priorityTaskNames.at(iter->second->priority).begin(), priorityTaskNames.at(iter->second->priority).end(), taskName);
-        if (name_iter != priorityTaskNames.at(iter->second->priority).end()){
-            priorityTaskNames.at(iter->second->priority).erase(name_iter);
-        }
-
-        nO -= iter->second->dim;
-        tasks.erase(taskName);
-
-        nOChange = true;
-    }
-
-    return true;
-}
-
-bool Wbc::removeConstraint(const std::string &constrName){
-
-    auto iter = constraints.find(constrName);
-
-    if (iter == constraints.end()){
-        std::cout << "Warning : the Constraint name : " << constrName << " NOT FOUND!" << std::endl;
-    }else {
-        auto name_iter = std::find(priorityConstraintNames.at(iter->second->priority).begin(), priorityConstraintNames.at(iter->second->priority).end(), constrName);
-        if (name_iter != priorityConstraintNames.at(iter->second->priority).end()){
-            priorityConstraintNames.at(iter->second->priority).erase(name_iter);
-        }
-
-        nC -= iter->second->dim;
-        constraints.erase(constrName);
-
-        nCChange = true;
-    }
-
-    return true;
-}
-
-bool Wbc::adjustTaskPriority(const std::string &taskName, int priority){
-
-    auto iter = tasks.find(taskName);
-    if (iter == tasks.end()){
-        std::cout << "Warning : the Task name : " << taskName << " NOT FOUND!" << std::endl;
-    }else {
-        if(iter->second->priority != priority){
-            auto ptrTemp = iter->second;
-            removeTask(taskName);
-            addTask(ptrTemp, priority);
-        }
-    }
-
-    return true;
-}
-
-bool Wbc::adjustConstraintPriority(const std::string &constrName, int priority){
-    auto iter = constraints.find(constrName);
-
-    if (iter == constraints.end()){
-        std::cout << "Warning : the Constraint name : " << constrName << " NOT FOUND!" << std::endl;
-    }else {
-        if(iter->second->priority != priority){
-            auto ptrTemp = iter->second;
-            removeConstraint(constrName);
-            addConstraint(ptrTemp, priority);
-        }
-    }
-
-    return true;
-}
-
-bool Wbc::clearTask(){
-    tasks.clear();
-    nO = 0;
-    nOChange = true;
-    priorityTaskNames.clear();
-    return true;
-}
-
-bool Wbc::clearConstraint(){
-    constraints.clear();
-    nC = 0;
-    nCChange = true;
-    priorityConstraintNames.clear();
     return true;
 }
 
@@ -288,24 +135,6 @@ bool Wbc::updateConstraint(const std::string & constrName,
                            const std::vector<double> * params){
 
     auto iter = constraints.find(constrName);
-    #ifdef USE_ERROR
-        if(iter == constraints.end()) {
-            throw NotExist(
-                "Error : In [Wbc::updateConstraint], the constraint does not exist!" );
-            }
-    #else
-
-        try {
-            if(iter == constraints.end()) {
-                throw NotExist(
-                    "Error : In [Wbc::updateConstraint], The constraint does not exist!" );
-                }
-        } catch ( NotExist notExist ) {
-            std::cout << notExist.what() << std::endl;
-            return false;
-        }
-    #endif
-
     if (params == nullptr){
         iter->second->update(* robot);
     }else{
@@ -315,7 +144,6 @@ bool Wbc::updateConstraint(const std::string & constrName,
             return false;
         }
     }
-
     return true;
 }
 
@@ -339,13 +167,6 @@ bool Wbc::getContainers(std::unordered_map<std::string, Task *> &wbcTasks,
     wbcConstraints = constraints;
     wbcPriorityTaskNames = priorityTaskNames;
     wbcPriorityConstraintNames = priorityConstraintNames;
-    return true;
-}
-
-bool Wbc::copyFromWbc(const Wbc &wbcInstance){
-    wbcInstance.getContainers(tasks, constraints, priorityTaskNames, priorityConstraintNames);
-    wbcInstance.getDimension(nV, nO, nC);
-    wbcInstance.getRobotPointer(robot);
     return true;
 }
 

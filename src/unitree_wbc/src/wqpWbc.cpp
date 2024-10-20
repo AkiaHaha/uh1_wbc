@@ -146,13 +146,13 @@ bool WqpWbc::createNewQP(){
 }
 
 bool WqpWbc::resizeQPMatrixVector(){
-    // ---------------------------- Costs/Objects --------------------------------------
+    // Costs/Objects 
     hessianMat = Eigen::MatrixXd::Zero(nV,nV);                          // nV*nV
     gradientVec = Eigen::VectorXd::Zero(nV);                            // nV*1
     weiVecAll = Eigen::VectorXd::Zero(nO);                              // nO*1
     taskMatAll = Eigen::MatrixXd::Zero(nO,nV);                          // nO*nV
     taskVecAll = Eigen::VectorXd::Zero(nO);                             // nO*1
-    // ------------------------ Bounds & Constraints -----------------------------------
+    // Bounds & Constraints 
     lowerBoundVec = Eigen::VectorXd::Zero(nV);                          // nV*1
     upperBoundVec = Eigen::VectorXd::Zero(nV);                          // nV*1
     cstrMatAll = Eigen::MatrixXd::Zero(nC,nV);                          // nC*nV
@@ -187,43 +187,16 @@ bool WqpWbc::calcHessianGradient(){
     for(auto level : priorityTaskNames){
         for(auto item : level){
             auto iter = tasks.find(item);
-            // std::cout << "item : " << item << "  " << iter->second->dim << std::endl;//Daniel
             taskMatAll.block(startRow, 0, iter->second->dim, nV) = iter->second->taskMatA;
             taskVecAll.segment(startRow, iter->second->dim) = iter->second->taskVecB;
             weiVecAll.segment(startRow, iter->second->dim) = iter->second->wei;
-            startRow += iter->second->dim;
-
-            cout << "------taskMatLevel Matrix------ " << "dim: " << iter->second->dim << "  " << iter->second->name << endl;
-            cout << iter->second->taskMatA.transpose() << endl;
-
-            cout << "------taskVecLevel Matrix------ " << iter->second->dim << endl;
-            cout << iter->second->taskVecB.transpose() << endl;
-
-            cout << "------weiVecLevel Matrix------ " << iter->second->dim << endl;
-            cout << iter->second->wei.transpose() << endl;            
+            startRow += iter->second->dim;          
         }
     }
     taskMatAll = weiVecAll.asDiagonal() * taskMatAll;
     taskVecAll = weiVecAll.asDiagonal() * taskVecAll;
-    // Hessian matrix, H = A^T * A
-    hessianMat = taskMatAll.transpose() * taskMatAll;
-    // gradient vector, g = - A^T * b
-    gradientVec = - taskMatAll.transpose() * taskVecAll;
-
-    //<---output test Daniel 5.23---//
-    // Displaying Hessian matrix dimensions //
-    // std::cout << "hessianMat dimensions: " << hessianMat.rows() << "x" << hessianMat.cols() << std::endl;
-
-    // Display the matrix in the requested format //
-    // std::cout << "hessianMat contents:" << std::endl;
-    // for (int i = 0; i < hessianMat.rows(); ++i) {
-    //     for (int j = 0; j < hessianMat.cols(); ++j) {
-    //         std::cout << hessianMat(i, j);
-    //         if (j < hessianMat.cols() - 1) std::cout << ", ";
-    //     }
-    //     std::cout << std::endl;
-    // }
-    //----------------------------->//
+    hessianMat = taskMatAll.transpose() * taskMatAll; ///< Hessian matrix, H = A^T * A 
+    gradientVec = - taskMatAll.transpose() * taskVecAll;///< Gradient vector, g = - A^T * b
     return true;
 }
 
@@ -232,16 +205,12 @@ bool WqpWbc::calcConstraintCoefficient(){
     for(auto level : priorityConstraintNames){
         for(auto item : level){
             auto iter = constraints.find(item);
-            // cout << "--------------dim: " << iter->second->dim << endl;
-            // cout << "--------------rows: " << iter->second->cstrMatC.rows() << endl;
-            // cout << "--------------cols: " << iter->second->cstrMatC.cols() << endl;
             cstrMatAll.block(startRow, 0, iter->second->dim, nV) = iter->second->cstrMatC;
             lbCstrAll.segment(startRow, iter->second->dim) = iter->second->lbC;
             ubCstrAll.segment(startRow, iter->second->dim) = iter->second->ubC;
             startRow += iter->second->dim;
         }
     }
-    // the transpose of cstrMatAll
     cstrMatAllTrans = cstrMatAll.transpose();
     return true;
 }
@@ -255,26 +224,6 @@ bool WqpWbc::qpSolve(){
                                       lowerBoundVec.data(), upperBoundVec.data(),
                                       lbCstrAll.data(), ubCstrAll.data(),
                                       nWSR, cpuTimePtr);
-        cout << "------Hessian Matrix------" << endl;
-        cout << hessianMat.transpose() << endl;
-
-        cout << "------gradient Vector------" << endl;
-        cout << gradientVec.transpose() << endl;
-
-        cout << "------cstr Mat AllTrans------" << endl;
-        cout << cstrMatAllTrans.transpose() << endl;
-
-        cout << "------lower Bound Vec------" << endl;
-        cout << lowerBoundVec.transpose() << endl;
-
-        cout << "------upper Bound Vec------" << endl;
-        cout << upperBoundVec.transpose() << endl;
-
-        cout << "------lb CstrAll------" << endl;
-        cout << lbCstrAll.transpose() << endl;
-
-        cout << "------ub CstrAll------" << endl;
-        cout << ubCstrAll.transpose() << endl;
 
         if(statusCodeSolving > 0){
             std::cout << "init QP yy: " << qpOASES::MessageHandling::getErrorCodeMessage(statusCodeSolving) << std::endl;

@@ -30,12 +30,6 @@ public:
      */
     Wbc(int dimVar, RobotDynamics * roDy);
 
-    /**
-     * @brief Copy constructor of Wbc
-     * @param wbcInstance the wbc instance to be copied from
-     */
-    Wbc(const Wbc &wbcInstance);
-
     // ================================================== virtual funcions ====================================================
 
     virtual ~Wbc() = default;
@@ -64,48 +58,6 @@ public:
      * @return
      */
     virtual bool addConstraint(Constraint * const cstrPtr, int priority, bool mandatory = false);
-
-    /**
-     * @brief Remove an element from tasks
-     * @param taskName The key of the element to be removed
-     * @return
-     */
-    virtual bool removeTask(const std::string & taskName);
-
-    /**
-     * @brief Remove an element from constraints
-     * @param cstrName The key of the element to be removed
-     * @return
-     */
-    virtual bool removeConstraint(const std::string & cstrName);
-
-    /**
-     * @brief Adjust Task Priority
-     * @param taskName The key of the element to be adjusted
-     * @param priority New level value
-     * @return
-     */
-    virtual bool adjustTaskPriority(const std::string & taskName, int priority);
-
-    /**
-     * @brief Adjust Constraint Priority
-     * @param cstrName The key of the element to be adjusted
-     * @param priority New level value
-     * @return
-     */
-    virtual bool adjustConstraintPriority(const std::string & cstrName, int priority);
-
-    /**
-     * @brief Remove all elements from tasks
-     * @return
-     */
-    virtual bool clearTask();
-
-    /**
-     * @brief Remove all elements from constraints
-     * @return
-     */
-    virtual bool clearConstraint();
 
     /**
      * @brief Update the memeber value in the named Task
@@ -168,13 +120,6 @@ public:
                                std::unordered_map<std::string, Constraint *> & wbcConstraints,
                                std::vector<std::vector<std::string>> & wbcPriorityTaskNames,
                                std::vector<std::vector<std::string>> & wbcPriorityConstraintNames) const;
-
-    /**
-     * @brief copy from another wbc
-     * @param wbcInstance the wbc instance to be copied from
-     * @return
-     */
-    virtual bool copyFromWbc(const Wbc & wbcInstance);
 
     /**
      * @brief Display WBC Information

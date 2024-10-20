@@ -75,10 +75,10 @@ if(COMPILE_EXAMPLE)
   file(GLOB EXAMPLE_SRC_FILES "example/src/*.cpp")
 
   # Setup the target executable for the example
-  add_executable(uh1Controller ${EXAMPLE_SRC_FILES})
+  add_executable(wwbicController ${EXAMPLE_SRC_FILES})
 
   # Link libraries for the example
-  target_link_libraries(uh1Controller
+  target_link_libraries(wwbicController
     ${catkin_LIBRARIES}
     ${PROJECT_NAME}
     ${RBDL_LIBRARY}
@@ -88,9 +88,9 @@ if(COMPILE_EXAMPLE)
   )
 
   # Custom command for the example
-  add_custom_command(TARGET uh1Controller POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_SOURCE_DIR}/executables"
-    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:uh1Controller>"
-    "${CMAKE_SOURCE_DIR}/executables"
+  add_custom_command(TARGET wwbicController POST_BUILD
+    # COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_SOURCE_DIR}"s
+    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:wwbicController>"
+    "${CMAKE_SOURCE_DIR}/../"
   )
 endif(COMPILE_EXAMPLE)
