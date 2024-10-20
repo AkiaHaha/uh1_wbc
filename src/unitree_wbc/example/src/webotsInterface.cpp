@@ -332,7 +332,6 @@ double Derivative :: mSig( double sigIn ) {
     double sigOut( 0. );
     sigOut = (sigIn - sigInPrev) * 1000.;
     // sigOut = b0 * sigIn + b1 * sigInPrev - a1 * sigOutPrev;
-
     sigOutPrev = sigOut;
     sigInPrev = sigIn;
     return sigOut;

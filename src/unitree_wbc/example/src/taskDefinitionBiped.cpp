@@ -1,4 +1,5 @@
 #include "taskDefinitionBiped.h"
+
 bool BipedFloatingBaseDynamics::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA << robot.selMatFloatingBase * robot.inertiaMat,
                 -robot.selMatFloatingBase * robot.quadContactJacoTc.J.transpose();

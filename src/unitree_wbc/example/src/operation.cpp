@@ -1,9 +1,24 @@
 #include "operation.h"
 
+/**
+ * @brief Prints the elements of an Eigen::VectorXd in a structured format.
+ * @param vector The Eigen vector to be printed.
+ * @param length The total number of elements in the vector.
+ * @param numRows The number of rows to print.
+ * @param ... A variable list of integers specifying the number of elements 
+ *            to print in each row. The total number of integers passed 
+ *            should equal numRows.
+ * @example
+ * Eigen::VectorXd myVector(10);
+ * myVector << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10;
+ * akiaPrint1(myVector, myVector.size(), 3, 3, 4, 3); 
+ * // This will print:
+ * // 1 2 3 
+ * // 4 5 6 7 
+ * // 8 9 10 
+ */
 void akiaPrint1(const Eigen::VectorXd &vector, int length, int numRows, ...) {
     std::vector<int> elementsPerRow(numRows);
-
-    // 获取可变参数
     va_list args;
     va_start(args, numRows);
     for (int i = 0; i < numRows; ++i) {
@@ -15,12 +30,10 @@ void akiaPrint1(const Eigen::VectorXd &vector, int length, int numRows, ...) {
     for (int i = 0; i < numRows; ++i) {
         int numElements = elementsPerRow[i];
 
-        // 确保不超过向量长度
         if (currentIndex + numElements > length) {
             numElements = length - currentIndex;
         }
 
-        // 打印每行的元素
         for (int j = 0; j < numElements; ++j) {
             if (currentIndex < length) {
                 std::cout << vector[currentIndex] << " ";
@@ -30,7 +43,6 @@ void akiaPrint1(const Eigen::VectorXd &vector, int length, int numRows, ...) {
         std::cout << std::endl;
     }
 
-    // 打印剩余元素（如果有）
     while (currentIndex < length) {
         std::cout << vector[currentIndex] << " ";
         currentIndex++;
@@ -40,12 +52,22 @@ void akiaPrint1(const Eigen::VectorXd &vector, int length, int numRows, ...) {
     }
 }
 
+/**
+ * @example
+ * Eigen::VectorXd myVector(10);
+ * myVector << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10;
+ * std::string output = akiaPrint2(myVector, myVector.size(), 3, 3, "Row 1", 4, "Row 2", 3, "Row 3");
+ * std::cout << output;
+ * // This will print:
+ * // Row 1: 1 2 3 
+ * // Row 2: 4 5 6 7 
+ * // Row 3: 8 9 10 
+ */
 std::string akiaPrint2(const Eigen::VectorXd &vector, int length, int numRows, ...) {
     std::ostringstream oss;
     std::vector<int> elementsPerRow(numRows);
     std::vector<std::string> rowRemarks(numRows);
 
-    // 获取可变参数
     va_list args;
     va_start(args, numRows);
     for (int i = 0; i < numRows; ++i) {
@@ -59,15 +81,12 @@ std::string akiaPrint2(const Eigen::VectorXd &vector, int length, int numRows, .
         int numElements = elementsPerRow[i];
         std::string remark = rowRemarks[i];
 
-        // 确保不超过向量长度
         if (currentIndex + numElements > length) {
             numElements = length - currentIndex;
         }
 
-        // 打印每行的备注
         oss << remark << ": ";
 
-        // 打印每行的元素
         for (int j = 0; j < numElements; ++j) {
             if (currentIndex < length) {
                 oss << vector[currentIndex] << " ";
@@ -77,7 +96,6 @@ std::string akiaPrint2(const Eigen::VectorXd &vector, int length, int numRows, .
         oss << "\n";
     }
 
-    // 打印剩余元素（如果有）
     while (currentIndex < length) {
         oss << vector[currentIndex] << " ";
         currentIndex++;
@@ -89,11 +107,20 @@ std::string akiaPrint2(const Eigen::VectorXd &vector, int length, int numRows, .
     return oss.str();
 }
 
+/**
+ * @example
+ * Eigen::VectorXd myVector(10);
+ * myVector << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10;
+ * akiaPrint3(myVector, myVector.size(), 3, 3, "Row 1", 4, "Row 2", 3, "Row 3");
+ * // This will print:
+ * // Row 1: 1 2 3 
+ * // Row 2: 4 5 6 7 
+ * // Row 3: 8 9 10 
+ */
 void akiaPrint3(const Eigen::VectorXd &vector, int length, int numRows, ...) {
     std::vector<int> elementsPerRow(numRows);
     std::vector<std::string> rowRemarks(numRows);
 
-    // 获取可变参数
     va_list args;
     va_start(args, numRows);
     for (int i = 0; i < numRows; ++i) {
@@ -107,15 +134,12 @@ void akiaPrint3(const Eigen::VectorXd &vector, int length, int numRows, ...) {
         int numElements = elementsPerRow[i];
         std::string remark = rowRemarks[i];
 
-        // 确保不超过向量长度
         if (currentIndex + numElements > length) {
             numElements = length - currentIndex;
         }
 
-        // 打印每行的备注
         std::cout << remark << ": ";
 
-        // 打印每行的元素
         for (int j = 0; j < numElements; ++j) {
             if (currentIndex < length) {
                 std::cout << vector[currentIndex] << " ";
@@ -125,7 +149,6 @@ void akiaPrint3(const Eigen::VectorXd &vector, int length, int numRows, ...) {
         std::cout << "\n";
     }
 
-    // 打印剩余元素（如果有）
     while (currentIndex < length) {
         std::cout << vector[currentIndex] << " ";
         currentIndex++;
@@ -135,6 +158,10 @@ void akiaPrint3(const Eigen::VectorXd &vector, int length, int numRows, ...) {
     }
 }
 
+
+/**
+ * @brief To generate a tigid body in RBDL
+ */
 RigidBodyDynamics::Body BodyAkia(double mass,
                                                     const RigidBodyDynamics::Math::Vector3d& com,
                                                     double Ixx, double Iyy, double Izz,
@@ -148,8 +175,10 @@ RigidBodyDynamics::Body BodyAkia(double mass,
 }
 
 
+/**
+ * @brief A math tool for integrate;
+ */
 Integrator::Integrator() : Qd_prev(0), Q_prev(0), dt(0.001) {}
-
 double Integrator::Integrate(double Qdd) {
     double Qd = Qd_prev + Qdd * dt;
     double Q = Q_prev + Qd * dt;
@@ -165,7 +194,7 @@ Eigen::VectorXd fillVector(double firstValue, double secondValue) {
     for (int i = 0; i < 12; ++i) {
         vector(i) = firstValue;
     }
-
+    
     for (int i = 12; i < NFCC4; ++i) {
         vector(i) = secondValue;
     }

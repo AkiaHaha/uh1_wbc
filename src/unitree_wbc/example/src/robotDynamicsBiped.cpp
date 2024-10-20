@@ -1,12 +1,12 @@
 #include "robotDynamicsBiped.h"
 using namespace std;
 
-
-// ======================================== Public Functions ==========================================
-
+//===========================================================================
+// Public functions for invocation
+//===========================================================================
 RobotDynamicsBiped::RobotDynamicsBiped() {
-    // ------------------------- public members of Base class -------------------
-    NJG = NG;//6（浮动）+6+6所有自由度 NJG = NJF + NJJ
+    // Basic elements
+    NJG = NG;///< NJG = NJF + NJJ
     NJF = 6;  //< Number of Joints Free-floating
     NJJ = NJ;  ///< Number of non-floating-base Joints, including actuated & underactuated(paissive) joints. NJJ = NJA + NJP
     NJA = NJ;   ///< Number of Joints Actuated (torque_actuated)
@@ -32,7 +32,7 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     selMatActuated.rightCols(NJA) = MatrixNd::Identity(NJA, NJA);
 
     selMatNonFloatingBase = MatrixNd :: Zero(NJJ, NJG);///< NJJ*NJG, Selection matrix of non-floating-base joints
-    // selMatPassive = MatrixNd :: Zero(18, NJG + NFC);///< NJP+6+6*NJG+6+6, Selection matrix of passive joints that do not contain floating bases
+    //selMatPassive = MatrixNd :: Zero(18, NJG + NFC);///< NJP+6+6*NJG+6+6, Selection matrix of passive joints that do not contain floating bases
 
 
     centroidalMomentumMatrix = MatrixNd :: Zero(NJF, NJG);///< NJF*NJG, Centroidal Momentum Matrix (CMM)质心动量矩阵
@@ -55,15 +55,13 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
 
     model = new RigidBodyDynamics::Model();
     model->gravity = Vector3d (0., 0., -GRAVITY_CONST);
-    // ------------------------- public members of Base class -------------------
-
-    // ------------------------- private members of Derived class -------------------
+    
     Body floatingWaistLink, torsoLink, fixedAnkleLink, fixedSoleLink, fixedArmEndLink;
     Body leftLegLink[5], leftArmLink[5];
     Body rightLegLink[5], rightArmLink[5];
     Joint floatingWaistJoint, fixedSoleJoint, fixedAnkleJoint, fixedArmEndJoint;
 
-    // ------------------------------------------------------ Biped parameters------------------------------------------------------
+    // Params of Unitree H1 humanoid robot
     floatingWaistLink = BodyAkia(5.39, Vector3d(-0.0002, 0.0, -0.04522), 0.044582, 0.0082464, 0.049021, 0, 0, 0);
 
     leftLegLink[0] = BodyAkia(2.244, Vector3d(-0.04923, 0.0001, 0.0072), 0.0025731, 0.0030444, 0.0022883, 0, 0, 0); // hip yaw
@@ -93,11 +91,8 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     fixedAnkleLink = Body(0.0, Vector3d (0., 0., 0.), Vector3d (0., 0., 0.));
     fixedSoleLink = Body(0.0, Vector3d (0., 0., 0.), Vector3d (0., 0., 0.));
     fixedArmEndLink = Body(0.0, Vector3d (0., 0., 0.), Vector3d (0., 0., 0.));
-     
 
-    // ------------------------------------------------------Biped parameters------------------------------------------------------
-
-    // ------------------------------------------------------Biped RBDL Model------------------------------------------------------
+    // Construction of robot use joints, body and transformation matrix;
     floatingWaistJoint = Joint(SpatialVector(0.,0.,0., 1.,0.,0.),  //                ^ Z
                                 SpatialVector(0.,0.,0., 0.,1.,0.), //                |
                                 SpatialVector(0.,0.,0., 0.,0.,1.), //                |___Pelvis, Torso (1.1) 
@@ -126,16 +121,14 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     SpatialTransform translatin_rsr = Xtrans(Vector3d(-0.0055, -0.0565, -0.0165));
     SpatialTransform transform_rsr = rotation_rsr * translatin_rsr;
 
-
-    //Pelvis relates the world coordinate system
-    idPelvis = model->AddBody(0, Xtrans(Vector3d(0., 0. , 0.)), floatingWaistJoint, floatingWaistLink,"pelvis");
+    idPelvis = model->AddBody(0, Xtrans(Vector3d(0., 0. , 0.)), floatingWaistJoint, floatingWaistLink,"pelvis"); ///< Pelvis of World sys.
 
     idLeftLegLink[0] = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0875, -0.1742)), joint_Rz, leftLegLink[0], "lhy");
     idLeftLegLink[1] = model->AppendBody(Xtrans(Vector3d(0.039468, 0, 0)), joint_Rx, leftLegLink[1], "lhr");
     idLeftLegLink[2] = model->AppendBody(Xtrans(Vector3d(0, 0.11536, 0)), joint_Ry, leftLegLink[2], "lhp");
     idLeftLegLink[3] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, leftLegLink[3], "lk");
     idLeftLegLink[4] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, fixedAnkleLink, "la");
-    idLeftSole = model->AppendBody(Xtrans(Vector3d(0.0556, 0, -0.05)), fixedSoleJoint, leftLegLink[4], "lsole");//Daniel5.1
+    idLeftSole = model->AppendBody(Xtrans(Vector3d(0.0556, 0, -0.05)), fixedSoleJoint, leftLegLink[4], "lsole");//@Danny240531
     idLeftSoleGround = model->AppendBody(Xtrans(Vector3d(0, 0, -0.012)), fixedSoleJoint, fixedSoleLink, "lsoleg");
 
     idRightLegLink[0] = model->AddBody(idPelvis, Xtrans(Vector3d(0, -0.0875, -0.1742)), joint_Rz, rightLegLink[0], "rhy");
@@ -143,11 +136,10 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     idRightLegLink[2] = model->AppendBody(Xtrans(Vector3d(0, -0.11536, 0)), joint_Ry, rightLegLink[2], "rhp");
     idRightLegLink[3] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, rightLegLink[3], "rk");
     idRightLegLink[4] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.4)), joint_Ry, fixedAnkleLink, "ra");
-    idRightSole = model->AppendBody(Xtrans(Vector3d(0.0556, 0, -0.05)), fixedSoleJoint, rightLegLink[4], "rsole");//5.31
+    idRightSole = model->AppendBody(Xtrans(Vector3d(0.0556, 0, -0.05)), fixedSoleJoint, rightLegLink[4], "rsole");//@Danny240531
     idRightSoleGround = model->AppendBody(Xtrans(Vector3d(0, 0, -0.012)), fixedSoleJoint, fixedSoleLink, "rsoleg");
 
-    //Torso, relates the world coordinate system by pelvis
-    idTorso = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0, 0.0)), joint_Rz, torsoLink, "torso");
+    idTorso = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0, 0.0)), joint_Rz, torsoLink, "torso");///< Torso related to world sys. by pelvis
     // idTorso = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0, 0.1)), fixedSoleJoint, torsoLink, "torso");
 
     // idLeftArmLink[0] = model->AddBody(idTorso, Xtrans(Vector3d(0.0055, 0.15535, 0.42999)), joint_Ry, leftArmLink[0], "lsp");
@@ -173,13 +165,11 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     idRightArmLink[2] = model->AppendBody(Xtrans(Vector3d(0, 0, -0.1343)), joint_Rz, rightLegLink[2], "rsy");
     idRightArmLink[3] = model->AppendBody(Xtrans(Vector3d(0.0185, 0, -0.198)), joint_Ry, rightLegLink[3], "rs");
     idRightArmEnd = model->AppendBody(Xtrans(Vector3d(0.27, 0.0, -0.02)), fixedArmEndJoint, fixedArmEndLink, "right_arm_end");
-    
 
     massAll = floatingWaistLink.mMass + torsoLink.mMass;
     for (int i = 0; i < 5; i++){massAll += leftLegLink[i].mMass + rightLegLink[i].mMass;}
     for (int i = 0; i < 4; i++){massAll += leftArmLink[i].mMass + rightArmLink[i].mMass;}
 
-    // -------- for Centroidal Dynamics ------- //
     centroidAG  = MatrixNd::Zero(NJF,NJG);
     centroidAICS = MatrixNd::Zero(NJF, NJG);
     compositeInertia = SpatialMatrix::Zero(NJF,NJF);
@@ -188,7 +178,6 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     centroidMomentum = SpatialVector::Zero(NJF);
     centroidMomentumICS = SpatialVector::Zero(NJF);
     spatialTransformG2ICS = SpatialMatrix::Zero(6,6);
-    // -------- for Centroidal Dynamics ------- //
 
     comPos2Waist = Vector3d::Zero();
     comPos2World = Vector3d::Zero();
@@ -214,7 +203,6 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     rightLegSoleJDotQDot = VectorNd::Zero(NJF);
     dualSoleJDotQDot = VectorNd::Zero(2*NJF);
     quadSoleJDotQDot = VectorNd::Zero(4*NJF);
-    // ------------------------- private members of Derived class -------------------
 }
 
 RobotDynamicsBiped::~RobotDynamicsBiped(){
@@ -237,7 +225,6 @@ bool RobotDynamicsBiped::calcWbcDependence(){
     updateKinematicsAcc();
     calcSoleTask();
     calcWaistTask();
-    // ------------------------- public members of Base class -------------------
     quadContactJacoTc.J = quadSoleJacob;
     quadContactJacoTc.JdotQdot = quadSoleJDotQDot;
     biContactJacoTc.J = dualSoleJacob;
@@ -252,15 +239,16 @@ bool RobotDynamicsBiped::calcWbcDependence(){
                 -selMatActuated * leftArmSoleJacob.transpose(),
                 -selMatActuated * rightArmSoleJacob.transpose();//Force @@
     eqCstrMatTauBias = selMatActuated * nonlinearBias;//A*G * G*1 = A*1
-    // ------------------------- public members of Base class -------------------
     return true;
 }
 
 double RobotDynamicsBiped::getTotalMass(){
     return massAll;
 }
-// ======================================== Public Functions ==========================================
 
+//===========================================================================
+// Update and calculate dynamics params
+//===========================================================================
 VectorNd RobotDynamicsBiped::estWaistPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
     VectorNd qTemp = VectorNd::Zero(NJG);
     VectorNd qDotTemp = VectorNd::Zero(NJG);
@@ -374,11 +362,11 @@ VectorNd RobotDynamicsBiped::estFootArmPosVelInWorld(const VectorNd& jointPos, c
 VectorNd RobotDynamicsBiped::getRootXyzRpy(const Eigen::VectorXd & q){//Daniel 5.26
      Eigen::VectorXd rootPose(6);
 
-    // 获取根节点的位置
+    // Obtain root node pos.
     Vector3d position = CalcBodyToBaseCoordinates(*model, q, idPelvis, Vector3d(0.0, 0.0, 0.0), false);
     rootPose.segment<3>(0) = position;
 
-    // 获取根节点的姿态
+    // Obtain root node rpy.
     Matrix3d orientation = CalcBodyWorldOrientation(*model, q, idPelvis, false);
     Eigen::Vector3d eulerAngles = orientation.eulerAngles(0, 1, 2); 
     rootPose.segment<3>(3) = eulerAngles;
@@ -389,10 +377,10 @@ VectorNd RobotDynamicsBiped::getRootXyzRpy(const Eigen::VectorXd & q){//Daniel 5
 VectorNd RobotDynamicsBiped::getRootXyzRpyDot(const Eigen::VectorXd &q, const Eigen::VectorXd &qDot) {//Daniel 5.27
     Eigen::VectorXd rootPoseDot(6);
 
-    // 获取根节点的速度
+    // Obtain root node Velocity screw  
     VectorNd velocity = CalcPointVelocity6D(*model, q, qDot, idPelvis, Vector3d(0.0, 0.0, 0.0), false);
 
-    // 分离线速度和角速度
+    // Split it
     Vector3d linearVelocity = velocity.segment<3>(3);  // 后三个分量是线速度
     Vector3d angularVelocity = velocity.segment<3>(0); // 前三个分量是角速度
 
@@ -402,12 +390,12 @@ VectorNd RobotDynamicsBiped::getRootXyzRpyDot(const Eigen::VectorXd &q, const Ei
     return rootPoseDot;
 }
 
-// Update fuction
 bool RobotDynamicsBiped::updateKinematicsPosVel() {
     UpdateKinematicsCustom(*model, &jntPositions, &jntVelocities, NULL);
     isPosVelUpdated = true;
     return true;
 }
+
 bool RobotDynamicsBiped::updateKinematicsAcc() {
     VectorNd qDDotZero = VectorNd::Zero(NJG);
     UpdateKinematicsCustom(*model, NULL, NULL, &qDDotZero);
@@ -552,18 +540,6 @@ bool RobotDynamicsBiped::calcSoleTask() {
 }
 
 bool RobotDynamicsBiped::calcWaistTask() {
-    // if (!model) {
-    //     std::cerr << "Model pointer is null!" << std::endl;
-    //     return false;
-    // }
-    // if (jntPositions.size() == 0) {
-    //     std::cerr << "Joint positions are not initialized!" << std::endl;
-    //     return false;
-    // }
-    // if (upTorsoJacob.rows() == 0 || upTorsoJacob.cols() == 0) {
-    //     std::cerr << "upTorsoJacob is not initialized!" << std::endl;
-    //     return false;
-    // }
     calcUpTorsoJacob();
     calcUpTorsoJDotQDot();  
     calcWaistJacob();
@@ -585,7 +561,9 @@ bool RobotDynamicsBiped::calcCentroidalMomentum() {
     return true;
 }
 
-// ------------------------- Math function ----------------------------------------
+//===========================================================================
+// Math operations
+//===========================================================================
 Vector3d RobotDynamicsBiped::rotaitonMatrix2EulerRPY(const Matrix3d& rotMat) {
     Vector3d rpy = Vector3d::Zero();
     rpy(0) = std::atan2(rotMat(2,1), rotMat(2,2));
@@ -616,4 +594,3 @@ Matrix3d RobotDynamicsBiped::skew(const Vector3d& omg) {
             -omg(1), omg(0), 0;
     return matRes;
 }
-// ------------------------- Math function ----------------------------------------
