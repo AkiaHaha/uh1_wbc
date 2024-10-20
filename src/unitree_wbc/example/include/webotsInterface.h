@@ -67,18 +67,18 @@ class Derivative {
         double sigOutPrev;
 };
 
-struct webotState
+struct webotsState
 {
     Eigen::VectorXd jointPosAct = Eigen::VectorXd::Zero(NJ);
     Eigen::VectorXd jointVelAct = Eigen::VectorXd::Zero(NJ);
     Eigen::VectorXd jointTorAct = Eigen::VectorXd::Zero(NJ);
-    Eigen::VectorXd imu9DAct = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd imuAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd footGrfAct = Eigen::VectorXd::Zero(2);
     Eigen::Vector3d waistRpyAct = Eigen::Vector3d::Zero();
-    Eigen::Vector3d waistRpyVelAct = Eigen::Vector3d::Zero();
-    Eigen::Vector3d waistXyzAccAct = Eigen::Vector3d::Zero();
+    Eigen::Vector3d waistDRpyAct = Eigen::Vector3d::Zero();
+    Eigen::Vector3d waistDDXyzAct = Eigen::Vector3d::Zero();
 
-    Eigen::VectorXd waistXyzPosVelAct = Eigen::VectorXd::Zero(6);
+    Eigen::VectorXd waistXyzDXyzAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd LeftSoleXyzRpyAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd RightSoleXyzRpyAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd LeftArmHandXyzRpyAct = Eigen::VectorXd::Zero(6);
@@ -94,7 +94,7 @@ public:
 
     void initWebots();
     void deleteRobot();
-    bool readData(double simTime, webotState &robotState);
+    bool readData(double simTime, webotsState &robotState);
     bool setMotorPos(const Eigen::VectorXd & jointPosTar);
     bool setMotorTau(const Eigen::VectorXd & jointTauTar);
     bool setMotorPosTau(const Eigen::VectorXd & jointTauPosMixed);

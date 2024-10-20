@@ -14,6 +14,7 @@
 #include "robotDynamicsBiped.h"
 #include "taskDefinitionBiped.h"
 #include "constraintDefinitionBiped.h"
+#include "webotsInterface.h"
 #include "operation.h"
 #include "configParams.h"
 
@@ -42,11 +43,7 @@ public:
     //=====================================================
     // Functions for invocation
     //=====================================================
-    bool update(double timeCtrlSys, const Eigen::VectorXd & imuData,
-                const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
-                const Eigen::VectorXd & forceSensorData, 
-                const Eigen::VectorXd & LeftSoleXyzRpyAct, const Eigen::VectorXd & RightSoleXyzRpyAct, 
-                const Eigen::VectorXd & LeftArmHandXyzRpyAct, const Eigen::VectorXd & RightArmHandXyzRpyAct);
+    bool update(double timeCtrlSys, webotsState & robotStateSim);
     bool getValueTauOpt(Eigen::VectorXd & jntTorOpt);
     bool getValuePosCurrent(Eigen::VectorXd & jntPosCur);
     bool getValueQdd(Eigen::VectorXd & Qdd);
@@ -54,11 +51,7 @@ public:
 
 private:
     ConfigParams configParams;
-    bool stateEstimation(const Eigen::VectorXd & imuData,
-                        const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
-                        const Eigen::VectorXd & forceSensorData, 
-                        const Eigen::VectorXd & LeftSoleXyzRpyAct, const Eigen::VectorXd & RightSoleXyzRpyAct,
-                        const Eigen::VectorXd & LeftArmHandXyzRpyAct, const Eigen::VectorXd & RightArmHandXyzRpyAct);                         
+    bool stateEstimation(webotsState & robotStateSim);                         
     bool motionPlan();
     bool taskControl();
     Eigen::MatrixXd diag(const std::vector<double>& diagElement);

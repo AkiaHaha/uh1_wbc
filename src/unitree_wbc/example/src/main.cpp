@@ -42,14 +42,14 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     // webots
     WebotsRobot bipedWebots;
     bipedWebots.initWebots();
-    webotState robotStateSim;
+    webotsState robotStateSim;
  
     // controller
     RobotController RobotController;
 
     // vector //
     Eigen::VectorXd standPosCmd = Eigen::VectorXd::Zero(NJ);
-    Eigen::VectorXd jointTorCmd = Eigen::VectorXd::Zero(NJ);
+    Eigen::VectorXd jointToqCmd = Eigen::VectorXd::Zero(NJ);
 
     Eigen::VectorXd jointPosInteg = Eigen::VectorXd::Zero(NJ);
     Eigen::VectorXd jointPosAcc = Eigen::VectorXd::Zero(NJ);
@@ -90,11 +90,8 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
 
         }else if (simCnt < simStopCnt){
             //dynamic control get torque
-            RobotController.update(simTime-goStandTime, robotStateSim.imu9DAct,
-                             robotStateSim.jointPosAct, robotStateSim.jointVelAct, robotStateSim.footGrfAct,
-                             robotStateSim.LeftSoleXyzRpyAct, robotStateSim.RightSoleXyzRpyAct,
-                             robotStateSim.LeftArmHandXyzRpyAct, robotStateSim.RightArmHandXyzRpyAct);
-            RobotController.getValueTauOpt(jointTorCmd);
+            RobotController.update(simTime-goStandTime, robotStateSim);
+            RobotController.getValueTauOpt(jointToqCmd);
 
          
             //Integrate acc for pos
@@ -112,7 +109,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             // for (size_t i = 0; i < NJ; i++){
             //     // joint_pos_msg.data[i] = 10;
             //     // joint_pos_msg.data[i] = jointPosAcc[i];
-            //     // joint_pos_msg.data[i] = jointTorCmd[i];
+            //     // joint_pos_msg.data[i] = jointToqCmd[i];
             //     joint_pos_msg.data[i] = robotStateSim.jointPosAct[i];
             // }
             // sim_info_msg.data[0] = simTime;
@@ -121,27 +118,27 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
 
 //-----------------------------------------------------------------
 //universal set toq / pos
-            // jointTorCmd(16) = 0;
-            bipedWebots.setMotorTau(jointTorCmd);
+            // jointToqCmd(16) = 0;
+            bipedWebots.setMotorTau(jointToqCmd);
             
             // bipedWebots.setMotorPos(jointPosInteg);
 
 
 //pos-leg&torso 
-            // standPosCmd.segment(11,8) = jointTorCmd.segment(11,8);
+            // standPosCmd.segment(11,8) = jointToqCmd.segment(11,8);
             // bipedWebots.setMotorPosTau(standPosCmd);
             // akiaPrint1(standPosCmd, 19, 5, 5, 5, 1, 4, 4);
 //pos-leg
-            // standPosCmd.segment(10,9) = jointTorCmd.segment(10,9);
+            // standPosCmd.segment(10,9) = jointToqCmd.segment(10,9);
             // bipedWebots.setMotorPosTau3(standPosCmd);
             // akiaPrint1(standPosCmd, 19, 5, 5, 5, 1, 4, 4);
 
 //pos-shoulder
-            // standPosCmd.head(10) = jointTorCmd.head(10);
+            // standPosCmd.head(10) = jointToqCmd.head(10);
             // bipedWebots.setMotorPosTau2(standPosCmd);  
 
 //only-pos-torso
-            // bipedWebots.setMotorPosTau4(jointTorCmd);
+            // bipedWebots.setMotorPosTau4(jointToqCmd);
 
 //-----------------------------------------------------------------
 

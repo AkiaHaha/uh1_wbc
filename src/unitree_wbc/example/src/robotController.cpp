@@ -4,6 +4,7 @@
 #include "robotController.h"
 #include "robotDynamics.h"
 #include "robotDynamicsBiped.h"
+#include "webotsInterface.h"
 
 #include "json.hpp"
 
@@ -98,11 +99,7 @@ Eigen::MatrixXd RobotController::diag(const std::vector<double>& diagElement){
 //================================================================
 // The main update controller of this frame
 //================================================================
-bool RobotController::update(double timeCtrlSys, const Eigen::VectorXd & imuData,
-                const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
-                const Eigen::VectorXd & forceSensorData, 
-                const Eigen::VectorXd & LeftSoleXyzRpyAct, const Eigen::VectorXd & RightSoleXyzRpyAct, 
-                const Eigen::VectorXd & LeftArmHandXyzRpyAct, const Eigen::VectorXd & RightArmHandXyzRpyAct){
+bool RobotController::update(double timeCtrlSys, webotsState& robotStateSim){
     // update Time
     timeCs = timeCtrlSys;
     if ( tick > 0){
@@ -112,8 +109,7 @@ bool RobotController::update(double timeCtrlSys, const Eigen::VectorXd & imuData
         time = 0.0;
     }
 
-    stateEstimation(imuData, jntPos, jntVel, forceSensorData, LeftSoleXyzRpyAct, 
-                        RightSoleXyzRpyAct, LeftArmHandXyzRpyAct, RightArmHandXyzRpyAct);
+    stateEstimation(robotStateSim);
     motionPlan();
     taskControl();
 
@@ -150,17 +146,13 @@ bool RobotController::getValuePosCurrent(Eigen::VectorXd &jntPosCur){
 //================================================================
 // Use sensor data for state estimation
 //================================================================
-bool RobotController::stateEstimation(const Eigen::VectorXd & imuData,
-                                      const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
-                                      const Eigen::VectorXd & forceSensorData, 
-                                      const Eigen::VectorXd & LeftSoleXyzRpyAct, const Eigen::VectorXd & RightSoleXyzRpyAct,
-                                      const Eigen::VectorXd & LeftArmHandXyzRpyAct, const Eigen::VectorXd & RightArmHandXyzRpyAct){
+bool RobotController::stateEstimation(webotsState & robotStateSim){
     // Data from sensor
-    rpyTorsoEst = imuData.head(3);
-    rpyDotTorsoEst = imuData.tail(3);
-    qActuated = jntPos;
-    qDotActuated = jntVel;
-    groundReactiveForce = forceSensorData;
+    rpyTorsoEst = robotStateSim.waistRpyAct.head(3);
+    rpyDotTorsoEst = robotStateSim.waistDRpyAct.tail(3);
+    qActuated = robotStateSim.jointPosAct;
+    qDotActuated = robotStateSim.jointVelAct;
+    groundReactiveForce = robotStateSim.footGrfAct;
 
     qGen.tail(nJa) = qActuated;
     qDotGen.tail(nJa) = qDotActuated;
@@ -173,7 +165,7 @@ bool RobotController::stateEstimation(const Eigen::VectorXd & imuData,
     xyzTorsoEst = trosoStateTemp.head(3); 
     xyzDotTorsoEst = trosoStateTemp.tail(3);
     qGen.head(3) = xyzTorsoEst;
-    qDotGen.head(3) = xyzDotTorsoEst;//>>>
+    qDotGen.head(3) = xyzDotTorsoEst;
 
     // UpTorso pose
     Eigen::VectorXd poseTemp0 = Eigen::VectorXd::Zero(12,1);
@@ -399,14 +391,8 @@ bool RobotController::taskControl(){
         std::cerr << "QP failed; Exiting the program at time of: " << timeCs << "  simpleStatus: " << simpleStatus << std::endl;
         exit(EXIT_FAILURE); 
     }
-        // cout << endl << "output*** " << timeCs << endl;
-        // cout << endl << "qDDotOpt-----------------" << endl;
-        // akiaPrint1(qDDotOpt, NJ, 5, 5, 5, 1, 4, 4);
-        // cout << endl << "forceOpt-----------------" << endl;
-        // akiaPrint1(forceOpt, NFCC2, 2, 6, 6);
         cout << endl << "tauOpt at timeCs of " << timeCs << endl;
         akiaPrint1(tauOpt, NJ, 5, 5, 5, 1, 4, 4);
-        // cout << endl << "varOpt-----------------" << endl;
-        // akiaPrint1(varOpt, NV, 5, 6, 11, 8, 6, 6);
+
     return true;
 }

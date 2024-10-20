@@ -53,20 +53,18 @@ void WebotsRobot::initWebots()
     imu = robot->getInertialUnit("inertial_unit_upperBody");
     accelerometer = robot->getAccelerometer("accelerometer_upperBody");
     
+    // Key control node
     Waist = robot->getFromDef("UnitreeH1");
     SoleLeft = robot->getFromDef("LeftFootSole");
     SoleRight = robot->getFromDef("RightFootSole");
     ArmHandLeft = robot->getFromDef("LeftArmSole");
     ArmHandRight = robot->getFromDef("RightArmSole");
 
-    // enable
+    // Enable sensors
     for (int i = 0; i < NJ; i++) {
         legMotor[i]->enableTorqueFeedback(TIME_STEP);
-    }
-    for (int i = 0; i < NJ; i++) {
         legSensor[i]->enable(TIME_STEP);
     }
-
     imu->enable(TIME_STEP);
     accelerometer->enable(TIME_STEP);
 
@@ -82,14 +80,13 @@ void WebotsRobot::initWebots()
 
 }
 
-
 void WebotsRobot::deleteRobot()
 {
     // delete robot;
 }
 
 
-bool WebotsRobot::readData(double simTime, webotState & robotStateSim)
+bool WebotsRobot::readData(double simTime, webotsState & robotStateSim)
 {
     // Motor pos
     robotStateSim.jointPosAct = getMotorPos();
@@ -107,8 +104,8 @@ bool WebotsRobot::readData(double simTime, webotState & robotStateSim)
     // Motor torque
     robotStateSim.jointTorAct = getMotorTau();
 
-    // IMU Data 9-dof
-    const double* rotmArray = Waist->getOrientation(); // it's a pointer //
+    // IMU Data of RPY and dRPY; 
+    const double* rotmArray = Waist->getOrientation();
     Eigen::Matrix3d rotm;
     rotm << rotmArray[0], rotmArray[1], rotmArray[2],
             rotmArray[3], rotmArray[4], rotmArray[5],
@@ -121,24 +118,23 @@ bool WebotsRobot::readData(double simTime, webotState & robotStateSim)
         }
     }
     for (int i = 0; i < 3; i++) {
-        robotStateSim.waistRpyVelAct(i) = dRpy.at(i).mSig(robotStateSim.waistRpyAct(i));
+        robotStateSim.waistDRpyAct(i) = dRpy.at(i).mSig(robotStateSim.waistRpyAct(i));
     }
-
-    // waist acc
-    robotStateSim.waistXyzAccAct = getWaistAcc();
-
-    //waist xyz PosVel
-    const double* xyzArray1 = Waist->getPosition(); // it's a pointer //
-    const double* xyzArray2 = Waist->getVelocity();
-    robotStateSim.waistXyzPosVelAct << xyzArray1[0], xyzArray1[1], xyzArray1[2], xyzArray2[0], xyzArray2[1], xyzArray2[2];
-
     //data summary//
-    robotStateSim.imu9DAct << robotStateSim.waistRpyAct, robotStateSim.waistXyzPosVelAct, robotStateSim.waistRpyVelAct;
+    robotStateSim.imuAct << robotStateSim.waistRpyAct, robotStateSim.waistDRpyAct;
+
+    // Waist's ddXYZ;
+    robotStateSim.waistDDXyzAct = getWaistAcc();
+
+    // Waist's XYZ & dXYZ;
+    const double* xyzArray1 = Waist->getPosition();
+    const double* xyzArray2 = Waist->getVelocity();
+    robotStateSim.waistXyzDXyzAct << xyzArray1[0], xyzArray1[1], xyzArray1[2], xyzArray2[0], xyzArray2[1], xyzArray2[2];
 
     //External Force
     robotStateSim.footGrfAct = getFootForce2D();
 
-    //Foot xyz and rpy // Daniel 5.26
+    //Foot xyz and rpy @Danny240516
     const double* a1 = SoleLeft->getPosition();
     const double* a2Array = SoleLeft->getOrientation();
     Eigen::Matrix3d a2;
@@ -159,7 +155,7 @@ bool WebotsRobot::readData(double simTime, webotState & robotStateSim)
     robotStateSim.RightSoleXyzRpyAct.head(3) << a3[0], a3[1], a3[2];
     robotStateSim.RightSoleXyzRpyAct.tail(3) = rotm2Rpy(a4);
 
-    //Arm xyz and rpy //Daniel 5.26
+    //Arm xyz and rpy @Danny240516
     const double* b1 = ArmHandLeft->getPosition();
     const double* b2Array = ArmHandLeft->getOrientation();
     Eigen::Matrix3d b2;
@@ -232,8 +228,6 @@ bool WebotsRobot::setMotorPosTau4(const Eigen::VectorXd& jointTauPosMixed) {
     return true;
 }
 
-
-
 bool WebotsRobot::setMotorTau(const Eigen::VectorXd& jointTauTar) {
     for (int i = 0; i < NJ; i++) {
         legMotor[i]->setTorque(jointTauTar(i, 0));
@@ -263,7 +257,7 @@ Eigen::Vector3d WebotsRobot::getWaistAcc() {
     return acceleration;
 }
 
-//--Daniel--a big modify here; cause the foot force feedback is adjusted from 6d 2 1d, only torque on y_axis--//
+// The foot force feedback is adjusted from 6d 2 1d, only torque on y_axis @Danny240520
 Eigen::VectorXd WebotsRobot::getFootForce(const int& footFlag) {
     Eigen::VectorXd torqueY(1); 
     double toq;
@@ -292,7 +286,6 @@ Eigen::VectorXd WebotsRobot::getFootForce2D() {
     FootForce << LFootForce,  RFootForce;
     return FootForce;
 }
-//---------------------------------------------------------------------------------------------------Daniel--//
 
 Eigen::Vector3d WebotsRobot::rotm2Rpy(const Eigen::Matrix3d & rotm) {
     Eigen::Vector3d rpy = Eigen::Vector3d::Zero();
@@ -302,7 +295,6 @@ Eigen::Vector3d WebotsRobot::rotm2Rpy(const Eigen::Matrix3d & rotm) {
     return rpy;
 }
 
-// **************************************************************************************************************//
 
 Derivative :: Derivative () {}
 
