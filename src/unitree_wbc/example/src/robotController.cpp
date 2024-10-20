@@ -148,11 +148,22 @@ bool RobotController::getValuePosCurrent(Eigen::VectorXd &jntPosCur){
 //================================================================
 bool RobotController::stateEstimation(webotsState & robotStateSim){
     // Data from sensor
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    rpyPelvisEst = robotStateSim.pelvisRpyAct.head(3);
+    rpyDotPelvisEst = robotStateSim.pelvisDRpyAct.tail(3);
+=======
+    rpyTorsoEst = robotStateSim.waistRpyAct.head(3);
+    rpyDotTorsoEst = robotStateSim.waistDRpyAct.tail(3);
+>>>>>>> 4eee64e... Improvement of webotsInterface I/O;
+>>>>>>> c286957... Unify names to only torso & pelvis
     qActuated = robotStateSim.jointPosAct;
     qDotActuated = robotStateSim.jointVelAct;
     groundReactiveForce = robotStateSim.footGrfAct;
     qGen.tail(nJa) = qActuated;
     qDotGen.tail(nJa) = qDotActuated;
+<<<<<<< HEAD
     qGen.segment(3,3) = robotStateSim.pelvisRpyAct;
     qDotGen.segment(3,3) = robotStateSim.pelvisDRpyAct;
 
@@ -174,6 +185,67 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     twistEstRightFoot = robotDynamics->estPointTwistWorld(qGen, qDotGen, 2);
     twistEstLeftArm = robotDynamics->estPointTwistWorld(qGen, qDotGen, 3);
     twistEstRightArm = robotDynamics->estPointTwistWorld(qGen, qDotGen, 4);
+=======
+    qGen.segment(3,3) = rpyPelvisEst;
+    qDotGen.segment(3,3) = rpyDotPelvisEst;
+
+    // Pelvis xyz pos&vel
+    Eigen::VectorXd trosoStateTemp = Eigen::VectorXd::Zero(6,1);
+<<<<<<< HEAD
+    trosoStateTemp = robotDynamics->estPelvisPosVelInWorld(qGen, qDotGen, 0);
+    xyzPelvisEst = trosoStateTemp.head(3); 
+    xyzDotPelvisEst = trosoStateTemp.tail(3);
+    qGen.head(3) = xyzPelvisEst;
+    qDotGen.head(3) = xyzDotPelvisEst;
+=======
+    trosoStateTemp = robotDynamics->estWaistPosVelInWorld(qGen, qDotGen, 0);
+    xyzTorsoEst = trosoStateTemp.head(3); 
+    xyzDotTorsoEst = trosoStateTemp.tail(3);
+    qGen.head(3) = xyzTorsoEst;
+    qDotGen.head(3) = xyzDotTorsoEst;
+>>>>>>> 4eee64e... Improvement of webotsInterface I/O;
+
+    // Torso pose
+    Eigen::VectorXd poseTemp0 = Eigen::VectorXd::Zero(12,1);
+    poseTemp0 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 0);
+
+    rpyTorsoEst = poseTemp0.head(3);
+    xyzTorsoEst = poseTemp0.segment(3,3);
+    rpyDotTorsoEst = poseTemp0.segment(6,3);
+    xyzDotTorsoEst = poseTemp0.tail(3);
+
+    // Foot EE pos&vel
+    Eigen::VectorXd footStateTemp0 = Eigen::VectorXd::Zero(12,1);
+    Eigen::VectorXd footStateTemp1 = Eigen::VectorXd::Zero(12,1);
+
+    footStateTemp0 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 1);
+    rpyFootEst[0] = footStateTemp0.head(3);
+    xyzFootEst[0] = footStateTemp0.segment(3,3);
+    rpyDotFootEst[0] = footStateTemp0.segment(6,3);
+    xyzDotFootEst[0] = footStateTemp0.tail(3);
+
+    footStateTemp1 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 2);
+    rpyFootEst[1] = footStateTemp1.head(3);
+    xyzFootEst[1] = footStateTemp1.segment(3,3);
+    rpyDotFootEst[1] = footStateTemp1.segment(6,3);
+    xyzDotFootEst[1] = footStateTemp1.tail(3);
+
+    // Arm EE pos&vel
+    Eigen::VectorXd armStateTemp0 = Eigen::VectorXd::Zero(12,1);
+    Eigen::VectorXd armStateTemp1 = Eigen::VectorXd::Zero(12,1);
+
+    armStateTemp0 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 3);
+    xyzArmEst[0] = armStateTemp0.head(3);
+    xyzArmEst[0] = armStateTemp0.segment(3,3);
+    rpyDotArmEst[0] = armStateTemp0.segment(6,3);
+    xyzDotArmEst[0] = armStateTemp0.tail(3);
+
+    armStateTemp1 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 4);
+    rpyArmEst[1] = armStateTemp1.head(3);
+    xyzArmEst[1] = armStateTemp1.segment(3,3);
+    rpyDotArmEst[1] = armStateTemp1.segment(6,3);
+    xyzDotArmEst[1] = armStateTemp1.tail(3);
+>>>>>>> c286957... Unify names to only torso & pelvis
 
     // Set initial task reference
     if(flagEstFirst == 0){

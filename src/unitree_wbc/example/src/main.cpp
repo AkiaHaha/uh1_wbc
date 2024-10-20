@@ -124,7 +124,15 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             // webotsRobot.setMotorPos(jointPosInteg);
 
 
+<<<<<<< HEAD
 //pos-leg&torso 
+=======
+<<<<<<< HEAD
+//pos-leg&pelvis 
+=======
+//pos-leg&torso 
+>>>>>>> 4eee64e... Improvement of webotsInterface I/O;
+>>>>>>> c286957... Unify names to only torso & pelvis
             // standPosCmd.segment(11,8) = jointToqCmd.segment(11,8);
             // webotsRobot.setMotorPosTau(standPosCmd);
             // akiaPrint1(standPosCmd, 19, 5, 5, 5, 1, 4, 4);
@@ -137,8 +145,17 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             // standPosCmd.head(10) = jointToqCmd.head(10);
             // webotsRobot.setMotorPosTau2(standPosCmd);  
 
+<<<<<<< HEAD
 //only-pos-torso
             // webotsRobot.setMotorPosTau4(jointToqCmd);
+=======
+<<<<<<< HEAD
+//only-pos-pelvis
+=======
+//only-pos-torso
+>>>>>>> 4eee64e... Improvement of webotsInterface I/O;
+            // bipedWebots.setMotorPosTau4(jointToqCmd);
+>>>>>>> c286957... Unify names to only torso & pelvis
 
 //-----------------------------------------------------------------
 
