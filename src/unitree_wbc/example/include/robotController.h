@@ -15,6 +15,7 @@
 #include "taskDefinitionBiped.h"
 #include "constraintDefinitionBiped.h"
 #include "operation.h"
+#include "configParams.h"
 
 #ifndef PI
     #define PI 3.141592654
@@ -35,9 +36,7 @@
 class RobotController
 {
 public:
-
     RobotController();
-    
     ~RobotController();
 
     //=====================================================
@@ -54,6 +53,7 @@ public:
 
 
 private:
+    ConfigParams configParams;
     bool stateEstimation(const Eigen::VectorXd & imuData,
                         const Eigen::VectorXd & jntPos, const Eigen::VectorXd & jntVel,
                         const Eigen::VectorXd & forceSensorData, 
@@ -143,8 +143,6 @@ private:
     Eigen::Vector3d rpyArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyDotArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
 
-
-
     // Reference state
     Eigen::Vector3d torsoXyzRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d torsoRpyRef = Eigen::Vector3d::Zero();
@@ -173,24 +171,6 @@ private:
     double cpuTimeRes{0.};     // the cputime actually performed
     double costOpt{0.};        // QP cost function value
 
-    // PD gains
-    std::vector<double> kpTorsoXyz{0., 0., 0.};
-    std::vector<double> kdTorsoXyz{0., 0., 0.};
-    std::vector<double> kpTorsoRpy = {0., 0., 0.};
-    std::vector<double> kdTorsoRpy = {0., 0., 0.};
-    std::vector<double> kpUpTorsoXyz{0., 0., 0.};
-    std::vector<double> kdUpTorsoXyz{0., 0., 0.};
-    std::vector<double> kpUpTorsoRpy = {0., 0., 0.};
-    std::vector<double> kdUpTorsoRpy = {0., 0., 0.};
-    std::vector<double> kpFootXyz{0., 0., 0.};
-    std::vector<double> kdFootXyz{0., 0., 0.};
-    std::vector<double> kpFootRpy{0., 0., 0.};
-    std::vector<double> kdFootRpy{0., 0., 0.};
-    std::vector<double> kpArmXyz{0., 0., 0.};
-    std::vector<double> kdArmXyz{0., 0., 0.};
-    std::vector<double> kpArmRpy{0., 0., 0.};
-    std::vector<double> kdArmRpy{0., 0., 0.};
-
     // Constraint parameters of friction cone and torque limitation
     double muStatic{0.6};
     double jointTauLimit{200.0};
@@ -204,23 +184,9 @@ private:
     Eigen::VectorXd lowerbounds = -jointQddotLimit * Eigen::VectorXd::Ones(nV);
     Eigen::VectorXd upperbounds = jointQddotLimit * Eigen::VectorXd::Ones(nV);
 
-    // Weight value of tasks and constraints
-    Eigen::Vector3d weightTorsoPosition = Eigen::Vector3d::Zero();
-    Eigen::Vector3d weightTorsoOrientation = Eigen::Vector3d::Zero();
-    Eigen::Vector3d weightUpTorsoPosition = Eigen::Vector3d::Zero();
-    Eigen::Vector3d weightUpTorsoOrientation = Eigen::Vector3d::Zero();
-    Eigen::VectorXd weightFootArmPosition = Eigen::VectorXd::Zero(NFCC4);//Daniel 24.5.21
-    Eigen::VectorXd weightFootForce = Eigen::VectorXd::Zero(NFCC2);
-    Eigen::VectorXd weightFootForceChange = Eigen::VectorXd::Zero(NFCC2);
-    Eigen::VectorXd weightFootArmForce = Eigen::VectorXd::Zero(NFCC4);
-    Eigen::VectorXd weightFootArmForceChange = Eigen::VectorXd::Zero(NFCC4);
-    Eigen::VectorXd weightFloatBaseDynamic = Eigen::VectorXd::Zero(6);
-    Eigen::VectorXd weightGlobalVelLimitation = Eigen::VectorXd::Zero(19);
-
     // Auxiliary Data
     std::vector<int> intData;
     std::vector<double> doubleData;
-
 
     // Additional body control task @Daniel240523
     Eigen::Vector3d xyzTorsoInit = Eigen::Vector3d::Zero();

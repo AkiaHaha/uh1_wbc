@@ -10,7 +10,6 @@
 using namespace std;
 using json = nlohmann::json;
 // #define USING_HQP
-// #define USING_UNIT_WEI
 
 //=======================================================
 // Initialization of classes
@@ -86,6 +85,16 @@ RobotController::~RobotController(){
     myWbc = nullptr;
 }
 
+Eigen::MatrixXd RobotController::diag(const std::vector<double>& diagElement){
+    int dim = static_cast<int>(diagElement.size());
+    Eigen::MatrixXd diagM = Eigen::MatrixXd::Zero(dim, dim);
+    for (int i = 0; i != dim; i++){
+        diagM(i, i) = diagElement.at(i);
+    }
+    return diagM;
+}
+
+
 //================================================================
 // The main update controller of this frame
 //================================================================
@@ -103,7 +112,8 @@ bool RobotController::update(double timeCtrlSys, const Eigen::VectorXd & imuData
         time = 0.0;
     }
 
-    stateEstimation(imuData, jntPos, jntVel, forceSensorData, LeftSoleXyzRpyAct, RightSoleXyzRpyAct, LeftArmHandXyzRpyAct, RightArmHandXyzRpyAct);
+    stateEstimation(imuData, jntPos, jntVel, forceSensorData, LeftSoleXyzRpyAct, 
+                        RightSoleXyzRpyAct, LeftArmHandXyzRpyAct, RightArmHandXyzRpyAct);
     motionPlan();
     taskControl();
 
@@ -244,12 +254,6 @@ bool RobotController::stateEstimation(const Eigen::VectorXd & imuData,
 // Set the reference task values from planning
 //================================================================
 bool RobotController::motionPlan(){// @Daniel240523
-        std::ifstream inputFile("/home/ukia/gitRepo/uh1_wbc/src/unitree_wbc/config/controller.json");
-        json jsonData;
-        inputFile >> jsonData;
-        double height = jsonData["height"];
-        double pitchApt = jsonData["pitchApt"];
-        double pitchFrq = jsonData["pitchFrq"];
 
         // if (flagTimeSetZero == 0){
         //     time = 0.0;
@@ -263,24 +267,24 @@ bool RobotController::motionPlan(){// @Daniel240523
 
         // Torso
         if(time <= 1000){
-            dsp = rpyTorsoInit(1)-pitchApt*(sin((pitchFrq*time+0.5)*PI)-1);
+            dsp = rpyTorsoInit(1)-configParams.pitchApt*(sin((configParams.pitchFrq*time+0.5)*PI)-1);
         }
         // xyzTorsoTgt = xyzTorsoInit;
         // xyzDotTorsoTgt << 0.0, 0.0, 0.0;
-        xyzTorsoTgt << xyzTorsoInit(0), xyzTorsoInit(1), xyzTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
+        xyzTorsoTgt << xyzTorsoInit(0), xyzTorsoInit(1), xyzTorsoInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
         // xyzTorsoTgt << comx, comy, xyzTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
         // xyzTorsoTgt << CoM(0), CoM(1), xyzTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
-        xyzDotTorsoTgt <<  0.0, 0.0, height*PI*cos((time+0.5)*PI);
+        xyzDotTorsoTgt <<  0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
         rpyTorsoTgt << 0.0, dsp, 0.0;
         rpyDotTorsoTgt << 0.0, 0.0, 0.0;
 
         // Up torso
         // xyzUpTorsoTgt = xyzUpTorsoInit;
         // xyzDotUpTorsoTgt << 0.0, 0.0, 0.0;
-        xyzUpTorsoTgt << xyzUpTorsoInit(0), xyzUpTorsoInit(1), xyzUpTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
+        xyzUpTorsoTgt << xyzUpTorsoInit(0), xyzUpTorsoInit(1), xyzUpTorsoInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
         // xyzUpTorsoTgt << comx, comy, xyzUpTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
         // xyzUpTorsoTgt << CoM(0), CoM(1), xyzUpTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
-        xyzDotUpTorsoTgt << 0.0, 0.0, height*PI*cos((time+0.5)*PI);
+        xyzDotUpTorsoTgt << 0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
         rpyUpTorsoTgt << 0.0, dsp, 0.0;
         rpyDotUpTorsoTgt << 0.0, 0.0, 0.0;
         
@@ -297,15 +301,15 @@ bool RobotController::motionPlan(){// @Daniel240523
 
         // xyzArmTgt[0] = xyzArmInit[0];
         // xyzDotArmTgt[0] = Eigen::Vector3d::Zero();
-        xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z()+height*(sin((time+0.5)*PI)-1);
-        xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z()+height*PI*cos((time+0.5)*PI);
+        xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z()+configParams.height*(sin((time+0.5)*PI)-1);
+        xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z()+configParams.height*PI*cos((time+0.5)*PI);
         rpyArmTgt[0] = rpyArmInit[0];
         rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
 
         // xyzArmTgt[1] = xyzArmInit[1];
         // xyzDotArmTgt[1] = Eigen::Vector3d::Zero();
-        xyzArmTgt[1] << xyzArmInit[1].x(), xyzArmInit[1].y(), xyzArmInit[1].z()+height*(sin((time+0.5)*PI)-1);
-        xyzDotArmTgt[1] << xyzDotArmInit[1].x(), xyzDotArmInit[1].y(), xyzDotArmInit[1].z()+height*PI*cos((time+0.5)*PI);
+        xyzArmTgt[1] << xyzArmInit[1].x(), xyzArmInit[1].y(), xyzArmInit[1].z()+configParams.height*(sin((time+0.5)*PI)-1);
+        xyzDotArmTgt[1] << xyzDotArmInit[1].x(), xyzDotArmInit[1].y(), xyzDotArmInit[1].z()+configParams.height*PI*cos((time+0.5)*PI);
         rpyArmTgt[1] = rpyArmInit[1];
         rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
 
@@ -319,198 +323,42 @@ bool RobotController::taskControl(){
     // Update Robot Dynamics 
     myWbc->updateRobotDynamics(qGen, qDotGen);
 
-    //
-    std::ifstream inputFile("/home/ukia/gitRepo/uh1_wbc/src/unitree_wbc/config/controller.json");
-    json jsonData;
-    inputFile >> jsonData;
+    // Calculate References //
 
-    double kpTorsoR = jsonData["kpTorsoR"];
-    double kpTorsoP = jsonData["kpTorsoP"];
-    double kpTorsoY = jsonData["kpTorsoY"];
-    double kdTorsoR = jsonData["kdTorsoR"];
-    double kdTorsoP = jsonData["kdTorsoP"];
-    double kdTorsoY = jsonData["kdTorsoY"];
-
-    double kpTorsoX = jsonData["kpTorsoX"];
-    double kpTorsoYY = jsonData["kpTorsoYY"];
-    double kpTorsoZ = jsonData["kpTorsoZ"];
-    double kdTorsoX = jsonData["kdTorsoX"];
-    double kdTorsoYY = jsonData["kdTorsoYY"];
-    double kdTorsoZ = jsonData["kdTorsoZ"];
-
-    double kpUpTorsoR = jsonData["kpUpTorsoR"];
-    double kpUpTorsoP = jsonData["kpUpTorsoP"];
-    double kpUpTorsoY = jsonData["kpUpTorsoY"];
-    double kdUpTorsoR = jsonData["kdUpTorsoR"];
-    double kdUpTorsoP = jsonData["kdUpTorsoP"];
-    double kdUpTorsoY = jsonData["kdUpTorsoY"];
-
-    double kpUpTorsoX = jsonData["kpUpTorsoX"];
-    double kpUpTorsoYY = jsonData["kpUpTorsoYY"];
-    double kpUpTorsoZ = jsonData["kpUpTorsoZ"];
-    double kdUpTorsoX = jsonData["kdUpTorsoX"];
-    double kdUpTorsoYY = jsonData["kdUpTorsoYY"];
-    double kdUpTorsoZ = jsonData["kdUpTorsoZ"];
-
-    double kpFootR = jsonData["kpFootR"];
-    double kpFootP = jsonData["kpFootP"];
-    double kpFootY = jsonData["kpFootY"];
-    double kdFootR = jsonData["kdFootR"];
-    double kdFootP = jsonData["kdFootP"];
-    double kdFootY = jsonData["kdFootY"];
-
-    double weightGVL = jsonData["weightGVL"];
-    double weightGVL10 = jsonData["weightGVL10"];
-    double weightGVLKnee = jsonData["weightGVLKnee"];
-    double weightGVLAnkle = jsonData["weightGVLAnkle"];
-
-    double weightFootForceR = jsonData["weightFootForceR"];
-    double weightFootForceP = jsonData["weightFootForceP"];
-    double weightFootForceYaw = jsonData["weightFootForceYaw"];
-    double weightFootForceX = jsonData["weightFootForceX"];
-    double weightFootForceY = jsonData["weightFootForceY"];
-    double weightFootForceZ = jsonData["weightFootForceZ"];
-
-    double weightArmForceR = jsonData["weightArmForceR"];
-    double weightArmForceP = jsonData["weightArmForceP"];
-    double weightArmForceYaw = jsonData["weightArmForceYaw"];
-    double weightArmForceX = jsonData["weightArmForceX"];
-    double weightArmForceY = jsonData["weightArmForceY"];
-    double weightArmForceZ = jsonData["weightArmForceZ"];
-
-    double weightFBD = jsonData["weightFBD"];
-
-    double weightFootPos = jsonData["weightFootPos"];
-    double weightFootYaw = jsonData["weightFootYaw"];
-    double weightArmPos = jsonData["weightArmPos"];
-    double weightArmRPY = jsonData["weightArmRPY"];
-    double weightArmZ = jsonData["weightArmZ"];
-
-    // double weightTorsoPos = jsonData["weightTorsoPos"];
-    // double weightTorsoRPY = jsonData["weightTorsoRPY"];
-
-    // ------------------------------ set weights --------------------------------------
-#ifdef USING_UNIT_WEI
-    weightTorsoPosition = fillVector3(weightTorsoPos);                                           
-    weightTorsoOrientation = fillVector3(weightTorsoPos); 
-    weightUpTorsoPosition = fillVector3(1);                                        
-    weightUpTorsoOrientation << 1, 1, 1;
-    weightFootArmPosition = fillVector(weightFootPos, weightArmPos);   
-    weightFootArmPosition(2) = weightFootYaw;
-    weightFootArmPosition(8) = weightFootYaw;
-    weightFootArmPosition(17) = weightArmZ;
-    weightFootArmPosition(23) = weightArmZ;
-    weightFootArmPosition.segment(12,3) = Eigen::VectorXd::Constant(3,weightArmRPY);
-    weightFootArmPosition.segment(18,3) = Eigen::VectorXd::Constant(3,weightArmRPY);
-    weightFootArmForce = Eigen::VectorXd::Constant(24,1);
-    weightFootArmForceChange = Eigen::VectorXd::Constant(24,1);
-    weightFloatBaseDynamic = Eigen::VectorXd::Constant(6,1);
-    weightGlobalVelLimitation = Eigen::VectorXd::Constant(19,1);
-#else
-    weightTorsoPosition = fillVector3(600000);                                           
-    weightTorsoOrientation = fillVector3(600000); 
-    weightUpTorsoPosition = fillVector3(300000);                                        
-    weightUpTorsoOrientation << 300000, 300000, 3000000;
-
-    weightFootArmPosition = fillVector(weightFootPos, weightArmPos);   
-    weightFootArmPosition(2) = weightFootYaw;
-    weightFootArmPosition(8) = weightFootYaw;
-    weightFootArmPosition(17) = weightArmZ;
-    weightFootArmPosition(23) = weightArmZ;
-    weightFootArmPosition.segment(12,3) = Eigen::VectorXd::Constant(3,weightArmRPY);
-    weightFootArmPosition.segment(18,3) = Eigen::VectorXd::Constant(3,weightArmRPY);
-    
-    weightFootArmForce <<   weightFootForceR, weightFootForceP, weightFootForceYaw, 
-                            weightFootForceX, weightFootForceY, weightFootForceZ, 
-                            weightFootForceR, weightFootForceP, weightFootForceYaw, 
-                            weightFootForceX, weightFootForceY, weightFootForceZ,
-                            weightArmForceR, weightArmForceP, weightArmForceYaw, 
-                            weightArmForceX, weightArmForceY, weightArmForceZ, 
-                            weightArmForceR, weightArmForceP, weightArmForceYaw, 
-                            weightArmForceX, weightArmForceY, weightArmForceZ;
-                            // 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 
-                            // 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01;
-
-    weightFootArmForceChange << weightFootForceR, weightFootForceP, weightFootForceYaw, 
-                                weightFootForceX, weightFootForceY, weightFootForceZ, 
-                                weightFootForceR, weightFootForceP, weightFootForceYaw, 
-                                weightFootForceX, weightFootForceY, weightFootForceZ,
-                                weightArmForceR, weightArmForceP, weightArmForceYaw, 
-                                weightArmForceX, weightArmForceY, weightArmForceZ, 
-                                weightArmForceR, weightArmForceP, weightArmForceYaw, 
-                                weightArmForceX, weightArmForceY, weightArmForceZ;
-
-    weightFloatBaseDynamic = Eigen::VectorXd::Constant(6,weightFBD);
-
-    weightGlobalVelLimitation = Eigen::VectorXd::Constant(19,weightGVL);
-    weightGlobalVelLimitation(10) = weightGVL10;
-    weightGlobalVelLimitation(3) = weightGVLKnee;
-    weightGlobalVelLimitation(8) = weightGVLKnee;
-    weightGlobalVelLimitation(4) = weightGVLAnkle;
-    weightGlobalVelLimitation(9) = weightGVLAnkle;
-#endif
-
-    // ------------------------------ Set PD gains ------------------------------------ //
-    kpTorsoRpy = {kpTorsoR, kpTorsoP, kpTorsoY};
-    kdTorsoRpy = {kdTorsoR, kdTorsoP, kdTorsoY};
-    kpTorsoXyz = {kpTorsoX, kpTorsoYY, kpTorsoZ};
-    kdTorsoXyz = {kdTorsoX, kdTorsoYY, kdTorsoZ};
-
-    kpUpTorsoRpy = {kpUpTorsoR, kpUpTorsoP, kpUpTorsoY};
-    kdUpTorsoRpy = {kdUpTorsoR, kdUpTorsoP, kdUpTorsoY};
-    kpUpTorsoXyz = {kpUpTorsoX, kpUpTorsoYY, kpUpTorsoZ};
-    kdUpTorsoXyz = {kdUpTorsoX, kdUpTorsoYY, kdUpTorsoZ};
-
-
-    kpFootXyz = {800., 800., 800.};
-    kdFootXyz = {15., 15., 15.};
-    kpFootRpy = {kpFootR, kpFootP, kpFootY};
-    kdFootRpy = {kdFootR, kdFootP, kdFootY};
-
-    kpArmXyz = fillVector2(1200, 3);
-    kdArmXyz = fillVector2(120, 3);
-    kpArmRpy = fillVector2(1000, 3);
-    kdArmRpy = fillVector2(100, 3);
-    // ------------------------------ Calculate Reference ------------------------------//
     // torso
-    torsoRpyRef = diag(kpTorsoRpy)*(rpyTorsoTgt - rpyTorsoEst) + diag(kdTorsoRpy)*(rpyDotTorsoTgt - rpyDotTorsoEst);
-    torsoXyzRef = diag(kpTorsoXyz)*(xyzTorsoTgt - xyzTorsoEst) + diag(kdTorsoXyz)*(xyzDotTorsoTgt - xyzDotTorsoEst);
+    torsoRpyRef = diag(configParams.kpTorsoRpy)*(rpyTorsoTgt - rpyTorsoEst) + diag(configParams.kdTorsoRpy)*(rpyDotTorsoTgt - rpyDotTorsoEst);
+    torsoXyzRef = diag(configParams.kpTorsoXyz)*(xyzTorsoTgt - xyzTorsoEst) + diag(configParams.kdTorsoXyz)*(xyzDotTorsoTgt - xyzDotTorsoEst);
     //up torso
-    upTorsoRpyRef = diag(kpUpTorsoRpy)*(rpyUpTorsoTgt - rpyUpTorsoEst) + diag(kdUpTorsoRpy)*(rpyDotUpTorsoTgt - rpyDotUpTorsoEst);
-    upTorsoXyzRef = diag(kpUpTorsoXyz)*(xyzUpTorsoTgt - xyzUpTorsoEst) + diag(kdUpTorsoXyz)*(xyzDotUpTorsoTgt - xyzDotUpTorsoEst);
+    upTorsoRpyRef = diag(configParams.kpUpTorsoRpy)*(rpyUpTorsoTgt - rpyUpTorsoEst) + diag(configParams.kdUpTorsoRpy)*(rpyDotUpTorsoTgt - rpyDotUpTorsoEst);
+    upTorsoXyzRef = diag(configParams.kpUpTorsoXyz)*(xyzUpTorsoTgt - xyzUpTorsoEst) + diag(configParams.kdUpTorsoXyz)*(xyzDotUpTorsoTgt - xyzDotUpTorsoEst);
     // left foot
-    footArmPosRef.segment(0,3) = diag(kpFootRpy)*(rpyFootTgt[0] - rpyFootEst[0]) + diag(kdFootRpy)*(rpyDotFootTgt[0] - rpyDotFootEst[0]);
-    footArmPosRef.segment(3,3) = diag(kpFootXyz)*(xyzFootTgt[0] - xyzFootEst[0]) + diag(kdFootXyz)*(xyzDotFootTgt[0] - xyzDotFootEst[0]); 
+    footArmPosRef.segment(0,3) = diag(configParams.kpFootRpy)*(rpyFootTgt[0] - rpyFootEst[0]) + diag(configParams.kdFootRpy)*(rpyDotFootTgt[0] - rpyDotFootEst[0]);
+    footArmPosRef.segment(3,3) = diag(configParams.kpFootXyz)*(xyzFootTgt[0] - xyzFootEst[0]) + diag(configParams.kdFootXyz)*(xyzDotFootTgt[0] - xyzDotFootEst[0]); 
     //right foot 
-    footArmPosRef.segment(6,3) = diag(kpFootRpy)*(rpyFootTgt[1] - rpyFootEst[1]) + diag(kdFootRpy)*(rpyDotFootTgt[1] - rpyDotFootEst[1]);
-    footArmPosRef.segment(9,3) = diag(kpFootXyz)*(xyzFootTgt[1] - xyzFootEst[1]) + diag(kdFootXyz)*(xyzDotFootTgt[1] - xyzDotFootEst[1]); 
+    footArmPosRef.segment(6,3) = diag(configParams.kpFootRpy)*(rpyFootTgt[1] - rpyFootEst[1]) + diag(configParams.kdFootRpy)*(rpyDotFootTgt[1] - rpyDotFootEst[1]);
+    footArmPosRef.segment(9,3) = diag(configParams.kpFootXyz)*(xyzFootTgt[1] - xyzFootEst[1]) + diag(configParams.kdFootXyz)*(xyzDotFootTgt[1] - xyzDotFootEst[1]); 
     // left arm
-    footArmPosRef.segment(12,3) = diag(kpArmRpy)*(rpyArmTgt[0] - rpyArmEst[0]) + diag(kdArmRpy)*(rpyDotArmTgt[0] - rpyDotArmEst[0]);
-    footArmPosRef.segment(15,3) = diag(kpArmXyz)*(xyzArmTgt[0] - xyzArmEst[0]) + diag(kdArmXyz)*(xyzDotArmTgt[0] - xyzDotArmEst[0]); 
+    footArmPosRef.segment(12,3) = diag(configParams.kpArmRpy)*(rpyArmTgt[0] - rpyArmEst[0]) + diag(configParams.kdArmRpy)*(rpyDotArmTgt[0] - rpyDotArmEst[0]);
+    footArmPosRef.segment(15,3) = diag(configParams.kpArmXyz)*(xyzArmTgt[0] - xyzArmEst[0]) + diag(configParams.kdArmXyz)*(xyzDotArmTgt[0] - xyzDotArmEst[0]); 
     //right arm 
-    footArmPosRef.segment(18,3) = diag(kpArmRpy)*(rpyArmTgt[1] - rpyArmEst[1]) + diag(kdArmRpy)*(rpyDotArmTgt[1] - rpyDotArmEst[1]);
-    footArmPosRef.segment(21,3) = diag(kpArmXyz)*(xyzArmTgt[1] - xyzArmEst[1]) + diag(kdArmXyz)*(xyzDotArmTgt[1] - xyzDotArmEst[1]);  
+    footArmPosRef.segment(18,3) = diag(configParams.kpArmRpy)*(rpyArmTgt[1] - rpyArmEst[1]) + diag(configParams.kdArmRpy)*(rpyDotArmTgt[1] - rpyDotArmEst[1]);
+    footArmPosRef.segment(21,3) = diag(configParams.kpArmXyz)*(xyzArmTgt[1] - xyzArmEst[1]) + diag(configParams.kdArmXyz)*(xyzDotArmTgt[1] - xyzDotArmEst[1]);  
     
     GlobalVelocityLimitationRef = -qDotActuated;
     footArmForceRef = forceOpt;
     // footArmForceRef.tail(12) = Eigen::VectorXd::Zero(12);
 
-    cout << "foot force ref" << endl;
-    akiaPrint1(forceOpt, NFCC4, 4, 6, 6, 6, 6);
-    // cout<<endl;
-    // akiaPrint1(footArmforceChangeRef, NFCC2, 4, 6, 6, 6, 6);
 
-    // ------------------------------ Update task & constraint -------------------------                 
-    myWbc->updateTask("BipedTorsoPosRpy", torsoRpyRef, weightTorsoOrientation);
-    myWbc->updateTask("BipedTorsoPosXyz", torsoXyzRef, weightTorsoPosition);
-    myWbc->updateTask("BipedUpTorsoPosRpy", upTorsoRpyRef, weightUpTorsoOrientation);
-    myWbc->updateTask("BipedUpTorsoPosXyz", upTorsoXyzRef, weightUpTorsoPosition);
-    myWbc->updateTask("Position", footArmPosRef, weightFootArmPosition);
-    myWbc->updateTask("Force4", footArmForceRef, weightFootArmForce);
-    // myWbc->updateTask("ForceChange4", footArmForceChangeRef, weightFootArmForceChange);
-    myWbc->updateTask("GlobalVelocityLimitation", GlobalVelocityLimitationRef, weightGlobalVelLimitation);
-    myWbc->updateTask("Dynamics", floatBaseDynamicRef, weightFloatBaseDynamic);
-
+    // Update task & constraint             
+    myWbc->updateTask("BipedTorsoPosRpy", torsoRpyRef, configParams.weightTorsoOrientation);
+    myWbc->updateTask("BipedTorsoPosXyz", torsoXyzRef, configParams.weightTorsoPosition);
+    myWbc->updateTask("BipedUpTorsoPosRpy", upTorsoRpyRef, configParams.weightUpTorsoOrientation);
+    myWbc->updateTask("BipedUpTorsoPosXyz", upTorsoXyzRef, configParams.weightUpTorsoPosition);
+    myWbc->updateTask("Position", footArmPosRef, configParams.weightFootArmPosition);
+    myWbc->updateTask("Force4", footArmForceRef, configParams.weightFootArmForce);
+    // myWbc->updateTask("ForceChange4", footArmForceChangeRef, configParams.weightFootArmForceChange);
+    myWbc->updateTask("GlobalVelocityLimitation", GlobalVelocityLimitationRef, configParams.weightGlobalVelLimitation);
+    myWbc->updateTask("Dynamics", floatBaseDynamicRef, configParams.weightFloatBaseDynamic);
 
     // myWbc->updateTask("ForceChange4", footArmForceChangeRef, weightFootArmForceChange);
     // myWbc->updateTask("ForceChange", footForceChangeRef, weightFootForceChange);
@@ -520,21 +368,17 @@ bool RobotController::taskControl(){
     myWbc->updateConstraint("BipedCenterOfPressure");
     myWbc->updateConstraint("BipedJointTorqueSaturation");
 
-    // ------------------------------ Update bounds -------------------------------------
+    // Update bounds
     lowerbounds(NG+5) = 0.0;
     upperbounds(NG+5) = 1000.0*GRAVITY;
     lowerbounds(NG+11) = 0.0;
     upperbounds(NG+11) = 1000.0*GRAVITY;
-
-    // cout << lowerbounds.transpose() << endl;
-    // cout << upperbounds.transpose() << endl;
     myWbc->updateBound(lowerbounds, upperbounds);
 
-    // ------------------------------ WBC solve ------------------------------------------
-    // exe wbc slove
+    // WBC solve
     myWbc->wbcSolve();
 
-    // get some data from solved wbc //
+    // Get some data from solved wbc
     myWbc->getAuxiliaryDataInt(intData);
     nWsrRes = intData.at(0);
     double Nlevel = myWbc->getNlevel();
@@ -545,8 +389,7 @@ bool RobotController::taskControl(){
     costOpt = doubleData.at(0);
     cpuTimeRes = doubleData.at(1);
 
-    // get wbc variables output and clac toq //
-    // here shows the nV = G + Fc //
+    // Get wbc variables output and clac toq //
     if (simpleStatus == 0){
         myWbc->getResultOpt(varOpt);
         qDDotOpt = varOpt.head(nJg);
@@ -566,13 +409,4 @@ bool RobotController::taskControl(){
         // cout << endl << "varOpt-----------------" << endl;
         // akiaPrint1(varOpt, NV, 5, 6, 11, 8, 6, 6);
     return true;
-}
-
-Eigen::MatrixXd RobotController::diag(const std::vector<double>& diagElement){
-    int dim = static_cast<int>(diagElement.size());
-    Eigen::MatrixXd diagM = Eigen::MatrixXd::Zero(dim, dim);
-    for (int i = 0; i != dim; i++){
-        diagM(i, i) = diagElement.at(i);
-    }
-    return diagM;
 }
