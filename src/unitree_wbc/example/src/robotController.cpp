@@ -1,12 +1,4 @@
-#include <iostream>
-#include <fstream>
-
 #include "robotController.h"
-#include "dynamics.h"
-#include "robotDynamics.h"
-#include "webotsInterface.h"
-
-#include "json.hpp"
 
 using namespace std;
 using json = nlohmann::json;

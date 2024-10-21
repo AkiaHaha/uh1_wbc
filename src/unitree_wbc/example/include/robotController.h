@@ -2,6 +2,7 @@
 #define AGIROBOT_EXAMPLE_BIPEDCONTROLLER_H
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <stdexcept>
@@ -12,6 +13,7 @@
 #include "hqpWbc.h"
 
 #include "dynamics.h"
+#include "robotDynamics.h"
 #include "taskDefinition.h"
 #include "constraintDefinition.h"
 #include "webotsInterface.h"
@@ -85,8 +87,6 @@ private:
     Eigen::Vector3d rpyPelvisEst = Eigen::Vector3d::Zero(), rpyDotPelvisEst = Eigen::Vector3d::Zero();
     Eigen::Vector3d xyzTorsoEst = Eigen::Vector3d::Zero(), xyzDotTorsoEst = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTorsoEst = Eigen::Vector3d::Zero(), rpyDotTorsoEst = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d xyzFootEst = Eigen::Vector3d::Zero(), xyzDotFootEst = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyFootEst = Eigen::Vector3d::Zero(), rpyDotFootEst = Eigen::Vector3d::Zero();
 
     Eigen::Vector3d xyzFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d xyzDotFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
@@ -108,10 +108,6 @@ private:
     Eigen::Vector3d xyzDotTorsoTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTorsoTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyDotTorsoTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d xyzFootTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d xyzDotFootTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyFootTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyDotFootTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d xyzFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d xyzDotFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
@@ -122,10 +118,6 @@ private:
     Eigen::Vector3d rpyFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyDotFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
 
-    // Eigen::Vector3d xyzArmTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d xyzDotArmTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyArmTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyDotArmTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d xyzArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d xyzDotArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
@@ -141,10 +133,6 @@ private:
     Eigen::Vector3d pelvisRpyRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d torsoXyzRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d torsoRpyRef = Eigen::Vector3d::Zero();
-    // Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(nFc);//Daniel 24.5.21
-    // Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(12);//Daniel
-    // Eigen::VectorXd forceRef = Eigen::VectorXd::Zero(nFc);
-    // Eigen::VectorXd forceChangeRef = Eigen::VectorXd::Zero(nFc);
     Eigen::VectorXd footArmPosRef = Eigen::VectorXd::Zero(NFCC4);//Daniel
     Eigen::VectorXd footForceRef = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd footForceChangeRef = Eigen::VectorXd::Zero(NFCC2);
