@@ -121,7 +121,8 @@
     "valarray": "cpp",
     "any": "cpp",
     "codecvt": "cpp",
-    "filesystem": "cpp"
+    "filesystem": "cpp",
+    "core": "cpp"
   },
   "python.autoComplete.extraPaths": [
     "/home/ukia/ustc_ws/devel/lib/python3/dist-packages",

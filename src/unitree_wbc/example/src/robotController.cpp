@@ -140,33 +140,33 @@ bool RobotController::getValuePosCurrent(Eigen::VectorXd &jntPosCur){
 //================================================================
 bool RobotController::stateEstimation(webotsState & robotStateSim){
     // Data from sensor
-    rpyPelvisEst = robotStateSim.pelvisRpyAct.head(3);
-    rpyDotPelvisEst = robotStateSim.pelvisDRpyAct.tail(3);
+    pelvisTwistEst.head(3) = robotStateSim.pelvisRpyAct.head(3);
+    pelvisTwistEst.segment(6,3) = robotStateSim.pelvisDRpyAct.tail(3);
     qActuated = robotStateSim.jointPosAct;
     qDotActuated = robotStateSim.jointVelAct;
     groundReactiveForce = robotStateSim.footGrfAct;
 
     qGen.tail(nJa) = qActuated;
     qDotGen.tail(nJa) = qDotActuated;
-    qGen.segment(3,3) = rpyPelvisEst;
-    qDotGen.segment(3,3) = rpyDotPelvisEst;
+    qGen.segment(3,3) = pelvisTwistEst.head(3);
+    qDotGen.segment(3,3) = pelvisTwistEst.segment(6,3);
 
     // Pelvis xyz pos&vel
     Eigen::VectorXd trosoStateTemp = Eigen::VectorXd::Zero(6,1);
     trosoStateTemp = robotDynamics->estPelvisPosVelInWorld(qGen, qDotGen, 0);
-    xyzPelvisEst = trosoStateTemp.head(3); 
-    xyzDotPelvisEst = trosoStateTemp.tail(3);
-    qGen.head(3) = xyzPelvisEst;
-    qDotGen.head(3) = xyzDotPelvisEst;
+    pelvisTwistEst.segment(3,3) = trosoStateTemp.head(3); 
+    pelvisTwistEst.tail(3) = trosoStateTemp.tail(3);
+    qGen.head(3) = pelvisTwistEst.segment(3,3);
+    qDotGen.head(3) = pelvisTwistEst.tail(3);
 
     // Torso pose
     Eigen::VectorXd poseTemp0 = Eigen::VectorXd::Zero(12,1);
     poseTemp0 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 0);
 
-    rpyTorsoEst = poseTemp0.head(3);
-    xyzTorsoEst = poseTemp0.segment(3,3);
-    rpyDotTorsoEst = poseTemp0.segment(6,3);
-    xyzDotTorsoEst = poseTemp0.tail(3);
+    torsoTwistEst.head(3) = poseTemp0.head(3);
+    torsoTwistEst.segment(3,3) = poseTemp0.segment(3,3);
+    torsoTwistEst.segment(6,3) = poseTemp0.segment(6,3);
+    torsoTwistEst.tail(3) = poseTemp0.tail(3);
 
     // Foot EE pos&vel
     Eigen::VectorXd footStateTemp0 = Eigen::VectorXd::Zero(12,1);
@@ -204,11 +204,11 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     if(flagEstFirst == 0){
         flagEstFirst = 1;
 
-        xyzPelvisInit = xyzPelvisEst;
-        xyzTorsoInit = xyzTorsoEst;
+        xyzPelvisInit = pelvisTwistEst.segment(3,3);
+        xyzTorsoInit = torsoTwistEst.segment(3,3);
 
-        rpyPelvisInit = rpyPelvisEst;
-        rpyTorsoInit = rpyTorsoEst;
+        rpyPelvisInit = pelvisTwistEst.head(3);
+        rpyTorsoInit = torsoTwistEst.head(3);
 
         rpyFootInit[0] = rpyFootEst[0]; 
         xyzFootInit[0] = xyzFootEst[0]; 
@@ -288,11 +288,11 @@ bool RobotController::taskControl(){
     // Calculate References //
 
     // Pelvis
-    pelvisRpyRef = diag(configParams.kpPelvisRpy)*(rpyPelvisTgt - rpyPelvisEst) + diag(configParams.kdPelvisRpy)*(rpyDotPelvisTgt - rpyDotPelvisEst);
-    pelvisXyzRef = diag(configParams.kpPelvisXyz)*(xyzPelvisTgt - xyzPelvisEst) + diag(configParams.kdPelvisXyz)*(xyzDotPelvisTgt - xyzDotPelvisEst);
+    pelvisRpyRef = diag(configParams.kpPelvisRpy)*(rpyPelvisTgt - pelvisTwistEst.head(3)) + diag(configParams.kdPelvisRpy)*(rpyDotPelvisTgt - pelvisTwistEst.segment(6,3));
+    pelvisXyzRef = diag(configParams.kpPelvisXyz)*(xyzPelvisTgt - pelvisTwistEst.segment(3,3)) + diag(configParams.kdPelvisXyz)*(xyzDotPelvisTgt - pelvisTwistEst.tail(3));
     // Torso
-    torsoRpyRef = diag(configParams.kpTorsoRpy)*(rpyTorsoTgt - rpyTorsoEst) + diag(configParams.kdTorsoRpy)*(rpyDotTorsoTgt - rpyDotTorsoEst);
-    torsoXyzRef = diag(configParams.kpTorsoXyz)*(xyzTorsoTgt - xyzTorsoEst) + diag(configParams.kdTorsoXyz)*(xyzDotTorsoTgt - xyzDotTorsoEst);
+    torsoRpyRef = diag(configParams.kpTorsoRpy)*(rpyTorsoTgt - torsoTwistEst.head(3)) + diag(configParams.kdTorsoRpy)*(rpyDotTorsoTgt - torsoTwistEst.segment(6,3));
+    torsoXyzRef = diag(configParams.kpTorsoXyz)*(xyzTorsoTgt - torsoTwistEst.segment(3,3)) + diag(configParams.kdTorsoXyz)*(xyzDotTorsoTgt - torsoTwistEst.tail(3));
     // left foot
     footArmPosRef.segment(0,3) = diag(configParams.kpFootRpy)*(rpyFootTgt[0] - rpyFootEst[0]) + diag(configParams.kdFootRpy)*(rpyDotFootTgt[0] - rpyDotFootEst[0]);
     footArmPosRef.segment(3,3) = diag(configParams.kpFootXyz)*(xyzFootTgt[0] - xyzFootEst[0]) + diag(configParams.kdFootXyz)*(xyzDotFootTgt[0] - xyzDotFootEst[0]); 
