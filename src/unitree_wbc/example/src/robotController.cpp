@@ -200,37 +200,26 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     rpyDotArmEst[1] = armStateTemp1.segment(6,3);
     xyzDotArmEst[1] = armStateTemp1.tail(3);
 
+
+    leftFootTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 1);
+    rightFootTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 2);
+    leftArmTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 3);
+    rightArmTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 4);
+
     // Set initial task reference
     if(flagEstFirst == 0){
         flagEstFirst = 1;
 
         xyzPelvisInit = pelvisTwistEst.segment(3,3);
-        xyzTorsoInit = torsoTwistEst.segment(3,3);
-
         rpyPelvisInit = pelvisTwistEst.head(3);
+        xyzTorsoInit = torsoTwistEst.segment(3,3);
         rpyTorsoInit = torsoTwistEst.head(3);
 
-        rpyFootInit[0] = rpyFootEst[0]; 
-        xyzFootInit[0] = xyzFootEst[0]; 
-        rpyDotFootInit[0] = rpyDotFootEst[0];
-        xyzDotFootInit[0] = xyzDotFootEst[0];
-
-        rpyFootInit[1] = rpyFootEst[1]; 
-        xyzFootInit[1] = xyzFootEst[1]; 
-        rpyDotFootInit[1] = rpyDotFootEst[1];
-        xyzDotFootInit[1] = xyzDotFootEst[1];
-
-        rpyArmInit[0] = rpyArmEst[0];
-        xyzArmInit[0] = xyzArmEst[0];
-        rpyDotArmInit[0] = rpyDotArmEst[0];
-        xyzDotArmInit[0] = xyzDotArmEst[0];
-
-        rpyArmInit[1] = rpyArmEst[1];
-        xyzArmInit[1] = xyzArmEst[1];
-        rpyDotArmInit[1] = rpyDotArmEst[1];
-        xyzDotArmInit[1] = xyzDotArmEst[1];
+        leftArmTwistInit =  leftArmTwistEst;
+        rightArmTwistInit = rightArmTwistEst;
+        leftFootTwistInit = leftFootTwistEst;
+        rightFootTwistInit = rightFootTwistEst;
     }
-
     return true;
 }
 
@@ -255,25 +244,58 @@ bool RobotController::motionPlan(){// @Daniel240523
         rpyDotTorsoTgt << 0.0, 0.0, 0.0;
         
         // Foot
-        xyzFootTgt[0] = xyzFootInit[0];
+        //==================================================================//
+        xyzFootTgt[0] = leftFootTwistInit.segment(3,3);
         xyzDotFootTgt[0] = Eigen::Vector3d::Zero();
-        rpyFootTgt[0] = rpyFootInit[0];
+        rpyFootTgt[0] = leftFootTwistInit.head(3);
         rpyDotFootTgt[0] = Eigen::Vector3d::Zero();
 
-        xyzFootTgt[1] = xyzFootInit[1];
+        xyzFootTgt[1] = rightFootTwistInit.segment(3,3);
         xyzDotFootTgt[1] = Eigen::Vector3d::Zero();
-        rpyFootTgt[1] = rpyFootInit[1];
+        rpyFootTgt[1] = rightFootTwistInit.head(3);
         rpyDotFootTgt[1] = Eigen::Vector3d::Zero();
 
-        xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z()+configParams.height*(sin((time+0.5)*PI)-1);
-        xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z()+configParams.height*PI*cos((time+0.5)*PI);
-        rpyArmTgt[0] = rpyArmInit[0];
+        xyzArmTgt[0] << leftArmTwistInit(3), leftArmTwistInit(4), leftArmTwistInit(5)+configParams.height*(sin((time+0.5)*PI)-1);
+        xyzDotArmTgt[0] << leftArmTwistInit(9), leftArmTwistInit(10), leftArmTwistInit(11)+configParams.height*PI*cos((time+0.5)*PI);
+        rpyArmTgt[0] = leftArmTwistInit.head(3);
         rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
 
-        xyzArmTgt[1] << xyzArmInit[1].x(), xyzArmInit[1].y(), xyzArmInit[1].z()+configParams.height*(sin((time+0.5)*PI)-1);
-        xyzDotArmTgt[1] << xyzDotArmInit[1].x(), xyzDotArmInit[1].y(), xyzDotArmInit[1].z()+configParams.height*PI*cos((time+0.5)*PI);
-        rpyArmTgt[1] = rpyArmInit[1];
+        xyzArmTgt[1] << rightArmTwistInit(3), rightArmTwistInit(4), rightArmTwistInit(5)+configParams.height*(sin((time+0.5)*PI)-1);
+        xyzDotArmTgt[1] << rightArmTwistInit(9), rightArmTwistInit(10), rightArmTwistInit(11)+configParams.height*PI*cos((time+0.5)*PI);
+        rpyArmTgt[1] = rightArmTwistInit.head(3);
         rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
+
+        //================================================================//
+
+        // xyzFootTgt[0] = xyzFootInit[0];
+        // xyzDotFootTgt[0] = Eigen::Vector3d::Zero();
+        // rpyFootTgt[0] = rpyFootInit[0];
+        // rpyDotFootTgt[0] = Eigen::Vector3d::Zero();
+        // cout << "Data test 2.s =========" << endl
+        //     << rpyFootTgt[0].transpose() << endl
+        //     << xyzFootTgt[0].transpose() << endl
+        //     << rpyDotFootTgt[0].transpose() << endl
+        //     << xyzDotFootTgt[0].transpose() << endl;
+
+        // xyzFootTgt[1] = xyzFootInit[1];
+        // xyzDotFootTgt[1] = Eigen::Vector3d::Zero();
+        // rpyFootTgt[1] = rpyFootInit[1];
+        // rpyDotFootTgt[1] = Eigen::Vector3d::Zero();
+
+        // xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z()+configParams.height*(sin((time+0.5)*PI)-1);
+        // xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z()+configParams.height*PI*cos((time+0.5)*PI);
+        // rpyArmTgt[0] = rpyArmInit[0];
+        // rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
+        // cout << "Data test 3.s =========" << endl
+        //     << rpyArmTgt[0].transpose() << endl
+        //     << xyzArmTgt[0].transpose() << endl
+        //     << rpyDotArmTgt[0].transpose() << endl
+        //     << xyzDotArmTgt[0].transpose() << endl;
+
+        // xyzArmTgt[1] << xyzArmInit[1].x(), xyzArmInit[1].y(), xyzArmInit[1].z()+configParams.height*(sin((time+0.5)*PI)-1);
+        // xyzDotArmTgt[1] << xyzDotArmInit[1].x(), xyzDotArmInit[1].y(), xyzDotArmInit[1].z()+configParams.height*PI*cos((time+0.5)*PI);
+        // rpyArmTgt[1] = rpyArmInit[1];
+        // rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
 
     return true;
 }
