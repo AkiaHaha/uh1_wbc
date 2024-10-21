@@ -77,13 +77,13 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
         if (simCnt < goStandCnt){
             standPosCmd << 0, 0, -0.3, 0.8, -0.46, //left leg--RYP
                            0, 0, -0.3, 0.8, -0.46,//right leg
-                           0,                     //torso
+                           0,                     //pelvis
                            0, 0, 0, 0,  //left arm--PRY
                            0, 0, 0, 0; //right arm
 
             // standPosCmd << 0, 0, 0, 0, 0, //left leg--RYP
             //                0, 0, 0, 0, 0,//right leg
-            //                0,           //torso
+            //                0,           //pelvis
             //                0, 0, 0, 0,  //left arm--PRY
             //                0, 0, 0, 0; //right arm
             bipedWebots.setMotorPos(standPosCmd);//设置初始位置曲腿
@@ -124,7 +124,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             // bipedWebots.setMotorPos(jointPosInteg);
 
 
-//pos-leg&torso 
+//pos-leg&pelvis 
             // standPosCmd.segment(11,8) = jointToqCmd.segment(11,8);
             // bipedWebots.setMotorPosTau(standPosCmd);
             // akiaPrint1(standPosCmd, 19, 5, 5, 5, 1, 4, 4);
@@ -137,7 +137,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             // standPosCmd.head(10) = jointToqCmd.head(10);
             // bipedWebots.setMotorPosTau2(standPosCmd);  
 
-//only-pos-torso
+//only-pos-pelvis
             // bipedWebots.setMotorPosTau4(jointToqCmd);
 
 //-----------------------------------------------------------------

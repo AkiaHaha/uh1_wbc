@@ -321,7 +321,7 @@ VectorNd RobotDynamicsBiped::estFootArmPosVelInWorld(const VectorNd& jointPos, c
     UpdateKinematicsCustom(*model, & qTemp, & qDotTemp, NULL);
     switch (footType)
     {
-        case 0: // Up torso
+        case 0: // Trunk
             sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idTorso, Math::Vector3d::Zero(), false);
             sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idTorso, false);
             sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idTorso, Math::Vector3d::Zero(), false);

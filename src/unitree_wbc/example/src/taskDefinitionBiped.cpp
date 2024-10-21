@@ -25,19 +25,19 @@ bool BipedAngularMomentum::update(const AGIROBOT::RobotDynamics &robot){
     return true;
 } 
 
-bool BipedTorsoPosition::update(const AGIROBOT::RobotDynamics &robot){
+bool BipedPelvisPosition::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J;
     taskVecB = ref - robot.floatBaseJacoTc.JdotQdot;
     return true;
 }
 
-bool BipedTorsoPosRpy::update(const AGIROBOT::RobotDynamics &robot){
+bool BipedPelvisPosRpy::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J.topRows(3);
     taskVecB = ref - robot.floatBaseJacoTc.JdotQdot.head(3);
     return true;
 }
 
-bool BipedTorsoPosXyz::update(const AGIROBOT::RobotDynamics &robot){
+bool BipedPelvisPosXyz::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J.bottomRows(3);
     taskVecB = ref - robot.floatBaseJacoTc.JdotQdot.tail(3);
     return true;

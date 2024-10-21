@@ -81,8 +81,8 @@ private:
     Eigen::VectorXd groundReactiveForce = Eigen::VectorXd::Zero(2);//Daniel nFc->2
     Eigen::VectorXd qGen = Eigen::VectorXd::Zero(nJg);
     Eigen::VectorXd qDotGen = Eigen::VectorXd::Zero(nJg);
-    Eigen::Vector3d xyzTorsoEst = Eigen::Vector3d::Zero(), xyzDotTorsoEst = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyTorsoEst = Eigen::Vector3d::Zero(), rpyDotTorsoEst = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzPelvisEst = Eigen::Vector3d::Zero(), xyzDotPelvisEst = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyPelvisEst = Eigen::Vector3d::Zero(), rpyDotPelvisEst = Eigen::Vector3d::Zero();
     Eigen::Vector3d xyzTrunkEst = Eigen::Vector3d::Zero(), xyzDotTrunkEst = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTrunkEst = Eigen::Vector3d::Zero(), rpyDotTrunkEst = Eigen::Vector3d::Zero();
     // Eigen::Vector3d xyzFootEst = Eigen::Vector3d::Zero(), xyzDotFootEst = Eigen::Vector3d::Zero();
@@ -99,10 +99,10 @@ private:
 
     // Target
     double dsp{};
-    Eigen::Vector3d xyzTorsoTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d xyzDotTorsoTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyTorsoTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyDotTorsoTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzPelvisTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzDotPelvisTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyPelvisTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyDotPelvisTgt = Eigen::Vector3d::Zero();
 
     Eigen::Vector3d xyzTrunkTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d xyzDotTrunkTgt = Eigen::Vector3d::Zero();
@@ -137,8 +137,8 @@ private:
     Eigen::Vector3d rpyDotArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
 
     // Reference state
-    Eigen::Vector3d torsoXyzRef = Eigen::Vector3d::Zero();
-    Eigen::Vector3d torsoRpyRef = Eigen::Vector3d::Zero();
+    Eigen::Vector3d pelvisXyzRef = Eigen::Vector3d::Zero();
+    Eigen::Vector3d pelvisRpyRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d trunkXyzRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d trunkRpyRef = Eigen::Vector3d::Zero();
     // Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(nFc);//Daniel 24.5.21
@@ -182,9 +182,9 @@ private:
     std::vector<double> doubleData;
 
     // Additional body control task @Daniel240523
-    Eigen::Vector3d xyzTorsoInit = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzPelvisInit = Eigen::Vector3d::Zero();
     Eigen::Vector3d xyzTrunkInit = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyTorsoInit = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyPelvisInit = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTrunkInit = Eigen::Vector3d::Zero();
     int flagTimeSetZero{};
     int flagEstFirst{};

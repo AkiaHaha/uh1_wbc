@@ -57,7 +57,7 @@ public:
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedTorsoPosition: public AGIROBOT::Task{
+class BipedPelvisPosition: public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -65,12 +65,12 @@ public:
      * @param taskDim The dimension of Task
      * @param varDim The DoF of variables in the WBC problem
      */
-    BipedTorsoPosition(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~BipedTorsoPosition() = default;
+    BipedPelvisPosition(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedPelvisPosition() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedTorsoPosRpy: public AGIROBOT::Task{
+class BipedPelvisPosRpy: public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -78,12 +78,12 @@ public:
      * @param taskDim The dimension of Task
      * @param varDim The DoF of variables in the WBC problem
      */
-    BipedTorsoPosRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~BipedTorsoPosRpy() = default;
+    BipedPelvisPosRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedPelvisPosRpy() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedTorsoPosXyz: public AGIROBOT::Task{
+class BipedPelvisPosXyz: public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -91,8 +91,8 @@ public:
      * @param taskDim The dimension of Task
      * @param varDim The DoF of variables in the WBC problem
      */
-    BipedTorsoPosXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~BipedTorsoPosXyz() = default;
+    BipedPelvisPosXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedPelvisPosXyz() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 

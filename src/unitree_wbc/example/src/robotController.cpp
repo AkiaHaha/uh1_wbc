@@ -20,8 +20,8 @@ RobotController::RobotController(){
     robotDynamics = new RobotDynamicsBiped();
     
     // Instantiate task & constraint 
-    AGIROBOT::Task * ptrBipedTorsoPosRpy = new BipedTorsoPosRpy("BipedTorsoPosRpy", 3, nV);
-    AGIROBOT::Task * ptrBipedTorsoPosXyz = new BipedTorsoPosXyz("BipedTorsoPosXyz", 3, nV);
+    AGIROBOT::Task * ptrBipedPelvisPosRpy = new BipedPelvisPosRpy("BipedPelvisPosRpy", 3, nV);
+    AGIROBOT::Task * ptrBipedPelvisPosXyz = new BipedPelvisPosXyz("BipedPelvisPosXyz", 3, nV);
     AGIROBOT::Task * ptrBipedTrunkPosRpy = new BipedTrunkPosRpy("BipedTrunkPosRpy", 3, nV);
     AGIROBOT::Task * ptrBipedTrunkPosXyz = new BipedTrunkPosXyz("BipedTrunkPosXyz", 3, nV);
     AGIROBOT::Task * ptrForce4 = new QuadSoleForce("Force4", NFCC4, nV);
@@ -49,8 +49,8 @@ RobotController::RobotController(){
     // myWbc->addTask(ptrBipedTrunkPosRpy, 1);
     // myWbc->addTask(ptrBipedTrunkPosXyz, 1);
     myWbc->addTask(ptrPosition, 1);
-    myWbc->addTask(ptrBipedTorsoPosRpy, 0);
-    myWbc->addTask(ptrBipedTorsoPosXyz, 0);
+    myWbc->addTask(ptrBipedPelvisPosRpy, 0);
+    myWbc->addTask(ptrBipedPelvisPosXyz, 0);
     // myWbc->addTask(ptrDynamic, 0);
     myWbc->addConstraint(ptrBipedDynamicConsistency, 0);
     myWbc->addConstraint(ptrBipedFrictionCone, 0);
@@ -59,8 +59,8 @@ RobotController::RobotController(){
 #else
     // Wqp
     myWbc = new AGIROBOT::WqpWbc(nV, robotDynamics);
-    myWbc->addTask(ptrBipedTorsoPosRpy, 0);
-    myWbc->addTask(ptrBipedTorsoPosXyz, 0);
+    myWbc->addTask(ptrBipedPelvisPosRpy, 0);
+    myWbc->addTask(ptrBipedPelvisPosXyz, 0);
     myWbc->addTask(ptrBipedTrunkPosRpy, 0);
     myWbc->addTask(ptrBipedTrunkPosXyz, 0);
     myWbc->addTask(ptrForce4, 0);
@@ -148,24 +148,24 @@ bool RobotController::getValuePosCurrent(Eigen::VectorXd &jntPosCur){
 //================================================================
 bool RobotController::stateEstimation(webotsState & robotStateSim){
     // Data from sensor
-    rpyTorsoEst = robotStateSim.pelvisRpyAct.head(3);
-    rpyDotTorsoEst = robotStateSim.pelvisDRpyAct.tail(3);
+    rpyPelvisEst = robotStateSim.pelvisRpyAct.head(3);
+    rpyDotPelvisEst = robotStateSim.pelvisDRpyAct.tail(3);
     qActuated = robotStateSim.jointPosAct;
     qDotActuated = robotStateSim.jointVelAct;
     groundReactiveForce = robotStateSim.footGrfAct;
 
     qGen.tail(nJa) = qActuated;
     qDotGen.tail(nJa) = qDotActuated;
-    qGen.segment(3,3) = rpyTorsoEst;
-    qDotGen.segment(3,3) = rpyDotTorsoEst;
+    qGen.segment(3,3) = rpyPelvisEst;
+    qDotGen.segment(3,3) = rpyDotPelvisEst;
 
-    // Torso xyz pos&vel
+    // Pelvis xyz pos&vel
     Eigen::VectorXd trosoStateTemp = Eigen::VectorXd::Zero(6,1);
     trosoStateTemp = robotDynamics->estPelvisPosVelInWorld(qGen, qDotGen, 0);
-    xyzTorsoEst = trosoStateTemp.head(3); 
-    xyzDotTorsoEst = trosoStateTemp.tail(3);
-    qGen.head(3) = xyzTorsoEst;
-    qDotGen.head(3) = xyzDotTorsoEst;
+    xyzPelvisEst = trosoStateTemp.head(3); 
+    xyzDotPelvisEst = trosoStateTemp.tail(3);
+    qGen.head(3) = xyzPelvisEst;
+    qDotGen.head(3) = xyzDotPelvisEst;
 
     // Trunk pose
     Eigen::VectorXd poseTemp0 = Eigen::VectorXd::Zero(12,1);
@@ -212,10 +212,10 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     if(flagEstFirst == 0){
         flagEstFirst = 1;
 
-        xyzTorsoInit = xyzTorsoEst;
+        xyzPelvisInit = xyzPelvisEst;
         xyzTrunkInit = xyzTrunkEst;
 
-        rpyTorsoInit = rpyTorsoEst;
+        rpyPelvisInit = rpyPelvisEst;
         rpyTrunkInit = rpyTrunkEst;
 
         rpyFootInit[0] = rpyFootEst[0]; 
@@ -253,24 +253,24 @@ bool RobotController::motionPlan(){// @Daniel240523
         //     cout << "welcome to plan stage 2 " << endl<<endl;
         // }
         // // TORSO XYZ
-        // xyzTorsoTgt << xyzTorsoInit(0), xyzTorsoInit(1), -0.005*sin(time/1*PI)+xyzTorsoInit(2);
-        // xyzDotTorsoTgt << 0.0, 0.0, -0.005*PI*cos(time/1*PI);
+        // xyzPelvisTgt << xyzPelvisInit(0), xyzPelvisInit(1), -0.005*sin(time/1*PI)+xyzPelvisInit(2);
+        // xyzDotPelvisTgt << 0.0, 0.0, -0.005*PI*cos(time/1*PI);
         // std::cout << "plan stage 2"  << std::endl;
 
-        // Torso
+        // Pelvis
         if(time <= 1000){
-            dsp = rpyTorsoInit(1)-configParams.pitchApt*(sin((configParams.pitchFrq*time+0.5)*PI)-1);
+            dsp = rpyPelvisInit(1)-configParams.pitchApt*(sin((configParams.pitchFrq*time+0.5)*PI)-1);
         }
-        // xyzTorsoTgt = xyzTorsoInit;
-        // xyzDotTorsoTgt << 0.0, 0.0, 0.0;
-        xyzTorsoTgt << xyzTorsoInit(0), xyzTorsoInit(1), xyzTorsoInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
-        // xyzTorsoTgt << comx, comy, xyzTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
-        // xyzTorsoTgt << CoM(0), CoM(1), xyzTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
-        xyzDotTorsoTgt <<  0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
-        rpyTorsoTgt << 0.0, dsp, 0.0;
-        rpyDotTorsoTgt << 0.0, 0.0, 0.0;
+        // xyzPelvisTgt = xyzPelvisInit;
+        // xyzDotPelvisTgt << 0.0, 0.0, 0.0;
+        xyzPelvisTgt << xyzPelvisInit(0), xyzPelvisInit(1), xyzPelvisInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
+        // xyzPelvisTgt << comx, comy, xyzPelvisInit(2)+height*(sin((time+0.5)*PI)-1);
+        // xyzPelvisTgt << CoM(0), CoM(1), xyzPelvisInit(2)+height*(sin((time+0.5)*PI)-1);
+        xyzDotPelvisTgt <<  0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
+        rpyPelvisTgt << 0.0, dsp, 0.0;
+        rpyDotPelvisTgt << 0.0, 0.0, 0.0;
 
-        // Up torso
+        // Trunk
         // xyzTrunkTgt = xyzTrunkInit;
         // xyzDotTrunkTgt << 0.0, 0.0, 0.0;
         xyzTrunkTgt << xyzTrunkInit(0), xyzTrunkInit(1), xyzTrunkInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
@@ -317,10 +317,10 @@ bool RobotController::taskControl(){
 
     // Calculate References //
 
-    // torso
-    torsoRpyRef = diag(configParams.kpTorsoRpy)*(rpyTorsoTgt - rpyTorsoEst) + diag(configParams.kdTorsoRpy)*(rpyDotTorsoTgt - rpyDotTorsoEst);
-    torsoXyzRef = diag(configParams.kpTorsoXyz)*(xyzTorsoTgt - xyzTorsoEst) + diag(configParams.kdTorsoXyz)*(xyzDotTorsoTgt - xyzDotTorsoEst);
-    //up torso
+    // Pelvis
+    pelvisRpyRef = diag(configParams.kpPelvisRpy)*(rpyPelvisTgt - rpyPelvisEst) + diag(configParams.kdPelvisRpy)*(rpyDotPelvisTgt - rpyDotPelvisEst);
+    pelvisXyzRef = diag(configParams.kpPelvisXyz)*(xyzPelvisTgt - xyzPelvisEst) + diag(configParams.kdPelvisXyz)*(xyzDotPelvisTgt - xyzDotPelvisEst);
+    // Trunk
     trunkRpyRef = diag(configParams.kpTrunkRpy)*(rpyTrunkTgt - rpyTrunkEst) + diag(configParams.kdTrunkRpy)*(rpyDotTrunkTgt - rpyDotTrunkEst);
     trunkXyzRef = diag(configParams.kpTrunkXyz)*(xyzTrunkTgt - xyzTrunkEst) + diag(configParams.kdTrunkXyz)*(xyzDotTrunkTgt - xyzDotTrunkEst);
     // left foot
@@ -342,8 +342,8 @@ bool RobotController::taskControl(){
 
 
     // Update task & constraint             
-    myWbc->updateTask("BipedTorsoPosRpy", torsoRpyRef, configParams.weightTorsoOrientation);
-    myWbc->updateTask("BipedTorsoPosXyz", torsoXyzRef, configParams.weightTorsoPosition);
+    myWbc->updateTask("BipedPelvisPosRpy", pelvisRpyRef, configParams.weightPelvisOrientation);
+    myWbc->updateTask("BipedPelvisPosXyz", pelvisXyzRef, configParams.weightPelvisPosition);
     myWbc->updateTask("BipedTrunkPosRpy", trunkRpyRef, configParams.weightTrunkOrientation);
     myWbc->updateTask("BipedTrunkPosXyz", trunkXyzRef, configParams.weightTrunkPosition);
     myWbc->updateTask("Position", footArmPosRef, configParams.weightFootArmPosition);
