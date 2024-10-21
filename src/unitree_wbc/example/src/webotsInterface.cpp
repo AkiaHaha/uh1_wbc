@@ -54,7 +54,7 @@ void WebotsRobot::initWebots()
     accelerometer = robot->getAccelerometer("accelerometer_upperBody");
     
     // Key control node
-    Waist = robot->getFromDef("UnitreeH1");
+    Pelvis = robot->getFromDef("UnitreeH1");
     SoleLeft = robot->getFromDef("LeftFootSole");
     SoleRight = robot->getFromDef("RightFootSole");
     ArmHandLeft = robot->getFromDef("LeftArmSole");
@@ -105,31 +105,31 @@ bool WebotsRobot::readData(double simTime, webotsState & robotStateSim)
     robotStateSim.jointTorAct = getMotorTau();
 
     // IMU Data of RPY and dRPY; 
-    const double* rotmArray = Waist->getOrientation();
+    const double* rotmArray = Pelvis->getOrientation();
     Eigen::Matrix3d rotm;
     rotm << rotmArray[0], rotmArray[1], rotmArray[2],
             rotmArray[3], rotmArray[4], rotmArray[5],
             rotmArray[6], rotmArray[7], rotmArray[8];
-    robotStateSim.waistRpyAct = rotm2Rpy(rotm);
+    robotStateSim.pelvisRpyAct = rotm2Rpy(rotm);
   
     if (simTime > SAMPLE_TIME - 1e-6 && simTime < SAMPLE_TIME + 1e-6){
         for (int i = 0; i < 3; i++) {
-            dRpy.at(i).init(SAMPLE_TIME, 1e-3, robotStateSim.waistRpyAct(i));
+            dRpy.at(i).init(SAMPLE_TIME, 1e-3, robotStateSim.pelvisRpyAct(i));
         }
     }
     for (int i = 0; i < 3; i++) {
-        robotStateSim.waistDRpyAct(i) = dRpy.at(i).mSig(robotStateSim.waistRpyAct(i));
+        robotStateSim.pelvisDRpyAct(i) = dRpy.at(i).mSig(robotStateSim.pelvisRpyAct(i));
     }
     //data summary//
-    robotStateSim.imuAct << robotStateSim.waistRpyAct, robotStateSim.waistDRpyAct;
+    robotStateSim.imuAct << robotStateSim.pelvisRpyAct, robotStateSim.pelvisDRpyAct;
 
-    // Waist's ddXYZ;
-    robotStateSim.waistDDXyzAct = getWaistAcc();
+    // Pelvis's ddXYZ;
+    robotStateSim.pelvisDDXyzAct = getPelvisAcc();
 
-    // Waist's XYZ & dXYZ;
-    const double* xyzArray1 = Waist->getPosition();
-    const double* xyzArray2 = Waist->getVelocity();
-    robotStateSim.waistXyzDXyzAct << xyzArray1[0], xyzArray1[1], xyzArray1[2], xyzArray2[0], xyzArray2[1], xyzArray2[2];
+    // Pelvis's XYZ & dXYZ;
+    const double* xyzArray1 = Pelvis->getPosition();
+    const double* xyzArray2 = Pelvis->getVelocity();
+    robotStateSim.pelvisXyzDXyzAct << xyzArray1[0], xyzArray1[1], xyzArray1[2], xyzArray2[0], xyzArray2[1], xyzArray2[2];
 
     //External Force
     robotStateSim.footGrfAct = getFootForce2D();
@@ -251,7 +251,7 @@ Eigen::VectorXd WebotsRobot::getMotorTau() {
     return Tau;
 }
 
-Eigen::Vector3d WebotsRobot::getWaistAcc() {
+Eigen::Vector3d WebotsRobot::getPelvisAcc() {
     const double* data = accelerometer->getValues();
     Eigen::Vector3d acceleration(data[0], data[1], data[2]);
     return acceleration;

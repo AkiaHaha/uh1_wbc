@@ -47,14 +47,14 @@ public:
     double getTotalMass() override;
 
     /**
-     * @brief estWaistPosVelInWorld
-     *          estimate the waist state in world frame (origin at the stance sole)
+     * @brief estPelvisPosVelInWorld
+     *          estimate the pelvis state in world frame (origin at the stance sole)
      * @param jointPos  generalized joint position
      * @param jointVel  generalized joint velocity
      * @param footType  stance sole label
-     * @return the [posXYZ, velXYZ] of waist in Vector(6,1)
+     * @return the [posXYZ, velXYZ] of pelvis in Vector(6,1)
      */
-    VectorNd estWaistPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
+    VectorNd estPelvisPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
 
     /**
      * @brief estFootArmPosVelInWorld
@@ -96,14 +96,14 @@ private:
     SpatialMatrix spatialTransformG2ICS;        // nJF*nJF, Transform matrix from GCS to ICS
     // -------- for Centroidal Dynamics -------
 
-    Vector3d comPos2Waist;
+    Vector3d comPos2Pelvis;
     Vector3d comPos2World;
     Vector3d comVel2World;
     Vector3d linearMomentum;
     Vector3d angularMomentum;
 
-    MatrixNd waistJacob;
-    VectorNd waistJDotQDot;
+    MatrixNd pelvisJacob;
+    VectorNd pelvisJDotQDot;
 
     MatrixNd trunkJacob;
     VectorNd trunkJDotQDot;
@@ -126,8 +126,8 @@ private:
     bool updateKinematicsPosVel();
     bool updateKinematicsAcc();
 
-    bool calcWaistJacob();
-    bool calcWaistJDotQDot();
+    bool calcPelvisJacob();
+    bool calcPelvisJDotQDot();
     bool calcTrunkJacob();
     bool calcTrunkJDotQDot();
     bool calcSoleJacob();
@@ -138,7 +138,7 @@ private:
     bool calcRigidBodyDynamicsDescriptors();
     bool calcCentroidalDynamicsDescriptors();
     bool calcSoleTask();
-    bool calcWaistTask();
+    bool calcPelvisTask();
 
     bool calcCOMPosVel();
     bool calcCOMState();

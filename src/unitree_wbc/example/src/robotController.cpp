@@ -148,8 +148,8 @@ bool RobotController::getValuePosCurrent(Eigen::VectorXd &jntPosCur){
 //================================================================
 bool RobotController::stateEstimation(webotsState & robotStateSim){
     // Data from sensor
-    rpyTorsoEst = robotStateSim.waistRpyAct.head(3);
-    rpyDotTorsoEst = robotStateSim.waistDRpyAct.tail(3);
+    rpyTorsoEst = robotStateSim.pelvisRpyAct.head(3);
+    rpyDotTorsoEst = robotStateSim.pelvisDRpyAct.tail(3);
     qActuated = robotStateSim.jointPosAct;
     qDotActuated = robotStateSim.jointVelAct;
     groundReactiveForce = robotStateSim.footGrfAct;
@@ -161,7 +161,7 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
 
     // Torso xyz pos&vel
     Eigen::VectorXd trosoStateTemp = Eigen::VectorXd::Zero(6,1);
-    trosoStateTemp = robotDynamics->estWaistPosVelInWorld(qGen, qDotGen, 0);
+    trosoStateTemp = robotDynamics->estPelvisPosVelInWorld(qGen, qDotGen, 0);
     xyzTorsoEst = trosoStateTemp.head(3); 
     xyzDotTorsoEst = trosoStateTemp.tail(3);
     qGen.head(3) = xyzTorsoEst;

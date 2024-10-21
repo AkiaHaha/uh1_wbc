@@ -74,11 +74,11 @@ struct webotsState
     Eigen::VectorXd jointTorAct = Eigen::VectorXd::Zero(NJ);
     Eigen::VectorXd imuAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd footGrfAct = Eigen::VectorXd::Zero(2);
-    Eigen::Vector3d waistRpyAct = Eigen::Vector3d::Zero();
-    Eigen::Vector3d waistDRpyAct = Eigen::Vector3d::Zero();
-    Eigen::Vector3d waistDDXyzAct = Eigen::Vector3d::Zero();
+    Eigen::Vector3d pelvisRpyAct = Eigen::Vector3d::Zero();
+    Eigen::Vector3d pelvisDRpyAct = Eigen::Vector3d::Zero();
+    Eigen::Vector3d pelvisDDXyzAct = Eigen::Vector3d::Zero();
 
-    Eigen::VectorXd waistXyzDXyzAct = Eigen::VectorXd::Zero(6);
+    Eigen::VectorXd pelvisXyzDXyzAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd LeftSoleXyzRpyAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd RightSoleXyzRpyAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd LeftArmHandXyzRpyAct = Eigen::VectorXd::Zero(6);
@@ -105,7 +105,7 @@ public:
 private:
     Eigen::VectorXd getMotorPos();
     Eigen::VectorXd getMotorTau();
-    Eigen::Vector3d getWaistAcc();
+    Eigen::Vector3d getPelvisAcc();
     Eigen::VectorXd getFootForce(const int& footFlag);
     Eigen::VectorXd getFootForce2D();
     Eigen::VectorXd getFootArmForce4D();
@@ -117,7 +117,7 @@ private:
     Gyro *gyro;
     Accelerometer *accelerometer;
     
-    Node* Waist;
+    Node* Pelvis;
     Node* SoleLeft;
     Node* SoleRight;
     Node* ArmHandLeft;

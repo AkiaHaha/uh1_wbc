@@ -56,13 +56,13 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     model = new RigidBodyDynamics::Model();
     model->gravity = Vector3d (0., 0., -GRAVITY_CONST);
     
-    Body floatingWaistLink, torsoLink, fixedAnkleLink, fixedSoleLink, fixedArmEndLink;
+    Body floatingPelvisLink, torsoLink, fixedAnkleLink, fixedSoleLink, fixedArmEndLink;
     Body leftLegLink[5], leftArmLink[5];
     Body rightLegLink[5], rightArmLink[5];
-    Joint floatingWaistJoint, fixedSoleJoint, fixedAnkleJoint, fixedArmEndJoint;
+    Joint floatingPelvisJoint, fixedSoleJoint, fixedAnkleJoint, fixedArmEndJoint;
 
     // Params of Unitree H1 humanoid robot
-    floatingWaistLink = BodyAkia(5.39, Vector3d(-0.0002, 0.0, -0.04522), 0.044582, 0.0082464, 0.049021, 0, 0, 0);
+    floatingPelvisLink = BodyAkia(5.39, Vector3d(-0.0002, 0.0, -0.04522), 0.044582, 0.0082464, 0.049021, 0, 0, 0);
 
     leftLegLink[0] = BodyAkia(2.244, Vector3d(-0.04923, 0.0001, 0.0072), 0.0025731, 0.0030444, 0.0022883, 0, 0, 0); // hip yaw
     leftLegLink[1] = BodyAkia(2.232, Vector3d(-0.0058, -0.00319, -9e-05), 0.0020603, 0.0022482, 0.0024323, 0, 0, 0); // hip row
@@ -93,7 +93,7 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     fixedArmEndLink = Body(0.0, Vector3d (0., 0., 0.), Vector3d (0., 0., 0.));
 
     // Construction of robot use joints, body and transformation matrix;
-    floatingWaistJoint = Joint(SpatialVector(0.,0.,0., 1.,0.,0.),  //                ^ Z
+    floatingPelvisJoint = Joint(SpatialVector(0.,0.,0., 1.,0.,0.),  //                ^ Z
                                 SpatialVector(0.,0.,0., 0.,1.,0.), //                |
                                 SpatialVector(0.,0.,0., 0.,0.,1.), //                |___Pelvis, Torso (1.1) 
                                 SpatialVector(1.,0.,0., 0.,0.,0.), //                |
@@ -121,7 +121,7 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     SpatialTransform translatin_rsr = Xtrans(Vector3d(-0.0055, -0.0565, -0.0165));
     SpatialTransform transform_rsr = rotation_rsr * translatin_rsr;
 
-    idPelvis = model->AddBody(0, Xtrans(Vector3d(0., 0. , 0.)), floatingWaistJoint, floatingWaistLink,"pelvis"); ///< Pelvis of World sys.
+    idPelvis = model->AddBody(0, Xtrans(Vector3d(0., 0. , 0.)), floatingPelvisJoint, floatingPelvisLink,"pelvis"); ///< Pelvis of World sys.
 
     idLeftLegLink[0] = model->AddBody(idPelvis, Xtrans(Vector3d(0, 0.0875, -0.1742)), joint_Rz, leftLegLink[0], "lhy");
     idLeftLegLink[1] = model->AppendBody(Xtrans(Vector3d(0.039468, 0, 0)), joint_Rx, leftLegLink[1], "lhr");
@@ -166,7 +166,7 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     idRightArmLink[3] = model->AppendBody(Xtrans(Vector3d(0.0185, 0, -0.198)), joint_Ry, rightLegLink[3], "rs");
     idRightArmEnd = model->AppendBody(Xtrans(Vector3d(0.27, 0.0, -0.02)), fixedArmEndJoint, fixedArmEndLink, "right_arm_end");
 
-    massAll = floatingWaistLink.mMass + torsoLink.mMass;
+    massAll = floatingPelvisLink.mMass + torsoLink.mMass;
     for (int i = 0; i < 5; i++){massAll += leftLegLink[i].mMass + rightLegLink[i].mMass;}
     for (int i = 0; i < 4; i++){massAll += leftArmLink[i].mMass + rightArmLink[i].mMass;}
 
@@ -179,14 +179,14 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     centroidMomentumICS = SpatialVector::Zero(NJF);
     spatialTransformG2ICS = SpatialMatrix::Zero(6,6);
 
-    comPos2Waist = Vector3d::Zero();
+    comPos2Pelvis = Vector3d::Zero();
     comPos2World = Vector3d::Zero();
     comVel2World = Vector3d::Zero();
     linearMomentum = Vector3d::Zero();
     angularMomentum = Vector3d::Zero();
   
-    waistJacob = MatrixNd::Zero(NJF, NJG);
-    waistJDotQDot = VectorNd::Zero(NJF);
+    pelvisJacob = MatrixNd::Zero(NJF, NJG);
+    pelvisJDotQDot = VectorNd::Zero(NJF);
     trunkJacob = MatrixNd::Zero(NJF, NJG);
     trunkJDotQDot = VectorNd::Zero(NJF);
 
@@ -224,13 +224,13 @@ bool RobotDynamicsBiped::calcWbcDependence(){
 //  calcCentroidalDynamicsDescriptors();
     updateKinematicsAcc();
     calcSoleTask();
-    calcWaistTask();
+    calcPelvisTask();
     quadContactJacoTc.J = quadSoleJacob;
     quadContactJacoTc.JdotQdot = quadSoleJDotQDot;
     biContactJacoTc.J = dualSoleJacob;
     biContactJacoTc.JdotQdot = dualSoleJDotQDot;
-    floatBaseJacoTc.J = waistJacob;
-    floatBaseJacoTc.JdotQdot = waistJDotQDot;
+    floatBaseJacoTc.J = pelvisJacob;
+    floatBaseJacoTc.JdotQdot = pelvisJDotQDot;
     trunkJacoTc.J = trunkJacob;
     trunkJacoTc.JdotQdot = trunkJDotQDot;
     eqCstrMatTau << selMatActuated * inertiaMat, //A*G * G*G
@@ -249,11 +249,11 @@ double RobotDynamicsBiped::getTotalMass(){
 //===========================================================================
 // Update and calculate dynamics params
 //===========================================================================
-VectorNd RobotDynamicsBiped::estWaistPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
+VectorNd RobotDynamicsBiped::estPelvisPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
     VectorNd qTemp = VectorNd::Zero(NJG);
     VectorNd qDotTemp = VectorNd::Zero(NJG);
-    Vector3d sole2WaistPos = Vector3d::Zero();
-    Vector3d sole2WaistVel = Vector3d::Zero();
+    Vector3d sole2PelvisPos = Vector3d::Zero();
+    Vector3d sole2PelvisVel = Vector3d::Zero();
     VectorNd posVelRes = VectorNd::Zero(6,1);
     qTemp = jointPos;
     qDotTemp = jointVel;
@@ -261,18 +261,18 @@ VectorNd RobotDynamicsBiped::estWaistPosVelInWorld(const VectorNd& jointPos, con
     switch (footType)
     {
         case TYPELEFTSOLE: // Left Sole
-            sole2WaistPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
-            sole2WaistVel = CalcPointVelocity(*model, qTemp, qDotTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
+            sole2PelvisPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
+            sole2PelvisVel = CalcPointVelocity(*model, qTemp, qDotTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
             break;
         case TYPERIGHTSOLE: // Right Sole
-            sole2WaistPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
-            sole2WaistVel = CalcPointVelocity(*model, qTemp, qDotTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
+            sole2PelvisPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
+            sole2PelvisVel = CalcPointVelocity(*model, qTemp, qDotTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
             break;    
         default:
             break;
     }
-    posVelRes.head(3) = qTemp.head(3)-sole2WaistPos;
-    posVelRes.tail(3) = qDotTemp.head(3)-sole2WaistVel;
+    posVelRes.head(3) = qTemp.head(3)-sole2PelvisPos;
+    posVelRes.tail(3) = qDotTemp.head(3)-sole2PelvisVel;
     return posVelRes;
 }
 
@@ -402,13 +402,13 @@ bool RobotDynamicsBiped::updateKinematicsAcc() {
     return true;
 }
 
-bool RobotDynamicsBiped::calcWaistJacob() {
-    CalcPointJacobian6D(*model, jntPositions, idPelvis, Vector3d::Zero(), waistJacob, false);
+bool RobotDynamicsBiped::calcPelvisJacob() {
+    CalcPointJacobian6D(*model, jntPositions, idPelvis, Vector3d::Zero(), pelvisJacob, false);
     return true;
 }
 
-bool RobotDynamicsBiped::calcWaistJDotQDot() {
-    waistJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idPelvis, Vector3d::Zero(), false);
+bool RobotDynamicsBiped::calcPelvisJDotQDot() {
+    pelvisJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idPelvis, Vector3d::Zero(), false);
     return true;
 }
 
@@ -481,55 +481,55 @@ bool RobotDynamicsBiped::calcCentroidalDynamicsDescriptors() {
     SpatialMatrix psi = SpatialMatrix::Zero(6,6);
     SpatialMatrix psiT = SpatialMatrix::Zero(6,6);
 
-    SpatialMatrix spatialTransformWaist2G = SpatialMatrix::Zero(6,6);
-    Matrix3d rotMatformWaist2G = Matrix3d::Zero();
+    SpatialMatrix spatialTransformPelvis2G = SpatialMatrix::Zero(6,6);
+    Matrix3d rotMatformPelvis2G = Matrix3d::Zero();
 
-    Vector3d waistPosXYZ = Vector3d::Zero();
-    Matrix3d waistRotm = Matrix3d::Zero();
-    MatrixNd waistJacob = MatrixNd::Zero(NJF, NJG);
+    Vector3d pelvisPosXYZ = Vector3d::Zero();
+    Matrix3d pelvisRotm = Matrix3d::Zero();
+    MatrixNd pelvisJacob = MatrixNd::Zero(NJF, NJG);
     MatrixNd spatialInertia1C = MatrixNd::Zero(NJF, NJF);
 
     //step: 1  Solve H Matrix
     //step: 2  Solve C Bias
 
     //step: 3  Solve pG Vector
-    //0R1(3x3)  and waistJacob
-    waistPosXYZ = CalcBodyToBaseCoordinates(*model, jntPositions, idPelvis, Vector3d::Zero(), false);
-    waistRotm = CalcBodyWorldOrientation(*model, jntPositions, idPelvis, false).transpose();
-    CalcPointJacobian6D(*model, jntPositions, idPelvis, Vector3d::Zero(), waistJacob, false);
+    //0R1(3x3)  and pelvisJacob
+    pelvisPosXYZ = CalcBodyToBaseCoordinates(*model, jntPositions, idPelvis, Vector3d::Zero(), false);
+    pelvisRotm = CalcBodyWorldOrientation(*model, jntPositions, idPelvis, false).transpose();
+    CalcPointJacobian6D(*model, jntPositions, idPelvis, Vector3d::Zero(), pelvisJacob, false);
     //phiR is constructed like:
     // |    0R1(3x3),   0(3x3)      |
     // |    0(3x3),     0R1(3x3)    |
-    phiR.block(0, 0, 3, 3) = waistRotm.transpose();
-    phiR.block(3, 3, 3, 3) = waistRotm.transpose();
-    // psi = phi ^ T;   phi = phiR * waistJacob
-    phi = phiR * waistJacob.block(0,0,NJF,NJF); //transformation from world 2 body;
+    phiR.block(0, 0, 3, 3) = pelvisRotm.transpose();
+    phiR.block(3, 3, 3, 3) = pelvisRotm.transpose();
+    // psi = phi ^ T;   phi = phiR * pelvisJacob
+    phi = phiR * pelvisJacob.block(0,0,NJF,NJF); //transformation from world 2 body;
     phiT = phi.transpose();
     psi = phi.inverse(); //transformation from body to world;
     psiT = psi.transpose();
     spatialInertia1C = psiT * inertiaMat.block(0,0,NJF,NJF)  * psi;//inertia matrix in B;
     massAll = spatialInertia1C(5,5);
-    comPos2Waist << spatialInertia1C(2,4)/massAll, spatialInertia1C(0,5)/massAll, spatialInertia1C(1,3)/massAll;
-    comPos2World = waistPosXYZ + waistRotm * comPos2Waist;
+    comPos2Pelvis << spatialInertia1C(2,4)/massAll, spatialInertia1C(0,5)/massAll, spatialInertia1C(1,3)/massAll;
+    comPos2World = pelvisPosXYZ + pelvisRotm * comPos2Pelvis;
     // step: 4  Solve Transform Matrix
-    rotMatformWaist2G = waistRotm;
+    rotMatformPelvis2G = pelvisRotm;
 
-    spatialTransformWaist2G.block(0,0,3,3) = rotMatformWaist2G;
-    spatialTransformWaist2G.block(3,3,3,3) = rotMatformWaist2G;
-    spatialTransformWaist2G.block(0,3,3,3) = rotMatformWaist2G * (skew(comPos2Waist).transpose());
+    spatialTransformPelvis2G.block(0,0,3,3) = rotMatformPelvis2G;
+    spatialTransformPelvis2G.block(3,3,3,3) = rotMatformPelvis2G;
+    spatialTransformPelvis2G.block(0,3,3,3) = rotMatformPelvis2G * (skew(comPos2Pelvis).transpose());
     spatialTransformG2ICS.block(0,0,3,3) = Matrix3d::Identity();
     spatialTransformG2ICS.block(3,3,3,3) = Matrix3d::Identity();
     spatialTransformG2ICS.block(3,0,3,3) = skew(-comPos2World).transpose();
     // step: 5 Solve AG and AGDotQDot
     // AG = iXG^T * psi^T * H11
     // AICS = G_X_ICS^T x AG
-    centroidAG = spatialTransformWaist2G * psiT * inertiaMat.block(0,0,NJF,NJG);
+    centroidAG = spatialTransformPelvis2G * psiT * inertiaMat.block(0,0,NJF,NJG);
     centroidAICS = spatialTransformG2ICS.transpose() * centroidAG;
     // AGDotQDot = iXG^T * psi^T * C1
-    centroidAGDotQDot = spatialTransformWaist2G * psiT * coriolisBias.block(0,0,NJF,1);
+    centroidAGDotQDot = spatialTransformPelvis2G * psiT * coriolisBias.block(0,0,NJF,1);
     centroidAICSDotQDot = spatialTransformG2ICS.transpose() * centroidAGDotQDot;
     // IG = iXG^T * psi^T * H11 * psi * iXG
-    compositeInertia = spatialTransformWaist2G * psiT * inertiaMat.block(0,0,NJF,NJF) * psi * spatialTransformWaist2G.transpose();
+    compositeInertia = spatialTransformPelvis2G * psiT * inertiaMat.block(0,0,NJF,NJF) * psi * spatialTransformPelvis2G.transpose();
     return true;
 }
 
@@ -539,11 +539,11 @@ bool RobotDynamicsBiped::calcSoleTask() {
     return true;
 }
 
-bool RobotDynamicsBiped::calcWaistTask() {
+bool RobotDynamicsBiped::calcPelvisTask() {
     calcTrunkJacob();
     calcTrunkJDotQDot();  
-    calcWaistJacob();
-    calcWaistJDotQDot(); 
+    calcPelvisJacob();
+    calcPelvisJDotQDot(); 
     return true;
 }
 
