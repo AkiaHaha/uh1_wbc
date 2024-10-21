@@ -78,74 +78,43 @@ private:
     
     Eigen::VectorXd qActuated = Eigen::VectorXd::Zero(nJa); ;
     Eigen::VectorXd qDotActuated = Eigen::VectorXd::Zero(nJa);
-    Eigen::VectorXd groundReactiveForce = Eigen::VectorXd::Zero(2);//Daniel nFc->2
+    Eigen::VectorXd groundReactiveForce = Eigen::VectorXd::Zero(2);//@Danny: Set nFc to 2;
     Eigen::VectorXd qGen = Eigen::VectorXd::Zero(nJg);
     Eigen::VectorXd qDotGen = Eigen::VectorXd::Zero(nJg);
-    Eigen::Vector3d xyzTorsoEst = Eigen::Vector3d::Zero(), xyzDotTorsoEst = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyTorsoEst = Eigen::Vector3d::Zero(), rpyDotTorsoEst = Eigen::Vector3d::Zero();
-    Eigen::Vector3d xyzUpTorsoEst = Eigen::Vector3d::Zero(), xyzDotUpTorsoEst = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyUpTorsoEst = Eigen::Vector3d::Zero(), rpyDotUpTorsoEst = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d xyzFootEst = Eigen::Vector3d::Zero(), xyzDotFootEst = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyFootEst = Eigen::Vector3d::Zero(), rpyDotFootEst = Eigen::Vector3d::Zero();
 
-    Eigen::Vector3d xyzFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d xyzDotFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d rpyFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d rpyDotFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d xyzArmEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d xyzDotArmEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d rpyArmEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d rpyDotArmEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    ///< The sequence of twist: Rpy,Xyz,dRpy,dXyz ; Est-Estimation, Tgt-Target, Init-Initial;
+    double dsp{};
+    // Estimation
+    Eigen::VectorXd twistEstLeftFoot = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistEstRightFoot = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistEstLeftArm = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistEstRightArm = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistEstPelvis = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistEstTorso = Eigen::VectorXd::Zero(12);
 
     // Target
-    double dsp{};
-    Eigen::Vector3d xyzTorsoTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d xyzDotTorsoTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyTorsoTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyDotTorsoTgt = Eigen::Vector3d::Zero();
+    Eigen::VectorXd twistTgtPelvis = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistTgtTorso = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistTgtLeftFoot = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistTgtRightFoot = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistTgtLeftArm = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistTgtRightArm = Eigen::VectorXd::Zero(12);
 
-    Eigen::Vector3d xyzUpTorsoTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d xyzDotUpTorsoTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyUpTorsoTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyDotUpTorsoTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d xyzFootTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d xyzDotFootTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyFootTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyDotFootTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d xyzFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d xyzDotFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d rpyFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d rpyDotFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    // Initial
+    Eigen::VectorXd twistInitPelvis = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistInitTorso = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistInitLeftFoot = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistInitRightFoot = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistInitLeftArm = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd twistInitRightArm = Eigen::VectorXd::Zero(12);
 
-    Eigen::Vector3d xyzFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d xyzDotFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d rpyFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d rpyDotFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-
-    // Eigen::Vector3d xyzArmTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d xyzDotArmTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyArmTgt = Eigen::Vector3d::Zero();
-    // Eigen::Vector3d rpyDotArmTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d xyzArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d xyzDotArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d rpyArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d rpyDotArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-
-    Eigen::Vector3d xyzArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d xyzDotArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d rpyArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d rpyDotArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-
-    // Reference state
+    // Reference 
+    Eigen::Vector3d pelvisXyzRef = Eigen::Vector3d::Zero();
+    Eigen::Vector3d pelvisRpyRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d torsoXyzRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d torsoRpyRef = Eigen::Vector3d::Zero();
-    Eigen::Vector3d upTorsoXyzRef = Eigen::Vector3d::Zero();
-    Eigen::Vector3d upTorsoRpyRef = Eigen::Vector3d::Zero();
-    // Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(nFc);//Daniel 24.5.21
-    // Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(12);//Daniel
-    // Eigen::VectorXd forceRef = Eigen::VectorXd::Zero(nFc);
-    // Eigen::VectorXd forceChangeRef = Eigen::VectorXd::Zero(nFc);
-    Eigen::VectorXd footArmPosRef = Eigen::VectorXd::Zero(NFCC4);//Daniel
+
+    Eigen::VectorXd footArmPoseRef = Eigen::VectorXd::Zero(NFCC4);//@Danny
     Eigen::VectorXd footForceRef = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd footForceChangeRef = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd footArmForceRef = Eigen::VectorXd::Zero(NFCC4);
@@ -182,10 +151,10 @@ private:
     std::vector<double> doubleData;
 
     // Additional body control task @Daniel240523
+    Eigen::Vector3d xyzPelvisInit = Eigen::Vector3d::Zero();
     Eigen::Vector3d xyzTorsoInit = Eigen::Vector3d::Zero();
-    Eigen::Vector3d xyzUpTorsoInit = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyPelvisInit = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTorsoInit = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyUpTorsoInit = Eigen::Vector3d::Zero();
     int flagTimeSetZero{};
     int flagEstFirst{};
 };

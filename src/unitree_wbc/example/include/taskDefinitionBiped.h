@@ -57,7 +57,7 @@ public:
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedTorsoPosition: public AGIROBOT::Task{
+class BipedPelvisPosition: public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -65,12 +65,12 @@ public:
      * @param taskDim The dimension of Task
      * @param varDim The DoF of variables in the WBC problem
      */
-    BipedTorsoPosition(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~BipedTorsoPosition() = default;
+    BipedPelvisPosition(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedPelvisPosition() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedTorsoPosRpy: public AGIROBOT::Task{
+class BipedPelvisRpy: public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -78,12 +78,12 @@ public:
      * @param taskDim The dimension of Task
      * @param varDim The DoF of variables in the WBC problem
      */
-    BipedTorsoPosRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~BipedTorsoPosRpy() = default;
+    BipedPelvisRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedPelvisRpy() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedTorsoPosXyz: public AGIROBOT::Task{
+class BipedPelvisXyz: public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -91,12 +91,12 @@ public:
      * @param taskDim The dimension of Task
      * @param varDim The DoF of variables in the WBC problem
      */
-    BipedTorsoPosXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~BipedTorsoPosXyz() = default;
+    BipedPelvisXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedPelvisXyz() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedUpTorsoPosRpy: public AGIROBOT::Task{
+class BipedTorsoRpy: public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -104,12 +104,12 @@ public:
      * @param taskDim The dimension of Task
      * @param varDim The DoF of variables in the WBC problem
      */
-    BipedUpTorsoPosRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~BipedUpTorsoPosRpy() = default;
+    BipedTorsoRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedTorsoRpy() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedUpTorsoPosXyz: public AGIROBOT::Task{
+class BipedTorsoXyz: public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -117,8 +117,8 @@ public:
      * @param taskDim The dimension of Task
      * @param varDim The DoF of variables in the WBC problem
      */
-    BipedUpTorsoPosXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~BipedUpTorsoPosXyz() = default;
+    BipedTorsoXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~BipedTorsoXyz() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 

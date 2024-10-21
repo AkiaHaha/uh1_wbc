@@ -25,33 +25,33 @@ bool BipedAngularMomentum::update(const AGIROBOT::RobotDynamics &robot){
     return true;
 } 
 
-bool BipedTorsoPosition::update(const AGIROBOT::RobotDynamics &robot){
-    taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J;
-    taskVecB = ref - robot.floatBaseJacoTc.JdotQdot;
+bool BipedPelvisPosition::update(const AGIROBOT::RobotDynamics &robot){
+    taskMatA.leftCols(robot.NJG) = robot.pelvisJacoTc.J;
+    taskVecB = ref - robot.pelvisJacoTc.JdotQdot;
     return true;
 }
 
-bool BipedTorsoPosRpy::update(const AGIROBOT::RobotDynamics &robot){
-    taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J.topRows(3);
-    taskVecB = ref - robot.floatBaseJacoTc.JdotQdot.head(3);
+bool BipedPelvisRpy::update(const AGIROBOT::RobotDynamics &robot){
+    taskMatA.leftCols(robot.NJG) = robot.pelvisJacoTc.J.topRows(3);
+    taskVecB = ref - robot.pelvisJacoTc.JdotQdot.head(3);
     return true;
 }
 
-bool BipedTorsoPosXyz::update(const AGIROBOT::RobotDynamics &robot){
-    taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J.bottomRows(3);
-    taskVecB = ref - robot.floatBaseJacoTc.JdotQdot.tail(3);
+bool BipedPelvisXyz::update(const AGIROBOT::RobotDynamics &robot){
+    taskMatA.leftCols(robot.NJG) = robot.pelvisJacoTc.J.bottomRows(3);
+    taskVecB = ref - robot.pelvisJacoTc.JdotQdot.tail(3);
     return true;
 }
 
-bool BipedUpTorsoPosRpy::update(const AGIROBOT::RobotDynamics &robot){
-    taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J.topRows(3);
-    taskVecB = ref - robot.floatBaseJacoTc.JdotQdot.head(3);
+bool BipedTorsoRpy::update(const AGIROBOT::RobotDynamics &robot){
+    taskMatA.leftCols(robot.NJG) = robot.torsoJacoTc.J.topRows(3);
+    taskVecB = ref - robot.torsoJacoTc.JdotQdot.head(3);
     return true;
 }
 
-bool BipedUpTorsoPosXyz::update(const AGIROBOT::RobotDynamics &robot){
-    taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J.bottomRows(3);
-    taskVecB = ref - robot.floatBaseJacoTc.JdotQdot.tail(3);
+bool BipedTorsoXyz::update(const AGIROBOT::RobotDynamics &robot){
+    taskMatA.leftCols(robot.NJG) = robot.torsoJacoTc.J.bottomRows(3);
+    taskVecB = ref - robot.torsoJacoTc.JdotQdot.tail(3);
     return true;
 }
 

@@ -40,8 +40,8 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     const double simStopTime = simStopCnt * SAMPLE_TIME;
     
     // webots
-    WebotsRobot bipedWebots;
-    bipedWebots.initWebots();
+    WebotsRobot webotsRobot;
+    webotsRobot.initWebots();
     webotsState robotStateSim;
  
     // controller
@@ -67,11 +67,11 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
 
     // simulation loopsim_information_msg
     std::cout << "Program started dd81." << std::endl << endl;
-    while (bipedWebots.robot->step(TIME_STEP) != -1)
+    while (webotsRobot.robot->step(TIME_STEP) != -1)
     {
         // read data from Webots //
-        simTime = bipedWebots.robot->getTime();
-        bipedWebots.readData(simTime, robotStateSim);
+        simTime = webotsRobot.robot->getTime();
+        webotsRobot.readData(simTime, robotStateSim);
 
         // control robot //
         if (simCnt < goStandCnt){
@@ -86,7 +86,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             //                0,           //torso
             //                0, 0, 0, 0,  //left arm--PRY
             //                0, 0, 0, 0; //right arm
-            bipedWebots.setMotorPos(standPosCmd);//设置初始位置曲腿
+            webotsRobot.setMotorPos(standPosCmd);//设置初始位置曲腿
 
         }else if (simCnt < simStopCnt){
             //dynamic control get torque
@@ -119,33 +119,33 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
 //-----------------------------------------------------------------
 //universal set toq / pos
             // jointToqCmd(16) = 0;
-            bipedWebots.setMotorTau(jointToqCmd);
+            webotsRobot.setMotorTau(jointToqCmd);
             
-            // bipedWebots.setMotorPos(jointPosInteg);
+            // webotsRobot.setMotorPos(jointPosInteg);
 
 
 //pos-leg&torso 
             // standPosCmd.segment(11,8) = jointToqCmd.segment(11,8);
-            // bipedWebots.setMotorPosTau(standPosCmd);
+            // webotsRobot.setMotorPosTau(standPosCmd);
             // akiaPrint1(standPosCmd, 19, 5, 5, 5, 1, 4, 4);
 //pos-leg
             // standPosCmd.segment(10,9) = jointToqCmd.segment(10,9);
-            // bipedWebots.setMotorPosTau3(standPosCmd);
+            // webotsRobot.setMotorPosTau3(standPosCmd);
             // akiaPrint1(standPosCmd, 19, 5, 5, 5, 1, 4, 4);
 
 //pos-shoulder
             // standPosCmd.head(10) = jointToqCmd.head(10);
-            // bipedWebots.setMotorPosTau2(standPosCmd);  
+            // webotsRobot.setMotorPosTau2(standPosCmd);  
 
 //only-pos-torso
-            // bipedWebots.setMotorPosTau4(jointToqCmd);
+            // webotsRobot.setMotorPosTau4(jointToqCmd);
 
 //-----------------------------------------------------------------
 
         }else{
             // keep current position
             RobotController.getValuePosCurrent(standPosCmd);
-            bipedWebots.setMotorPos(standPosCmd);
+            webotsRobot.setMotorPos(standPosCmd);
         }
 
         // stop simulation
@@ -156,7 +156,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     };
 
     // Free memory
-    bipedWebots.deleteRobot();
+    webotsRobot.deleteRobot();
     
     std::cout << "Program ended." << std::endl;
     return true;

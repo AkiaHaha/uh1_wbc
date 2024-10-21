@@ -8,3 +8,8 @@ Worked in ROS;
 
 - Install gdb
 sudo apt install gdb
+
+Twist:
+Wrench:
+Pelvis:
+Pelvis:

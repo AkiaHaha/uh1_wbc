@@ -47,24 +47,24 @@ public:
     double getTotalMass() override;
 
     /**
-     * @brief estWaistPosVelInWorld
-     *          estimate the waist state in world frame (origin at the stance sole)
+     * @brief estPelvisPosVelInWorld
+     *          estimate the pelvis state in world frame (origin at the stance sole)
      * @param jointPos  generalized joint position
      * @param jointVel  generalized joint velocity
      * @param footType  stance sole label
-     * @return the [posXYZ, velXYZ] of waist in Vector(6,1)
+     * @return the [posXYZ, velXYZ] of pelvis in Vector(6,1)
      */
-    VectorNd estWaistPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
+    VectorNd estPelvisPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
 
     /**
-     * @brief estFootArmPosVelInWorld
+     * @brief estPointTwistWorld
      *          estimate the swing foot state in world frame (origin at the stance sole)
      * @param jointPos  generalized joint position
      * @param jointVel  generalized joint velocity
-     * @param footType  stance sole label
-     * @return the [posRPY, posXYZ, velRPY, velXYZ] of swing foot in Vector(12,1)
+     * @param footType  the point number in which: 0->torso; 1->left sole; 2->rigit sole; 3->left arm; 4->right arm;
+     * @return the twist [posRPY, posXYZ, velRPY, velXYZ] of a specified point in Vector(12,1)
      */
-    VectorNd estFootArmPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
+    VectorNd estPointTwistWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
 
     VectorNd getRootXyzRpy(const Eigen::VectorXd & q);//Daniel 5.26
 
@@ -96,17 +96,17 @@ private:
     SpatialMatrix spatialTransformG2ICS;        // nJF*nJF, Transform matrix from GCS to ICS
     // -------- for Centroidal Dynamics -------
 
-    Vector3d comPos2Waist;
+    Vector3d comPos2Pelvis;
     Vector3d comPos2World;
     Vector3d comVel2World;
     Vector3d linearMomentum;
     Vector3d angularMomentum;
 
-    MatrixNd waistJacob;
-    VectorNd waistJDotQDot;
+    MatrixNd pelvisJacob;
+    VectorNd pelvisJDotQDot;
 
-    MatrixNd upTorsoJacob;
-    VectorNd upTorsoJDotQDot;
+    MatrixNd torsoJacob;
+    VectorNd torsoJDotQDot;
 
     MatrixNd leftArmSoleJacob;
     MatrixNd rightArmSoleJacob;
@@ -126,10 +126,10 @@ private:
     bool updateKinematicsPosVel();
     bool updateKinematicsAcc();
 
-    bool calcWaistJacob();
-    bool calcWaistJDotQDot();
-    bool calcUpTorsoJacob();
-    bool calcUpTorsoJDotQDot();
+    bool calcPelvisJacob();
+    bool calcPelvisJDotQDot();
+    bool calcTorsoJacob();
+    bool calcTorsoJDotQDot();
     bool calcSoleJacob();
     bool calcSoleJDotQDot();
 
@@ -138,7 +138,7 @@ private:
     bool calcRigidBodyDynamicsDescriptors();
     bool calcCentroidalDynamicsDescriptors();
     bool calcSoleTask();
-    bool calcWaistTask();
+    bool calcPelvisTask();
 
     bool calcCOMPosVel();
     bool calcCOMState();

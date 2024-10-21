@@ -107,8 +107,8 @@ public:
     JacobianTc biContactJacoTc;                                          ///< JacobianTc of contact point(s)
     JacobianTc quadContactJacoTc;                                          ///< JacobianTc of contact point(s)
 
-    JacobianTc floatBaseJacoTc;                                        ///< JacobianTc of floating-base.
-    JacobianTc upTorsoJacoTc;                                          ///< JacobianTc of floating-base.
+    JacobianTc pelvisJacoTc;                                        ///< JacobianTc of floating-base.
+    JacobianTc torsoJacoTc;                                          ///< JacobianTc of floating-base.
 
     std::vector<JacobianTc> tasksJacoTc;                               ///< tasks JacobianTc, e.g. knee, elbow, etc.
 };

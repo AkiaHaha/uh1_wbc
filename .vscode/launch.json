@@ -11,7 +11,7 @@
       "name": "C++ Launch",
       "type": "cppdbg",
       "request": "launch",
-      "program": "/home/ukia/gitRepo/uh1_wbc/src/executables/wwbicController",
+      "program": "/home/ukia/gitRepo/uh1_wbc/wwbicController",
       "args": [],
       "stopAtEntry": false,
       "cwd": "/home/ukia/gitRepo/uh1_wbc",
