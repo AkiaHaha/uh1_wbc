@@ -41,8 +41,8 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     floatBaseJacoTc.J = MatrixNd :: Zero(NJF, NJG);///< JacobianTc of floating-base.
     floatBaseJacoTc.JdotQdot = VectorNd :: Zero(NJF);
 
-    trunkJacoTc.J = MatrixNd :: Zero(NJF, NJG);///< JacobianTc of floating-base.
-    trunkJacoTc.JdotQdot = VectorNd :: Zero(NJF);
+    torsoJacoTc.J = MatrixNd :: Zero(NJF, NJG);///< JacobianTc of floating-base.
+    torsoJacoTc.JdotQdot = VectorNd :: Zero(NJF);
 
     biContactJacoTc.J = MatrixNd :: Zero(12, NJG);///< JacobianTc of contact point(s)
     biContactJacoTc.JdotQdot = VectorNd :: Zero(12); 
@@ -187,8 +187,8 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
   
     pelvisJacob = MatrixNd::Zero(NJF, NJG);
     pelvisJDotQDot = VectorNd::Zero(NJF);
-    trunkJacob = MatrixNd::Zero(NJF, NJG);
-    trunkJDotQDot = VectorNd::Zero(NJF);
+    torsoJacob = MatrixNd::Zero(NJF, NJG);
+    torsoJDotQDot = VectorNd::Zero(NJF);
 
     leftArmSoleJacob = MatrixNd::Zero(NJF, NJG);
     rightArmSoleJacob = MatrixNd::Zero(NJF, NJG);
@@ -231,8 +231,8 @@ bool RobotDynamicsBiped::calcWbcDependence(){
     biContactJacoTc.JdotQdot = dualSoleJDotQDot;
     floatBaseJacoTc.J = pelvisJacob;
     floatBaseJacoTc.JdotQdot = pelvisJDotQDot;
-    trunkJacoTc.J = trunkJacob;
-    trunkJacoTc.JdotQdot = trunkJDotQDot;
+    torsoJacoTc.J = torsoJacob;
+    torsoJacoTc.JdotQdot = torsoJDotQDot;
     eqCstrMatTau << selMatActuated * inertiaMat, //A*G * G*G
                 -selMatActuated * leftLegSoleJacob.transpose(),//A*F * G*F()
                 -selMatActuated * rightLegSoleJacob.transpose(),//A*F * G*F   ====>A*(G+2F)   {TauActuated = eqCstrMatTau * x^T + eqCstrMatTauBias}  ===> X = (G+2F) * 1  = (g+fc)*1=nv*1
@@ -321,7 +321,7 @@ VectorNd RobotDynamicsBiped::estFootArmPosVelInWorld(const VectorNd& jointPos, c
     UpdateKinematicsCustom(*model, & qTemp, & qDotTemp, NULL);
     switch (footType)
     {
-        case 0: // Trunk
+        case 0: // Torso
             sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idTorso, Math::Vector3d::Zero(), false);
             sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idTorso, false);
             sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idTorso, Math::Vector3d::Zero(), false);
@@ -412,13 +412,13 @@ bool RobotDynamicsBiped::calcPelvisJDotQDot() {
     return true;
 }
 
-bool RobotDynamicsBiped::calcTrunkJacob() {
-    CalcPointJacobian6D(*model, jntPositions, idTorso, Vector3d::Zero(), trunkJacob, false);
+bool RobotDynamicsBiped::calcTorsoJacob() {
+    CalcPointJacobian6D(*model, jntPositions, idTorso, Vector3d::Zero(), torsoJacob, false);
     return true;
 }
 
-bool RobotDynamicsBiped::calcTrunkJDotQDot() {
-    trunkJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idTorso, Vector3d::Zero(), false);
+bool RobotDynamicsBiped::calcTorsoJDotQDot() {
+    torsoJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idTorso, Vector3d::Zero(), false);
     return true;
 }
 
@@ -540,8 +540,8 @@ bool RobotDynamicsBiped::calcSoleTask() {
 }
 
 bool RobotDynamicsBiped::calcPelvisTask() {
-    calcTrunkJacob();
-    calcTrunkJDotQDot();  
+    calcTorsoJacob();
+    calcTorsoJDotQDot();  
     calcPelvisJacob();
     calcPelvisJDotQDot(); 
     return true;
