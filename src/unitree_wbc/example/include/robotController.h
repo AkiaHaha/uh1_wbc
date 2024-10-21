@@ -83,8 +83,8 @@ private:
     Eigen::VectorXd qDotGen = Eigen::VectorXd::Zero(nJg);
     Eigen::Vector3d xyzTorsoEst = Eigen::Vector3d::Zero(), xyzDotTorsoEst = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTorsoEst = Eigen::Vector3d::Zero(), rpyDotTorsoEst = Eigen::Vector3d::Zero();
-    Eigen::Vector3d xyzUpTorsoEst = Eigen::Vector3d::Zero(), xyzDotUpTorsoEst = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyUpTorsoEst = Eigen::Vector3d::Zero(), rpyDotUpTorsoEst = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzTrunkEst = Eigen::Vector3d::Zero(), xyzDotTrunkEst = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyTrunkEst = Eigen::Vector3d::Zero(), rpyDotTrunkEst = Eigen::Vector3d::Zero();
     // Eigen::Vector3d xyzFootEst = Eigen::Vector3d::Zero(), xyzDotFootEst = Eigen::Vector3d::Zero();
     // Eigen::Vector3d rpyFootEst = Eigen::Vector3d::Zero(), rpyDotFootEst = Eigen::Vector3d::Zero();
 
@@ -104,10 +104,10 @@ private:
     Eigen::Vector3d rpyTorsoTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyDotTorsoTgt = Eigen::Vector3d::Zero();
 
-    Eigen::Vector3d xyzUpTorsoTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d xyzDotUpTorsoTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyUpTorsoTgt = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyDotUpTorsoTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzTrunkTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzDotTrunkTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyTrunkTgt = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyDotTrunkTgt = Eigen::Vector3d::Zero();
     // Eigen::Vector3d xyzFootTgt = Eigen::Vector3d::Zero();
     // Eigen::Vector3d xyzDotFootTgt = Eigen::Vector3d::Zero();
     // Eigen::Vector3d rpyFootTgt = Eigen::Vector3d::Zero();
@@ -139,8 +139,8 @@ private:
     // Reference state
     Eigen::Vector3d torsoXyzRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d torsoRpyRef = Eigen::Vector3d::Zero();
-    Eigen::Vector3d upTorsoXyzRef = Eigen::Vector3d::Zero();
-    Eigen::Vector3d upTorsoRpyRef = Eigen::Vector3d::Zero();
+    Eigen::Vector3d trunkXyzRef = Eigen::Vector3d::Zero();
+    Eigen::Vector3d trunkRpyRef = Eigen::Vector3d::Zero();
     // Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(nFc);//Daniel 24.5.21
     // Eigen::VectorXd footPosRef = Eigen::VectorXd::Zero(12);//Daniel
     // Eigen::VectorXd forceRef = Eigen::VectorXd::Zero(nFc);
@@ -183,9 +183,9 @@ private:
 
     // Additional body control task @Daniel240523
     Eigen::Vector3d xyzTorsoInit = Eigen::Vector3d::Zero();
-    Eigen::Vector3d xyzUpTorsoInit = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzTrunkInit = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyTorsoInit = Eigen::Vector3d::Zero();
-    Eigen::Vector3d rpyUpTorsoInit = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyTrunkInit = Eigen::Vector3d::Zero();
     int flagTimeSetZero{};
     int flagEstFirst{};
 };

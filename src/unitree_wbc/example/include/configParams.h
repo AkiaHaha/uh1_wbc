@@ -9,8 +9,8 @@ struct ConfigParams {
     // PArams for task control
     double kpTorsoR, kpTorsoP, kpTorsoY, kdTorsoR, kdTorsoP, kdTorsoY;
     double kpTorsoX, kpTorsoYY, kpTorsoZ, kdTorsoX, kdTorsoYY, kdTorsoZ;
-    double kpUpTorsoR, kpUpTorsoP, kpUpTorsoY, kdUpTorsoR, kdUpTorsoP, kdUpTorsoY;
-    double kpUpTorsoX, kpUpTorsoYY, kpUpTorsoZ, kdUpTorsoX, kdUpTorsoYY, kdUpTorsoZ;
+    double kpTrunkR, kpTrunkP, kpTrunkY, kdTrunkR, kdTrunkP, kdTrunkY;
+    double kpTrunkX, kpTrunkYY, kpTrunkZ, kdTrunkX, kdTrunkYY, kdTrunkZ;
     double kpFootR, kpFootP, kpFootY, kdFootR, kdFootP, kdFootY;
     double weightGVL, weightGVL10, weightGVLKnee, weightGVLAnkle;
     double weightFootForceR, weightFootForceP, weightFootForceYaw;
@@ -28,10 +28,10 @@ struct ConfigParams {
     std::vector<double> kdTorsoXyz{0., 0., 0.};
     std::vector<double> kpTorsoRpy = {0., 0., 0.};
     std::vector<double> kdTorsoRpy = {0., 0., 0.};
-    std::vector<double> kpUpTorsoXyz{0., 0., 0.};
-    std::vector<double> kdUpTorsoXyz{0., 0., 0.};
-    std::vector<double> kpUpTorsoRpy = {0., 0., 0.};
-    std::vector<double> kdUpTorsoRpy = {0., 0., 0.};
+    std::vector<double> kpTrunkXyz{0., 0., 0.};
+    std::vector<double> kdTrunkXyz{0., 0., 0.};
+    std::vector<double> kpTrunkRpy = {0., 0., 0.};
+    std::vector<double> kdTrunkRpy = {0., 0., 0.};
     std::vector<double> kpFootXyz{0., 0., 0.};
     std::vector<double> kdFootXyz{0., 0., 0.};
     std::vector<double> kpFootRpy{0., 0., 0.};
@@ -44,8 +44,8 @@ struct ConfigParams {
     // Weight value of tasks and constraints
     Eigen::Vector3d weightTorsoPosition = Eigen::Vector3d::Zero();
     Eigen::Vector3d weightTorsoOrientation = Eigen::Vector3d::Zero();
-    Eigen::Vector3d weightUpTorsoPosition = Eigen::Vector3d::Zero();
-    Eigen::Vector3d weightUpTorsoOrientation = Eigen::Vector3d::Zero();
+    Eigen::Vector3d weightTrunkPosition = Eigen::Vector3d::Zero();
+    Eigen::Vector3d weightTrunkOrientation = Eigen::Vector3d::Zero();
     Eigen::VectorXd weightFootArmPosition = Eigen::VectorXd::Zero(NFCC4);// @Daniel240521
     Eigen::VectorXd weightFootForce = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd weightFootForceChange = Eigen::VectorXd::Zero(NFCC2);
@@ -75,19 +75,19 @@ struct ConfigParams {
         kdTorsoYY = jsonData["kdTorsoYY"];
         kdTorsoZ = jsonData["kdTorsoZ"];
 
-        kpUpTorsoR = jsonData["kpUpTorsoR"];
-        kpUpTorsoP = jsonData["kpUpTorsoP"];
-        kpUpTorsoY = jsonData["kpUpTorsoY"];
-        kdUpTorsoR = jsonData["kdUpTorsoR"];
-        kdUpTorsoP = jsonData["kdUpTorsoP"];
-        kdUpTorsoY = jsonData["kdUpTorsoY"];
+        kpTrunkR = jsonData["kpTrunkR"];
+        kpTrunkP = jsonData["kpTrunkP"];
+        kpTrunkY = jsonData["kpTrunkY"];
+        kdTrunkR = jsonData["kdTrunkR"];
+        kdTrunkP = jsonData["kdTrunkP"];
+        kdTrunkY = jsonData["kdTrunkY"];
 
-        kpUpTorsoX = jsonData["kpUpTorsoX"];
-        kpUpTorsoYY = jsonData["kpUpTorsoYY"];
-        kpUpTorsoZ = jsonData["kpUpTorsoZ"];
-        kdUpTorsoX = jsonData["kdUpTorsoX"];
-        kdUpTorsoYY = jsonData["kdUpTorsoYY"];
-        kdUpTorsoZ = jsonData["kdUpTorsoZ"];
+        kpTrunkX = jsonData["kpTrunkX"];
+        kpTrunkYY = jsonData["kpTrunkYY"];
+        kpTrunkZ = jsonData["kpTrunkZ"];
+        kdTrunkX = jsonData["kdTrunkX"];
+        kdTrunkYY = jsonData["kdTrunkYY"];
+        kdTrunkZ = jsonData["kdTrunkZ"];
 
         kpFootR = jsonData["kpFootR"];
         kpFootP = jsonData["kpFootP"];
@@ -130,10 +130,10 @@ struct ConfigParams {
         kpTorsoXyz = {kpTorsoX, kpTorsoYY, kpTorsoZ};
         kdTorsoXyz = {kdTorsoX, kdTorsoYY, kdTorsoZ};
 
-        kpUpTorsoRpy = {kpUpTorsoR, kpUpTorsoP, kpUpTorsoY};
-        kdUpTorsoRpy = {kdUpTorsoR, kdUpTorsoP, kdUpTorsoY};
-        kpUpTorsoXyz = {kpUpTorsoX, kpUpTorsoYY, kpUpTorsoZ};
-        kdUpTorsoXyz = {kdUpTorsoX, kdUpTorsoYY, kdUpTorsoZ};
+        kpTrunkRpy = {kpTrunkR, kpTrunkP, kpTrunkY};
+        kdTrunkRpy = {kdTrunkR, kdTrunkP, kdTrunkY};
+        kpTrunkXyz = {kpTrunkX, kpTrunkYY, kpTrunkZ};
+        kdTrunkXyz = {kdTrunkX, kdTrunkYY, kdTrunkZ};
 
 
         kpFootXyz = {800., 800., 800.};
@@ -149,8 +149,8 @@ struct ConfigParams {
         // Set weights 
         weightTorsoPosition = fillVector3(600000);                                           
         weightTorsoOrientation = fillVector3(600000); 
-        weightUpTorsoPosition = fillVector3(300000);                                        
-        weightUpTorsoOrientation << 300000, 300000, 3000000;
+        weightTrunkPosition = fillVector3(300000);                                        
+        weightTrunkOrientation << 300000, 300000, 3000000;
 
         weightFootArmPosition = fillVector(weightFootPos, weightArmPos);   
         weightFootArmPosition(2) = weightFootYaw;

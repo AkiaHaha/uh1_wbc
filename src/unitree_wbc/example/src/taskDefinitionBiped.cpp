@@ -43,13 +43,13 @@ bool BipedTorsoPosXyz::update(const AGIROBOT::RobotDynamics &robot){
     return true;
 }
 
-bool BipedUpTorsoPosRpy::update(const AGIROBOT::RobotDynamics &robot){
+bool BipedTrunkPosRpy::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J.topRows(3);
     taskVecB = ref - robot.floatBaseJacoTc.JdotQdot.head(3);
     return true;
 }
 
-bool BipedUpTorsoPosXyz::update(const AGIROBOT::RobotDynamics &robot){
+bool BipedTrunkPosXyz::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J.bottomRows(3);
     taskVecB = ref - robot.floatBaseJacoTc.JdotQdot.tail(3);
     return true;

@@ -22,8 +22,8 @@ RobotController::RobotController(){
     // Instantiate task & constraint 
     AGIROBOT::Task * ptrBipedTorsoPosRpy = new BipedTorsoPosRpy("BipedTorsoPosRpy", 3, nV);
     AGIROBOT::Task * ptrBipedTorsoPosXyz = new BipedTorsoPosXyz("BipedTorsoPosXyz", 3, nV);
-    AGIROBOT::Task * ptrBipedUpTorsoPosRpy = new BipedUpTorsoPosRpy("BipedUpTorsoPosRpy", 3, nV);
-    AGIROBOT::Task * ptrBipedUpTorsoPosXyz = new BipedUpTorsoPosXyz("BipedUpTorsoPosXyz", 3, nV);
+    AGIROBOT::Task * ptrBipedTrunkPosRpy = new BipedTrunkPosRpy("BipedTrunkPosRpy", 3, nV);
+    AGIROBOT::Task * ptrBipedTrunkPosXyz = new BipedTrunkPosXyz("BipedTrunkPosXyz", 3, nV);
     AGIROBOT::Task * ptrForce4 = new QuadSoleForce("Force4", NFCC4, nV);
     AGIROBOT::Task * ptrForceChange4 = new QuadSoleForceChange("ForceChange4", NFCC4, nV);
     AGIROBOT::Task * ptrPosition = new QuadSolePosition("Position", NFCC4, nV);
@@ -46,8 +46,8 @@ RobotController::RobotController(){
     myWbc = new AGIROBOT::HqpWbc(nV, robotDynamics);
     // myWbc->addTask(ptrGblVelLimits, 2);
     myWbc->addTask(ptrForce4, 2);
-    // myWbc->addTask(ptrBipedUpTorsoPosRpy, 1);
-    // myWbc->addTask(ptrBipedUpTorsoPosXyz, 1);
+    // myWbc->addTask(ptrBipedTrunkPosRpy, 1);
+    // myWbc->addTask(ptrBipedTrunkPosXyz, 1);
     myWbc->addTask(ptrPosition, 1);
     myWbc->addTask(ptrBipedTorsoPosRpy, 0);
     myWbc->addTask(ptrBipedTorsoPosXyz, 0);
@@ -61,8 +61,8 @@ RobotController::RobotController(){
     myWbc = new AGIROBOT::WqpWbc(nV, robotDynamics);
     myWbc->addTask(ptrBipedTorsoPosRpy, 0);
     myWbc->addTask(ptrBipedTorsoPosXyz, 0);
-    myWbc->addTask(ptrBipedUpTorsoPosRpy, 0);
-    myWbc->addTask(ptrBipedUpTorsoPosXyz, 0);
+    myWbc->addTask(ptrBipedTrunkPosRpy, 0);
+    myWbc->addTask(ptrBipedTrunkPosXyz, 0);
     myWbc->addTask(ptrForce4, 0);
     myWbc->addTask(ptrForceChange4, 0);
     myWbc->addTask(ptrPosition, 0);
@@ -167,14 +167,14 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     qGen.head(3) = xyzTorsoEst;
     qDotGen.head(3) = xyzDotTorsoEst;
 
-    // UpTorso pose
+    // Trunk pose
     Eigen::VectorXd poseTemp0 = Eigen::VectorXd::Zero(12,1);
     poseTemp0 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 0);
 
-    rpyUpTorsoEst = poseTemp0.head(3);
-    xyzUpTorsoEst = poseTemp0.segment(3,3);
-    rpyDotUpTorsoEst = poseTemp0.segment(6,3);
-    xyzDotUpTorsoEst = poseTemp0.tail(3);
+    rpyTrunkEst = poseTemp0.head(3);
+    xyzTrunkEst = poseTemp0.segment(3,3);
+    rpyDotTrunkEst = poseTemp0.segment(6,3);
+    xyzDotTrunkEst = poseTemp0.tail(3);
 
     // Foot EE pos&vel
     Eigen::VectorXd footStateTemp0 = Eigen::VectorXd::Zero(12,1);
@@ -213,10 +213,10 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
         flagEstFirst = 1;
 
         xyzTorsoInit = xyzTorsoEst;
-        xyzUpTorsoInit = xyzUpTorsoEst;
+        xyzTrunkInit = xyzTrunkEst;
 
         rpyTorsoInit = rpyTorsoEst;
-        rpyUpTorsoInit = rpyUpTorsoEst;
+        rpyTrunkInit = rpyTrunkEst;
 
         rpyFootInit[0] = rpyFootEst[0]; 
         xyzFootInit[0] = xyzFootEst[0]; 
@@ -271,14 +271,14 @@ bool RobotController::motionPlan(){// @Daniel240523
         rpyDotTorsoTgt << 0.0, 0.0, 0.0;
 
         // Up torso
-        // xyzUpTorsoTgt = xyzUpTorsoInit;
-        // xyzDotUpTorsoTgt << 0.0, 0.0, 0.0;
-        xyzUpTorsoTgt << xyzUpTorsoInit(0), xyzUpTorsoInit(1), xyzUpTorsoInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
-        // xyzUpTorsoTgt << comx, comy, xyzUpTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
-        // xyzUpTorsoTgt << CoM(0), CoM(1), xyzUpTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
-        xyzDotUpTorsoTgt << 0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
-        rpyUpTorsoTgt << 0.0, dsp, 0.0;
-        rpyDotUpTorsoTgt << 0.0, 0.0, 0.0;
+        // xyzTrunkTgt = xyzTrunkInit;
+        // xyzDotTrunkTgt << 0.0, 0.0, 0.0;
+        xyzTrunkTgt << xyzTrunkInit(0), xyzTrunkInit(1), xyzTrunkInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
+        // xyzTrunkTgt << comx, comy, xyzTrunkInit(2)+height*(sin((time+0.5)*PI)-1);
+        // xyzTrunkTgt << CoM(0), CoM(1), xyzTrunkInit(2)+height*(sin((time+0.5)*PI)-1);
+        xyzDotTrunkTgt << 0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
+        rpyTrunkTgt << 0.0, dsp, 0.0;
+        rpyDotTrunkTgt << 0.0, 0.0, 0.0;
         
         // Foot
         xyzFootTgt[0] = xyzFootInit[0];
@@ -321,8 +321,8 @@ bool RobotController::taskControl(){
     torsoRpyRef = diag(configParams.kpTorsoRpy)*(rpyTorsoTgt - rpyTorsoEst) + diag(configParams.kdTorsoRpy)*(rpyDotTorsoTgt - rpyDotTorsoEst);
     torsoXyzRef = diag(configParams.kpTorsoXyz)*(xyzTorsoTgt - xyzTorsoEst) + diag(configParams.kdTorsoXyz)*(xyzDotTorsoTgt - xyzDotTorsoEst);
     //up torso
-    upTorsoRpyRef = diag(configParams.kpUpTorsoRpy)*(rpyUpTorsoTgt - rpyUpTorsoEst) + diag(configParams.kdUpTorsoRpy)*(rpyDotUpTorsoTgt - rpyDotUpTorsoEst);
-    upTorsoXyzRef = diag(configParams.kpUpTorsoXyz)*(xyzUpTorsoTgt - xyzUpTorsoEst) + diag(configParams.kdUpTorsoXyz)*(xyzDotUpTorsoTgt - xyzDotUpTorsoEst);
+    trunkRpyRef = diag(configParams.kpTrunkRpy)*(rpyTrunkTgt - rpyTrunkEst) + diag(configParams.kdTrunkRpy)*(rpyDotTrunkTgt - rpyDotTrunkEst);
+    trunkXyzRef = diag(configParams.kpTrunkXyz)*(xyzTrunkTgt - xyzTrunkEst) + diag(configParams.kdTrunkXyz)*(xyzDotTrunkTgt - xyzDotTrunkEst);
     // left foot
     footArmPosRef.segment(0,3) = diag(configParams.kpFootRpy)*(rpyFootTgt[0] - rpyFootEst[0]) + diag(configParams.kdFootRpy)*(rpyDotFootTgt[0] - rpyDotFootEst[0]);
     footArmPosRef.segment(3,3) = diag(configParams.kpFootXyz)*(xyzFootTgt[0] - xyzFootEst[0]) + diag(configParams.kdFootXyz)*(xyzDotFootTgt[0] - xyzDotFootEst[0]); 
@@ -344,8 +344,8 @@ bool RobotController::taskControl(){
     // Update task & constraint             
     myWbc->updateTask("BipedTorsoPosRpy", torsoRpyRef, configParams.weightTorsoOrientation);
     myWbc->updateTask("BipedTorsoPosXyz", torsoXyzRef, configParams.weightTorsoPosition);
-    myWbc->updateTask("BipedUpTorsoPosRpy", upTorsoRpyRef, configParams.weightUpTorsoOrientation);
-    myWbc->updateTask("BipedUpTorsoPosXyz", upTorsoXyzRef, configParams.weightUpTorsoPosition);
+    myWbc->updateTask("BipedTrunkPosRpy", trunkRpyRef, configParams.weightTrunkOrientation);
+    myWbc->updateTask("BipedTrunkPosXyz", trunkXyzRef, configParams.weightTrunkPosition);
     myWbc->updateTask("Position", footArmPosRef, configParams.weightFootArmPosition);
     myWbc->updateTask("Force4", footArmForceRef, configParams.weightFootArmForce);
     // myWbc->updateTask("ForceChange4", footArmForceChangeRef, configParams.weightFootArmForceChange);
