@@ -3,7 +3,6 @@
 using namespace std;
 using json = nlohmann::json;
 // #define USING_HQP
-
 //=======================================================
 // Initialization of classes
 //=======================================================
@@ -21,35 +20,35 @@ RobotController::RobotController(){
     AGIROBOT::Task * ptrPosition = new QuadSolePosition("Position", NFCC4, nV);
     AGIROBOT::Task * ptrDynamic = new FloatingBaseDynamics("Dynamics", 6, nV);
     AGIROBOT::Task * ptrGblVelLimits = new GlobalVelocityLimitation("GlobalVelocityLimitation", 19, nV); 
-    // AGIROBOT::Task * ptrForce = new QuadSoleForce("Force", NFCC2, nV);
-    // AGIROBOT::Task * ptrForceChange = new QuadSoleForceChange("ForceChange", NFCC2, nV);
     AGIROBOT::Constraint * ptrDynamicConsistency = new DynamicConsistency("DynamicConsistency", 6, nV);
     AGIROBOT::Constraint * ptrFrictionCone = new FrictionCone("FrictionCone", 8, nV);
     AGIROBOT::Constraint * ptrJointTorqueSaturation = new JointTorqueSaturation("JointTorqueSaturation", NJ, nV);
     AGIROBOT::Constraint * ptrCenterOfPressure = new CenterOfPressure("CenterOfPressure", 8, nV);
+    // AGIROBOT::Task * ptrForce = new QuadSoleForce("Force", NFCC2, nV);
+    // AGIROBOT::Task * ptrForceChange = new QuadSoleForceChange("ForceChange", NFCC2, nV);
 
     ptrFrictionCone->setParameter(std::vector<double>{muStatic, myInfinity});
     ptrJointTorqueSaturation->setParameter(std::vector<double>{jointTauLimit});
-    ptrCenterOfPressure->setParameter(std::vector<double>{soleFront, soleBack, soleLeft, soleRight, CopFactor, myInfinity});
+    ptrCenterOfPressure->setParameter(std::vector<double>{soleFront, soleBack, 
+                                    soleLeft, soleRight, CopFactor, myInfinity});
 
     // Instantiate the Wbc instance && Add task & constraint to the instance
     // Hqp
 #ifdef USING_HQP
     myWbc = new AGIROBOT::HqpWbc(nV, robotDynamics);
-    // myWbc->addTask(ptrGblVelLimits, 2);
     myWbc->addTask(ptrForce4, 2);
-    // myWbc->addTask(ptrTorsoPosRpy, 1);
-    // myWbc->addTask(ptrTorsoPosXyz, 1);
     myWbc->addTask(ptrPosition, 1);
     myWbc->addTask(ptrPelvisPosRpy, 0);
     myWbc->addTask(ptrPelvisPosXyz, 0);
-    // myWbc->addTask(ptrDynamic, 0);
     myWbc->addConstraint(ptrDynamicConsistency, 0);
     myWbc->addConstraint(ptrFrictionCone, 0);
     myWbc->addConstraint(ptrCenterOfPressure, 0);
     myWbc->addConstraint(ptrJointTorqueSaturation, 0);
+    // myWbc->addTask(ptrGblVelLimits, 2);
+    // myWbc->addTask(ptrTorsoPosXyz, 1);
+    // myWbc->addTask(ptrTorsoPosRpy, 1);
+    // myWbc->addTask(ptrDynamic, 0);
 #else
-    // Wqp
     myWbc = new AGIROBOT::WqpWbc(nV, robotDynamics);
     myWbc->addTask(ptrPelvisPosRpy, 0);
     myWbc->addTask(ptrPelvisPosXyz, 0);
@@ -67,8 +66,8 @@ RobotController::RobotController(){
 #endif
     // Initialize the wbc controller
     myWbc->wbcInit();
-    myWbc->displayWbcInformation(); // optional
-    myWbc->displayResultInformation();// show qp parameter informations 
+    myWbc->displayWbcInformation();
+    myWbc->displayResultInformation();
 }
 
 RobotController::~RobotController(){
@@ -85,33 +84,6 @@ Eigen::MatrixXd RobotController::diag(const std::vector<double>& diagElement){
         diagM(i, i) = diagElement.at(i);
     }
     return diagM;
-}
-
-
-//================================================================
-// The main update controller of this frame
-//================================================================
-bool RobotController::update(double timeCtrlSys, webotsState& robotStateSim){
-    // update Time
-    timeCs = timeCtrlSys;
-    if ( tick > 0){
-        time += DT;
-    } else {// tick<=0
-        tick = 0;
-        time = 0.0;
-    }
-
-    stateEstimation(robotStateSim);
-    motionPlan();
-    taskControl();
-
-    // update tick-tack
-    tick++;
-    if (tick >= std::numeric_limits<int>::max()-1000){
-        tick = 1000;    // avoid tick out-of range
-    }
-
-    return true;
 }
 
 bool RobotController::getValueTauOpt(Eigen::VectorXd &jntTorOpt){
@@ -134,44 +106,75 @@ bool RobotController::getValuePosCurrent(Eigen::VectorXd &jntPosCur){
     }
     return true;
 }
+//================================================================
+// The main update controller of this frame
+//================================================================
+bool RobotController::update(double timeCtrlSys, webotsState& robotStateSim){
+    // update Time
+    timeCs = timeCtrlSys;
+    if ( tick > 0){time += DT;}
+    else {tick = 0; time = 0.0;}// tick<=0
+
+    stateEstimation(robotStateSim);
+    motionPlan();
+    taskControl();
+
+    // update tick-tack
+    tick++;
+    if (tick >= std::numeric_limits<int>::max()-1000){tick = 1000;}    // avoid tick out-of range
+
+    return true;
+}
+
 
 //================================================================
 // Use sensor data for state estimation
 //================================================================
 bool RobotController::stateEstimation(webotsState & robotStateSim){
     // Data from sensor
-    pelvisTwistEst.head(3) = robotStateSim.pelvisRpyAct.head(3);
-    pelvisTwistEst.segment(6,3) = robotStateSim.pelvisDRpyAct.tail(3);
     qActuated = robotStateSim.jointPosAct;
     qDotActuated = robotStateSim.jointVelAct;
     groundReactiveForce = robotStateSim.footGrfAct;
+    qGen.tail(nJa) = robotStateSim.jointPosAct;
+    qDotGen.tail(nJa) = robotStateSim.jointVelAct;
+    qGen.segment(3,3) = robotStateSim.pelvisRpyAct.head(3);
+    qDotGen.segment(3,3) = robotStateSim.pelvisDRpyAct.tail(3);
 
-    qGen.tail(nJa) = qActuated;
-    qDotGen.tail(nJa) = qDotActuated;
-    qGen.segment(3,3) = pelvisTwistEst.head(3);
-    qDotGen.segment(3,3) = pelvisTwistEst.segment(6,3);
+    // Root from forward kinematics; set the stance foot as origin coord.
+    Eigen::VectorXd stateTemp = Eigen::VectorXd::Zero(6,1);
+    stateTemp = robotDynamics->estPelvisPosVelInWorld(qGen, qDotGen, 0);
 
-    // Pelvis xyz pos&vel
-    Eigen::VectorXd trosoStateTemp = Eigen::VectorXd::Zero(6,1);
-    trosoStateTemp = robotDynamics->estPelvisPosVelInWorld(qGen, qDotGen, 0);
-    pelvisTwistEst.segment(3,3) = trosoStateTemp.head(3); 
-    pelvisTwistEst.tail(3) = trosoStateTemp.tail(3);
+#ifdef USING_TWIST
+    // Root
+    pelvisTwistEst.head(3) = robotStateSim.pelvisRpyAct.head(3);
+    pelvisTwistEst.segment(6,3) = robotStateSim.pelvisDRpyAct.tail(3);
+    pelvisTwistEst.segment(3,3) = stateTemp.head(3); 
+    pelvisTwistEst.tail(3) = stateTemp.tail(3);
     qGen.head(3) = pelvisTwistEst.segment(3,3);
     qDotGen.head(3) = pelvisTwistEst.tail(3);
+    // Others
+    torsoTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 0);
+    leftFootTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 1);
+    rightFootTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 2);
+    leftArmTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 3);
+    rightArmTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 4);
+#else
+    rpyPelvisEst = robotStateSim.pelvisRpyAct.head(3);
+    rpyDotPelvisEst = robotStateSim.pelvisDRpyAct.tail(3);
+    xyzPelvisEst = stateTemp.head(3); 
+    xyzDotPelvisEst = stateTemp.tail(3);
+    qGen.head(3) = xyzPelvisEst;
+    qDotGen.head(3) = xyzDotPelvisEst;
 
-    // Torso pose
     Eigen::VectorXd poseTemp0 = Eigen::VectorXd::Zero(12,1);
     poseTemp0 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 0);
+    rpyTorsoEst = poseTemp0.head(3);
+    xyzTorsoEst = poseTemp0.segment(3,3);
+    rpyDotTorsoEst = poseTemp0.segment(6,3);
+    xyzDotTorsoEst = poseTemp0.tail(3);
 
-    torsoTwistEst.head(3) = poseTemp0.head(3);
-    torsoTwistEst.segment(3,3) = poseTemp0.segment(3,3);
-    torsoTwistEst.segment(6,3) = poseTemp0.segment(6,3);
-    torsoTwistEst.tail(3) = poseTemp0.tail(3);
-
-    // Foot EE pos&vel
     Eigen::VectorXd footStateTemp0 = Eigen::VectorXd::Zero(12,1);
     Eigen::VectorXd footStateTemp1 = Eigen::VectorXd::Zero(12,1);
-
     footStateTemp0 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 1);
     rpyFootEst[0] = footStateTemp0.head(3);
     xyzFootEst[0] = footStateTemp0.segment(3,3);
@@ -184,10 +187,8 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     rpyDotFootEst[1] = footStateTemp1.segment(6,3);
     xyzDotFootEst[1] = footStateTemp1.tail(3);
 
-    // Arm EE pos&vel
     Eigen::VectorXd armStateTemp0 = Eigen::VectorXd::Zero(12,1);
     Eigen::VectorXd armStateTemp1 = Eigen::VectorXd::Zero(12,1);
-
     armStateTemp0 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 3);
     xyzArmEst[0] = armStateTemp0.head(3);
     xyzArmEst[0] = armStateTemp0.segment(3,3);
@@ -199,26 +200,46 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     xyzArmEst[1] = armStateTemp1.segment(3,3);
     rpyDotArmEst[1] = armStateTemp1.segment(6,3);
     xyzDotArmEst[1] = armStateTemp1.tail(3);
+#endif
 
-
-    leftFootTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 1);
-    rightFootTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 2);
-    leftArmTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 3);
-    rightArmTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 4);
 
     // Set initial task reference
     if(flagEstFirst == 0){
-        flagEstFirst = 1;
+        flagEstFirst = 1;  ///< Make sure it only exe. once;
 
-        xyzPelvisInit = pelvisTwistEst.segment(3,3);
-        rpyPelvisInit = pelvisTwistEst.head(3);
-        xyzTorsoInit = torsoTwistEst.segment(3,3);
-        rpyTorsoInit = torsoTwistEst.head(3);
-
+#ifdef USING_TWIST
+        pelvisTwistInit = pelvisTwistEst;
+        torsoTwistInit = torsoTwistEst;
         leftArmTwistInit =  leftArmTwistEst;
         rightArmTwistInit = rightArmTwistEst;
         leftFootTwistInit = leftFootTwistEst;
         rightFootTwistInit = rightFootTwistEst;
+#else
+        xyzPelvisInit = xyzPelvisEst;
+        rpyPelvisInit = rpyPelvisEst;
+        xyzTorsoInit = xyzTorsoEst;
+        rpyTorsoInit = rpyTorsoEst;
+
+        rpyFootInit[0] = rpyFootEst[0]; 
+        xyzFootInit[0] = xyzFootEst[0]; 
+        rpyDotFootInit[0] = rpyDotFootEst[0];
+        xyzDotFootInit[0] = xyzDotFootEst[0];
+
+        rpyFootInit[1] = rpyFootEst[1]; 
+        xyzFootInit[1] = xyzFootEst[1]; 
+        rpyDotFootInit[1] = rpyDotFootEst[1];
+        xyzDotFootInit[1] = xyzDotFootEst[1];
+
+        rpyArmInit[0] = rpyArmEst[0];
+        xyzArmInit[0] = xyzArmEst[0];
+        rpyDotArmInit[0] = rpyDotArmEst[0];
+        xyzDotArmInit[0] = xyzDotArmEst[0];
+
+        rpyArmInit[1] = rpyArmEst[1];
+        xyzArmInit[1] = xyzArmEst[1];
+        rpyDotArmInit[1] = rpyDotArmEst[1];
+        xyzDotArmInit[1] = xyzDotArmEst[1];
+#endif
     }
     return true;
 }
@@ -227,106 +248,153 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
 // Set the reference task values from planning
 //================================================================
 bool RobotController::motionPlan(){// @Daniel240523
+    
+#ifdef USING_TWIST
+    if(time <= 1000)
+        dsp = pelvisTwistInit(1)-configParams.pitchApt*(sin((configParams.pitchFrq*time+0.5)*PI)-1);
 
-        // Pelvis
-        if(time <= 1000){
-            dsp = rpyPelvisInit(1)-configParams.pitchApt*(sin((configParams.pitchFrq*time+0.5)*PI)-1);
-        }
-        xyzPelvisTgt << xyzPelvisInit(0), xyzPelvisInit(1), xyzPelvisInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
-        xyzDotPelvisTgt <<  0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
-        rpyPelvisTgt << 0.0, dsp, 0.0;
-        rpyDotPelvisTgt << 0.0, 0.0, 0.0;
+    pelvisTwistTgt   << 0.0, dsp, 0.0,
+                        pelvisTwistInit(3), pelvisTwistInit(4), pelvisTwistInit(5)+configParams.height*(sin((time+0.5)*PI)-1),
+                        0.0, 0.0, 0.0,
+                        0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
 
-        // Torso
-        xyzTorsoTgt << xyzTorsoInit(0), xyzTorsoInit(1), xyzTorsoInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
-        xyzDotTorsoTgt << 0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
-        rpyTorsoTgt << 0.0, dsp, 0.0;
-        rpyDotTorsoTgt << 0.0, 0.0, 0.0;
-        
-        // Foot
-        //==================================================================//
-        xyzFootTgt[0] = leftFootTwistInit.segment(3,3);
-        xyzDotFootTgt[0] = Eigen::Vector3d::Zero();
-        rpyFootTgt[0] = leftFootTwistInit.head(3);
-        rpyDotFootTgt[0] = Eigen::Vector3d::Zero();
+    torsoTwistTgt    << 0.0, dsp, 0.0,                
+                        torsoTwistInit(3), torsoTwistInit(4), torsoTwistInit(5)+configParams.height*(sin((time+0.5)*PI)-1),
+                        0.0, 0.0, 0.0,
+                        0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
 
-        xyzFootTgt[1] = rightFootTwistInit.segment(3,3);
-        xyzDotFootTgt[1] = Eigen::Vector3d::Zero();
-        rpyFootTgt[1] = rightFootTwistInit.head(3);
-        rpyDotFootTgt[1] = Eigen::Vector3d::Zero();
+    leftFootTwistTgt << leftFootTwistInit.head(3), leftFootTwistInit.segment(3,3),
+                        Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero();
 
-        xyzArmTgt[0] << leftArmTwistInit(3), leftArmTwistInit(4), leftArmTwistInit(5)+configParams.height*(sin((time+0.5)*PI)-1);
-        xyzDotArmTgt[0] << leftArmTwistInit(9), leftArmTwistInit(10), leftArmTwistInit(11)+configParams.height*PI*cos((time+0.5)*PI);
-        rpyArmTgt[0] = leftArmTwistInit.head(3);
-        rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
+    rightFootTwistTgt << rightFootTwistInit.head(3), rightFootTwistInit.segment(3,3),
+                        Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero();
 
-        xyzArmTgt[1] << rightArmTwistInit(3), rightArmTwistInit(4), rightArmTwistInit(5)+configParams.height*(sin((time+0.5)*PI)-1);
-        xyzDotArmTgt[1] << rightArmTwistInit(9), rightArmTwistInit(10), rightArmTwistInit(11)+configParams.height*PI*cos((time+0.5)*PI);
-        rpyArmTgt[1] = rightArmTwistInit.head(3);
-        rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
+    leftArmTwistTgt <<  leftArmTwistInit.head(3),                        
+                        leftArmTwistInit(3), leftArmTwistInit(4), leftArmTwistInit(5)+configParams.height*(sin((time+0.5)*PI)-1),
+                        Eigen::Vector3d::Zero(),
+                        leftArmTwistInit(9), leftArmTwistInit(10), leftArmTwistInit(11)+configParams.height*PI*cos((time+0.5)*PI);
 
-        //================================================================//
+    rightArmTwistTgt << rightArmTwistInit.head(3),
+                        rightArmTwistInit(3), rightArmTwistInit(4), rightArmTwistInit(5)+configParams.height*(sin((time+0.5)*PI)-1),
+                        Eigen::Vector3d::Zero(),
+                        rightArmTwistInit(9), rightArmTwistInit(10), rightArmTwistInit(11)+configParams.height*PI*cos((time+0.5)*PI);
+#else
+    if(time <= 1000)
+        dsp = rpyPelvisInit(1)-configParams.pitchApt*(sin((configParams.pitchFrq*time+0.5)*PI)-1);
 
-        // xyzFootTgt[0] = xyzFootInit[0];
-        // xyzDotFootTgt[0] = Eigen::Vector3d::Zero();
-        // rpyFootTgt[0] = rpyFootInit[0];
-        // rpyDotFootTgt[0] = Eigen::Vector3d::Zero();
-        // cout << "Data test 2.s =========" << endl
-        //     << rpyFootTgt[0].transpose() << endl
-        //     << xyzFootTgt[0].transpose() << endl
-        //     << rpyDotFootTgt[0].transpose() << endl
-        //     << xyzDotFootTgt[0].transpose() << endl;
+    xyzPelvisTgt << xyzPelvisInit(0), xyzPelvisInit(1), xyzPelvisInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
+    xyzDotPelvisTgt <<  0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
+    rpyPelvisTgt << 0.0, dsp, 0.0;
+    rpyDotPelvisTgt << 0.0, 0.0, 0.0;
 
-        // xyzFootTgt[1] = xyzFootInit[1];
-        // xyzDotFootTgt[1] = Eigen::Vector3d::Zero();
-        // rpyFootTgt[1] = rpyFootInit[1];
-        // rpyDotFootTgt[1] = Eigen::Vector3d::Zero();
+    xyzTorsoTgt << xyzTorsoInit(0), xyzTorsoInit(1), xyzTorsoInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
+    xyzDotTorsoTgt << 0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
+    rpyTorsoTgt << 0.0, dsp, 0.0;
+    rpyDotTorsoTgt << 0.0, 0.0, 0.0;
 
-        // xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z()+configParams.height*(sin((time+0.5)*PI)-1);
-        // xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z()+configParams.height*PI*cos((time+0.5)*PI);
-        // rpyArmTgt[0] = rpyArmInit[0];
-        // rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
-        // cout << "Data test 3.s =========" << endl
-        //     << rpyArmTgt[0].transpose() << endl
-        //     << xyzArmTgt[0].transpose() << endl
-        //     << rpyDotArmTgt[0].transpose() << endl
-        //     << xyzDotArmTgt[0].transpose() << endl;
+    rpyFootTgt[0] = rpyFootInit[0];
+    xyzFootTgt[0] = xyzFootInit[0];
+    xyzDotFootTgt[0] = Eigen::Vector3d::Zero();
+    rpyDotFootTgt[0] = Eigen::Vector3d::Zero();
 
-        // xyzArmTgt[1] << xyzArmInit[1].x(), xyzArmInit[1].y(), xyzArmInit[1].z()+configParams.height*(sin((time+0.5)*PI)-1);
-        // xyzDotArmTgt[1] << xyzDotArmInit[1].x(), xyzDotArmInit[1].y(), xyzDotArmInit[1].z()+configParams.height*PI*cos((time+0.5)*PI);
-        // rpyArmTgt[1] = rpyArmInit[1];
-        // rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
+    rpyFootTgt[1] = rpyFootInit[1];
+    xyzFootTgt[1] = xyzFootInit[1];
+    xyzDotFootTgt[1] = Eigen::Vector3d::Zero();
+    rpyDotFootTgt[1] = Eigen::Vector3d::Zero();
 
+    rpyArmTgt[0] = rpyArmInit[0];
+    xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z()+configParams.height*(sin((time+0.5)*PI)-1);
+    rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
+    xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z()+configParams.height*PI*cos((time+0.5)*PI);
+
+    xyzArmTgt[1] << xyzArmInit[1].x(), xyzArmInit[1].y(), xyzArmInit[1].z()+configParams.height*(sin((time+0.5)*PI)-1);
+    xyzDotArmTgt[1] << xyzDotArmInit[1].x(), xyzDotArmInit[1].y(), xyzDotArmInit[1].z()+configParams.height*PI*cos((time+0.5)*PI);
+    rpyArmTgt[1] = rpyArmInit[1];
+    rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
+#endif
     return true;
 }
 
 //==================================================================
 // The main control function to execute QP calcalation and set solutions
 //==================================================================
-bool RobotController::taskControl(){
-    // Update Robot Dynamics 
-    myWbc->updateRobotDynamics(qGen, qDotGen);
+bool RobotController::taskControl(){ 
+    myWbc->updateRobotDynamics(qGen, qDotGen); //# Update Robot Dynamics
 
-    // Calculate References //
+#ifdef USING_TWIST //# Calculate References
+    Eigen::VectorXd pelvisTwistErr = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd torsoTwistErr = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd leftFootTwistErr = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd rightFootTwistErr = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd leftArmTwistErr = Eigen::VectorXd::Zero(12);
+    Eigen::VectorXd rightArmTwistErr = Eigen::VectorXd::Zero(12);
+    pelvisTwistErr = pelvisTwistTgt - pelvisTwistEst;
+    torsoTwistErr = torsoTwistTgt - torsoTwistEst;
+    leftFootTwistErr = leftFootTwistTgt - leftFootTwistEst;
+    rightFootTwistErr = rightFootTwistTgt - rightFootTwistEst;
+    leftArmTwistErr = leftArmTwistTgt - leftArmTwistEst;
+    rightArmTwistErr = rightArmTwistTgt - rightArmTwistEst;
 
-    // Pelvis
-    pelvisRpyRef = diag(configParams.kpPelvisRpy)*(rpyPelvisTgt - pelvisTwistEst.head(3)) + diag(configParams.kdPelvisRpy)*(rpyDotPelvisTgt - pelvisTwistEst.segment(6,3));
-    pelvisXyzRef = diag(configParams.kpPelvisXyz)*(xyzPelvisTgt - pelvisTwistEst.segment(3,3)) + diag(configParams.kdPelvisXyz)*(xyzDotPelvisTgt - pelvisTwistEst.tail(3));
-    // Torso
-    torsoRpyRef = diag(configParams.kpTorsoRpy)*(rpyTorsoTgt - torsoTwistEst.head(3)) + diag(configParams.kdTorsoRpy)*(rpyDotTorsoTgt - torsoTwistEst.segment(6,3));
-    torsoXyzRef = diag(configParams.kpTorsoXyz)*(xyzTorsoTgt - torsoTwistEst.segment(3,3)) + diag(configParams.kdTorsoXyz)*(xyzDotTorsoTgt - torsoTwistEst.tail(3));
-    // left foot
-    footArmPosRef.segment(0,3) = diag(configParams.kpFootRpy)*(rpyFootTgt[0] - rpyFootEst[0]) + diag(configParams.kdFootRpy)*(rpyDotFootTgt[0] - rpyDotFootEst[0]);
-    footArmPosRef.segment(3,3) = diag(configParams.kpFootXyz)*(xyzFootTgt[0] - xyzFootEst[0]) + diag(configParams.kdFootXyz)*(xyzDotFootTgt[0] - xyzDotFootEst[0]); 
-    //right foot 
-    footArmPosRef.segment(6,3) = diag(configParams.kpFootRpy)*(rpyFootTgt[1] - rpyFootEst[1]) + diag(configParams.kdFootRpy)*(rpyDotFootTgt[1] - rpyDotFootEst[1]);
-    footArmPosRef.segment(9,3) = diag(configParams.kpFootXyz)*(xyzFootTgt[1] - xyzFootEst[1]) + diag(configParams.kdFootXyz)*(xyzDotFootTgt[1] - xyzDotFootEst[1]); 
-    // left arm
-    footArmPosRef.segment(12,3) = diag(configParams.kpArmRpy)*(rpyArmTgt[0] - rpyArmEst[0]) + diag(configParams.kdArmRpy)*(rpyDotArmTgt[0] - rpyDotArmEst[0]);
-    footArmPosRef.segment(15,3) = diag(configParams.kpArmXyz)*(xyzArmTgt[0] - xyzArmEst[0]) + diag(configParams.kdArmXyz)*(xyzDotArmTgt[0] - xyzDotArmEst[0]); 
-    //right arm 
-    footArmPosRef.segment(18,3) = diag(configParams.kpArmRpy)*(rpyArmTgt[1] - rpyArmEst[1]) + diag(configParams.kdArmRpy)*(rpyDotArmTgt[1] - rpyDotArmEst[1]);
-    footArmPosRef.segment(21,3) = diag(configParams.kpArmXyz)*(xyzArmTgt[1] - xyzArmEst[1]) + diag(configParams.kdArmXyz)*(xyzDotArmTgt[1] - xyzDotArmEst[1]);  
+    pelvisRpyRef = diag(configParams.kpPelvisRpy) * pelvisTwistErr.segment(0,3)
+                 + diag(configParams.kdPelvisRpy) * pelvisTwistErr.segment(6,3);
+    pelvisXyzRef = diag(configParams.kpPelvisXyz) * pelvisTwistErr.segment(3,3)
+                 + diag(configParams.kdPelvisXyz) * pelvisTwistErr.segment(9,3);
+
+    torsoRpyRef = diag(configParams.kpTorsoRpy) * torsoTwistErr.segment(0,3)
+                + diag(configParams.kdTorsoRpy) * torsoTwistErr.segment(6,3);
+    torsoXyzRef = diag(configParams.kpTorsoXyz) * torsoTwistErr.segment(3,3)
+                + diag(configParams.kdTorsoXyz) * torsoTwistErr.segment(9,3);
+
+    footArmPosRef.segment(0,3) = diag(configParams.kpFootRpy) * leftFootTwistErr.segment(0,3)
+                               + diag(configParams.kdFootRpy) * leftFootTwistErr.segment(6,3);
+    footArmPosRef.segment(3,3) = diag(configParams.kpFootXyz) * leftFootTwistErr.segment(3,3)
+                               + diag(configParams.kdFootXyz) * leftFootTwistErr.segment(9,3);
+
+    footArmPosRef.segment(6,3) = diag(configParams.kpFootRpy) * rightFootTwistErr.segment(0,3)
+                               + diag(configParams.kdFootRpy) * rightFootTwistErr.segment(6,3);
+    footArmPosRef.segment(9,3) = diag(configParams.kpFootXyz) * rightFootTwistErr.segment(3,3)
+                               + diag(configParams.kdFootXyz) * rightFootTwistErr.segment(9,3);
+
+    footArmPosRef.segment(12,3) = diag(configParams.kpArmRpy) * leftArmTwistErr.segment(0,3)
+                                + diag(configParams.kdArmRpy) * leftArmTwistErr.segment(6,3);
+    footArmPosRef.segment(15,3) = diag(configParams.kpArmXyz) * leftArmTwistErr.segment(3,3)
+                                + diag(configParams.kdArmXyz) * leftArmTwistErr.segment(9,3);
+
+    footArmPosRef.segment(18,3) = diag(configParams.kpArmRpy) * rightArmTwistErr.segment(0,3)
+                                + diag(configParams.kdArmRpy) * rightArmTwistErr.segment(6,3);
+    footArmPosRef.segment(21,3) = diag(configParams.kpArmXyz) * rightArmTwistErr.segment(3,3)
+                                + diag(configParams.kdArmXyz) * rightArmTwistErr.segment(9,3);
+#else
+    pelvisRpyRef = diag(configParams.kpPelvisRpy)*(rpyPelvisTgt - rpyPelvisEst) 
+                    + diag(configParams.kdPelvisRpy)*(rpyDotPelvisTgt - rpyDotPelvisEst);
+    pelvisXyzRef = diag(configParams.kpPelvisXyz)*(xyzPelvisTgt - xyzPelvisEst) 
+                    + diag(configParams.kdPelvisXyz)*(xyzDotPelvisTgt - xyzDotPelvisEst);
+
+    torsoRpyRef = diag(configParams.kpTorsoRpy)*(rpyTorsoTgt - rpyTorsoEst) 
+                    + diag(configParams.kdTorsoRpy)*(rpyDotTorsoTgt - rpyDotTorsoEst);
+    torsoXyzRef = diag(configParams.kpTorsoXyz)*(xyzTorsoTgt - xyzTorsoEst) 
+                    + diag(configParams.kdTorsoXyz)*(xyzDotTorsoTgt - xyzDotTorsoEst);
+
+    footArmPosRef.segment(0,3) = diag(configParams.kpFootRpy)*(rpyFootTgt[0] - rpyFootEst[0]) 
+                                + diag(configParams.kdFootRpy)*(rpyDotFootTgt[0] - rpyDotFootEst[0]);
+    footArmPosRef.segment(3,3) = diag(configParams.kpFootXyz)*(xyzFootTgt[0] - xyzFootEst[0]) 
+                                + diag(configParams.kdFootXyz)*(xyzDotFootTgt[0] - xyzDotFootEst[0]); 
+
+    footArmPosRef.segment(6,3) = diag(configParams.kpFootRpy)*(rpyFootTgt[1] - rpyFootEst[1]) 
+                                + diag(configParams.kdFootRpy)*(rpyDotFootTgt[1] - rpyDotFootEst[1]);
+    footArmPosRef.segment(9,3) = diag(configParams.kpFootXyz)*(xyzFootTgt[1] - xyzFootEst[1]) 
+                                + diag(configParams.kdFootXyz)*(xyzDotFootTgt[1] - xyzDotFootEst[1]); 
+
+    footArmPosRef.segment(12,3) = diag(configParams.kpArmRpy)*(rpyArmTgt[0] - rpyArmEst[0]) 
+                                + diag(configParams.kdArmRpy)*(rpyDotArmTgt[0] - rpyDotArmEst[0]);
+    footArmPosRef.segment(15,3) = diag(configParams.kpArmXyz)*(xyzArmTgt[0] - xyzArmEst[0]) 
+                                + diag(configParams.kdArmXyz)*(xyzDotArmTgt[0] - xyzDotArmEst[0]); 
+
+    footArmPosRef.segment(18,3) = diag(configParams.kpArmRpy)*(rpyArmTgt[1] - rpyArmEst[1]) 
+                                + diag(configParams.kdArmRpy)*(rpyDotArmTgt[1] - rpyDotArmEst[1]);
+    footArmPosRef.segment(21,3) = diag(configParams.kpArmXyz)*(xyzArmTgt[1] - xyzArmEst[1]) 
+                                + diag(configParams.kdArmXyz)*(xyzDotArmTgt[1] - xyzDotArmEst[1]);  
+#endif
     
     GlobalVelocityLimitationRef = -qDotActuated;
     footArmForceRef = forceOpt;
@@ -340,7 +408,8 @@ bool RobotController::taskControl(){
     myWbc->updateTask("TorsoPosXyz", torsoXyzRef, configParams.weightTorsoPosition);
     myWbc->updateTask("Position", footArmPosRef, configParams.weightFootArmPosition);
     myWbc->updateTask("Force4", footArmForceRef, configParams.weightFootArmForce);
-    myWbc->updateTask("GlobalVelocityLimitation", GlobalVelocityLimitationRef, configParams.weightGlobalVelLimitation);
+    myWbc->updateTask("GlobalVelocityLimitation", GlobalVelocityLimitationRef, 
+                                        configParams.weightGlobalVelLimitation);
     myWbc->updateTask("Dynamics", floatBaseDynamicRef, configParams.weightFloatBaseDynamic);
 
     myWbc->updateConstraint("DynamicConsistency");
@@ -380,7 +449,8 @@ bool RobotController::taskControl(){
         forceOpt = varOpt.tail(nFc);
         tauOpt = robotDynamics->eqCstrMatTau * varOpt + robotDynamics->eqCstrMatTauBias;
     }else{
-        std::cerr << "QP failed; Exiting the program at time of: " << timeCs << "  simpleStatus: " << simpleStatus << std::endl;
+        std::cerr << "QP failed; Exiting the program at time of: " << timeCs 
+                    << "  simpleStatus: " << simpleStatus << std::endl; 
         exit(EXIT_FAILURE); 
     }
         cout << endl << "tauOpt at timeCs of " << timeCs << endl;

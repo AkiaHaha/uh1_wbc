@@ -57,7 +57,7 @@ struct ConfigParams {
 
     ConfigParams() {
         // Constructor to initialize from JSON file
-        std::ifstream inputFile("/home/ukia/gitRepo/uh1_wbc/src/unitree_wbc/config/controller.json");
+        std::ifstream inputFile("src/unitree_wbc/config/controller.json");
         json jsonData;
         inputFile >> jsonData;
 
@@ -168,8 +168,6 @@ struct ConfigParams {
                                 weightArmForceX, weightArmForceY, weightArmForceZ, 
                                 weightArmForceR, weightArmForceP, weightArmForceYaw, 
                                 weightArmForceX, weightArmForceY, weightArmForceZ;
-                                // 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 
-                                // 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01;
 
         weightFootArmForceChange << weightFootForceR, weightFootForceP, weightFootForceYaw, 
                                     weightFootForceX, weightFootForceY, weightFootForceZ, 
@@ -192,5 +190,4 @@ struct ConfigParams {
         pitchApt = jsonData["pitchApt"];
         pitchFrq = jsonData["pitchFrq"];
     }
-
 };

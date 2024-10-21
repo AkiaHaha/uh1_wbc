@@ -25,11 +25,6 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-// =======================================================================
-// ksajdoijsaiodjsajdsaoijd
-// =======================================================================
-
-
 bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     // timing
     int simCnt = 0;

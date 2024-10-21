@@ -36,20 +36,17 @@
     #define DT 1e-3
 #endif // DELTA-T
 
+// #define USING_TWIST
+
 class RobotController
 {
 public:
     RobotController();
     ~RobotController();
-
-    //=====================================================
-    // Functions for invocation
-    //=====================================================
     bool update(double timeCtrlSys, webotsState & robotStateSim);
     bool getValueTauOpt(Eigen::VectorXd & jntTorOpt);
     bool getValuePosCurrent(Eigen::VectorXd & jntPosCur);
     bool getValueQdd(Eigen::VectorXd & Qdd);
-
 
 private:
     ConfigParams configParams;
@@ -57,19 +54,9 @@ private:
     bool motionPlan();
     bool taskControl();
     Eigen::MatrixXd diag(const std::vector<double>& diagElement);
-
-    //=====================================================
-    // Pointers of main class
-    //=====================================================
     RobotDynamics * robotDynamics;
     AGIROBOT::Wbc * myWbc;
 
-
-    //=====================================================
-    // Constant and parameters of the robot's and QP
-    //=====================================================
-
-    // Current
     int stanceLeg{1};                       // 1: right; 0:left
     double timeCs{0.0};                     // time of CS (Control System)
     int tick{0};                            // the tick-tack for time accumulation
@@ -85,6 +72,7 @@ private:
     Eigen::VectorXd qGen = Eigen::VectorXd::Zero(nJg);
     Eigen::VectorXd qDotGen = Eigen::VectorXd::Zero(nJg);
 
+#ifdef USING_TWIST
     // === Vectors of twist in 12 Dof; the Seq.: Rpy,Xyz,dRpy,dXyz;
     // Estimation - Est
     Eigen::VectorXd pelvisTwistEst = Eigen::VectorXd::Zero(12);
@@ -109,8 +97,12 @@ private:
     Eigen::VectorXd rightFootTwistInit = Eigen::VectorXd::Zero(12);
     Eigen::VectorXd leftArmTwistInit = Eigen::VectorXd::Zero(12);
     Eigen::VectorXd rightArmTwistInit = Eigen::VectorXd::Zero(12);
-
-//-----------------------------------------------------------------------------------//
+#else
+    // Estimation - Est
+    Eigen::Vector3d xyzPelvisEst = Eigen::Vector3d::Zero(), xyzDotPelvisEst = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyPelvisEst = Eigen::Vector3d::Zero(), rpyDotPelvisEst = Eigen::Vector3d::Zero();
+    Eigen::Vector3d xyzTorsoEst = Eigen::Vector3d::Zero(), xyzDotTorsoEst = Eigen::Vector3d::Zero();
+    Eigen::Vector3d rpyTorsoEst = Eigen::Vector3d::Zero(), rpyDotTorsoEst = Eigen::Vector3d::Zero();
     Eigen::Vector3d xyzFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d xyzDotFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyFootEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
@@ -120,7 +112,7 @@ private:
     Eigen::Vector3d rpyArmEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyDotArmEst[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
 
-    // Target
+    // Target - Tgt
     Eigen::Vector3d xyzPelvisTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d xyzDotPelvisTgt = Eigen::Vector3d::Zero();
     Eigen::Vector3d rpyPelvisTgt = Eigen::Vector3d::Zero();
@@ -135,27 +127,29 @@ private:
     Eigen::Vector3d rpyFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyDotFootTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
 
-    Eigen::Vector3d xyzFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d xyzDotFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d rpyFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-    Eigen::Vector3d rpyDotFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
-
     Eigen::Vector3d xyzArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d xyzDotArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyDotArmTgt[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
 
+    // Initial - Init
+    Eigen::Vector3d xyzFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d xyzDotFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d rpyFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d rpyDotFootInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+
     Eigen::Vector3d xyzArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d xyzDotArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyDotArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+#endif
 
     // Reference state
     Eigen::Vector3d pelvisXyzRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d pelvisRpyRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d torsoXyzRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d torsoRpyRef = Eigen::Vector3d::Zero();
-    Eigen::VectorXd footArmPosRef = Eigen::VectorXd::Zero(NFCC4);//Daniel
+    Eigen::VectorXd footArmPosRef = Eigen::VectorXd::Zero(NFCC4);//@Danny
     Eigen::VectorXd footForceRef = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd footForceChangeRef = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd footArmForceRef = Eigen::VectorXd::Zero(NFCC4);
@@ -183,7 +177,7 @@ private:
     double soleFront{0.186};
     double soleBack{0.094};
     double soleLeft{0.015};
-    double soleRight{0.015};//this item modified based on uh1 foot//Daniel.24.5.10//
+    double soleRight{0.015};//# this item modified based on uh1 foot//@Danny240510
     Eigen::VectorXd lowerbounds = -jointQddotLimit * Eigen::VectorXd::Ones(nV);
     Eigen::VectorXd upperbounds = jointQddotLimit * Eigen::VectorXd::Ones(nV);
 
