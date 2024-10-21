@@ -2,8 +2,8 @@
 #include <fstream>
 
 #include "robotController.h"
+#include "dynamics.h"
 #include "robotDynamics.h"
-#include "robotDynamicsBiped.h"
 #include "webotsInterface.h"
 
 #include "json.hpp"
@@ -17,28 +17,28 @@ using json = nlohmann::json;
 //=======================================================
 RobotController::RobotController(){
     // Robot Dynamics
-    robotDynamics = new RobotDynamicsBiped();
+    robotDynamics = new RobotDynamics();
     
     // Instantiate task & constraint 
-    AGIROBOT::Task * ptrBipedPelvisPosRpy = new BipedPelvisPosRpy("BipedPelvisPosRpy", 3, nV);
-    AGIROBOT::Task * ptrBipedPelvisPosXyz = new BipedPelvisPosXyz("BipedPelvisPosXyz", 3, nV);
-    AGIROBOT::Task * ptrBipedTorsoPosRpy = new BipedTorsoPosRpy("BipedTorsoPosRpy", 3, nV);
-    AGIROBOT::Task * ptrBipedTorsoPosXyz = new BipedTorsoPosXyz("BipedTorsoPosXyz", 3, nV);
+    AGIROBOT::Task * ptrPelvisPosRpy = new PelvisPosRpy("PelvisPosRpy", 3, nV);
+    AGIROBOT::Task * ptrPelvisPosXyz = new PelvisPosXyz("PelvisPosXyz", 3, nV);
+    AGIROBOT::Task * ptrTorsoPosRpy = new TorsoPosRpy("TorsoPosRpy", 3, nV);
+    AGIROBOT::Task * ptrTorsoPosXyz = new TorsoPosXyz("TorsoPosXyz", 3, nV);
     AGIROBOT::Task * ptrForce4 = new QuadSoleForce("Force4", NFCC4, nV);
     AGIROBOT::Task * ptrForceChange4 = new QuadSoleForceChange("ForceChange4", NFCC4, nV);
     AGIROBOT::Task * ptrPosition = new QuadSolePosition("Position", NFCC4, nV);
-    AGIROBOT::Task * ptrDynamic = new BipedFloatingBaseDynamics("Dynamics", 6, nV);
+    AGIROBOT::Task * ptrDynamic = new FloatingBaseDynamics("Dynamics", 6, nV);
     AGIROBOT::Task * ptrGblVelLimits = new GlobalVelocityLimitation("GlobalVelocityLimitation", 19, nV); 
     // AGIROBOT::Task * ptrForce = new QuadSoleForce("Force", NFCC2, nV);
     // AGIROBOT::Task * ptrForceChange = new QuadSoleForceChange("ForceChange", NFCC2, nV);
-    AGIROBOT::Constraint * ptrBipedDynamicConsistency = new BipedDynamicConsistency("BipedDynamicConsistency", 6, nV);
-    AGIROBOT::Constraint * ptrBipedFrictionCone = new BipedFrictionCone("BipedFrictionCone", 8, nV);
-    AGIROBOT::Constraint * ptrBipedJointTorqueSaturation = new BipedJointTorqueSaturation("BipedJointTorqueSaturation", NJ, nV);
-    AGIROBOT::Constraint * ptrBipedCenterOfPressure = new BipedCenterOfPressure("BipedCenterOfPressure", 8, nV);
+    AGIROBOT::Constraint * ptrDynamicConsistency = new DynamicConsistency("DynamicConsistency", 6, nV);
+    AGIROBOT::Constraint * ptrFrictionCone = new FrictionCone("FrictionCone", 8, nV);
+    AGIROBOT::Constraint * ptrJointTorqueSaturation = new JointTorqueSaturation("JointTorqueSaturation", NJ, nV);
+    AGIROBOT::Constraint * ptrCenterOfPressure = new CenterOfPressure("CenterOfPressure", 8, nV);
 
-    ptrBipedFrictionCone->setParameter(std::vector<double>{muStatic, myInfinity});
-    ptrBipedJointTorqueSaturation->setParameter(std::vector<double>{jointTauLimit});
-    ptrBipedCenterOfPressure->setParameter(std::vector<double>{soleFront, soleBack, soleLeft, soleRight, CopFactor, myInfinity});
+    ptrFrictionCone->setParameter(std::vector<double>{muStatic, myInfinity});
+    ptrJointTorqueSaturation->setParameter(std::vector<double>{jointTauLimit});
+    ptrCenterOfPressure->setParameter(std::vector<double>{soleFront, soleBack, soleLeft, soleRight, CopFactor, myInfinity});
 
     // Instantiate the Wbc instance && Add task & constraint to the instance
     // Hqp
@@ -46,32 +46,32 @@ RobotController::RobotController(){
     myWbc = new AGIROBOT::HqpWbc(nV, robotDynamics);
     // myWbc->addTask(ptrGblVelLimits, 2);
     myWbc->addTask(ptrForce4, 2);
-    // myWbc->addTask(ptrBipedTorsoPosRpy, 1);
-    // myWbc->addTask(ptrBipedTorsoPosXyz, 1);
+    // myWbc->addTask(ptrTorsoPosRpy, 1);
+    // myWbc->addTask(ptrTorsoPosXyz, 1);
     myWbc->addTask(ptrPosition, 1);
-    myWbc->addTask(ptrBipedPelvisPosRpy, 0);
-    myWbc->addTask(ptrBipedPelvisPosXyz, 0);
+    myWbc->addTask(ptrPelvisPosRpy, 0);
+    myWbc->addTask(ptrPelvisPosXyz, 0);
     // myWbc->addTask(ptrDynamic, 0);
-    myWbc->addConstraint(ptrBipedDynamicConsistency, 0);
-    myWbc->addConstraint(ptrBipedFrictionCone, 0);
-    myWbc->addConstraint(ptrBipedCenterOfPressure, 0);
-    myWbc->addConstraint(ptrBipedJointTorqueSaturation, 0);
+    myWbc->addConstraint(ptrDynamicConsistency, 0);
+    myWbc->addConstraint(ptrFrictionCone, 0);
+    myWbc->addConstraint(ptrCenterOfPressure, 0);
+    myWbc->addConstraint(ptrJointTorqueSaturation, 0);
 #else
     // Wqp
     myWbc = new AGIROBOT::WqpWbc(nV, robotDynamics);
-    myWbc->addTask(ptrBipedPelvisPosRpy, 0);
-    myWbc->addTask(ptrBipedPelvisPosXyz, 0);
-    myWbc->addTask(ptrBipedTorsoPosRpy, 0);
-    myWbc->addTask(ptrBipedTorsoPosXyz, 0);
+    myWbc->addTask(ptrPelvisPosRpy, 0);
+    myWbc->addTask(ptrPelvisPosXyz, 0);
+    myWbc->addTask(ptrTorsoPosRpy, 0);
+    myWbc->addTask(ptrTorsoPosXyz, 0);
     myWbc->addTask(ptrForce4, 0);
     myWbc->addTask(ptrForceChange4, 0);
     myWbc->addTask(ptrPosition, 0);
     myWbc->addTask(ptrDynamic, 0);
     myWbc->addTask(ptrGblVelLimits, 0);
-    myWbc->addConstraint(ptrBipedDynamicConsistency, 0);
-    myWbc->addConstraint(ptrBipedFrictionCone, 0);
-    myWbc->addConstraint(ptrBipedCenterOfPressure, 0);
-    myWbc->addConstraint(ptrBipedJointTorqueSaturation, 0);
+    myWbc->addConstraint(ptrDynamicConsistency, 0);
+    myWbc->addConstraint(ptrFrictionCone, 0);
+    myWbc->addConstraint(ptrCenterOfPressure, 0);
+    myWbc->addConstraint(ptrJointTorqueSaturation, 0);
 #endif
     // Initialize the wbc controller
     myWbc->wbcInit();
@@ -247,35 +247,17 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
 //================================================================
 bool RobotController::motionPlan(){// @Daniel240523
 
-        // if (flagTimeSetZero == 0){
-        //     time = 0.0;
-        //     flagTimeSetZero = 1;
-        //     cout << "welcome to plan stage 2 " << endl<<endl;
-        // }
-        // // TORSO XYZ
-        // xyzPelvisTgt << xyzPelvisInit(0), xyzPelvisInit(1), -0.005*sin(time/1*PI)+xyzPelvisInit(2);
-        // xyzDotPelvisTgt << 0.0, 0.0, -0.005*PI*cos(time/1*PI);
-        // std::cout << "plan stage 2"  << std::endl;
-
         // Pelvis
         if(time <= 1000){
             dsp = rpyPelvisInit(1)-configParams.pitchApt*(sin((configParams.pitchFrq*time+0.5)*PI)-1);
         }
-        // xyzPelvisTgt = xyzPelvisInit;
-        // xyzDotPelvisTgt << 0.0, 0.0, 0.0;
         xyzPelvisTgt << xyzPelvisInit(0), xyzPelvisInit(1), xyzPelvisInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
-        // xyzPelvisTgt << comx, comy, xyzPelvisInit(2)+height*(sin((time+0.5)*PI)-1);
-        // xyzPelvisTgt << CoM(0), CoM(1), xyzPelvisInit(2)+height*(sin((time+0.5)*PI)-1);
         xyzDotPelvisTgt <<  0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
         rpyPelvisTgt << 0.0, dsp, 0.0;
         rpyDotPelvisTgt << 0.0, 0.0, 0.0;
 
         // Torso
-        // xyzTorsoTgt = xyzTorsoInit;
-        // xyzDotTorsoTgt << 0.0, 0.0, 0.0;
         xyzTorsoTgt << xyzTorsoInit(0), xyzTorsoInit(1), xyzTorsoInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
-        // xyzTorsoTgt << comx, comy, xyzTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
-        // xyzTorsoTgt << CoM(0), CoM(1), xyzTorsoInit(2)+height*(sin((time+0.5)*PI)-1);
         xyzDotTorsoTgt << 0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
         rpyTorsoTgt << 0.0, dsp, 0.0;
         rpyDotTorsoTgt << 0.0, 0.0, 0.0;
@@ -291,15 +273,11 @@ bool RobotController::motionPlan(){// @Daniel240523
         rpyFootTgt[1] = rpyFootInit[1];
         rpyDotFootTgt[1] = Eigen::Vector3d::Zero();
 
-        // xyzArmTgt[0] = xyzArmInit[0];
-        // xyzDotArmTgt[0] = Eigen::Vector3d::Zero();
         xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z()+configParams.height*(sin((time+0.5)*PI)-1);
         xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z()+configParams.height*PI*cos((time+0.5)*PI);
         rpyArmTgt[0] = rpyArmInit[0];
         rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
 
-        // xyzArmTgt[1] = xyzArmInit[1];
-        // xyzDotArmTgt[1] = Eigen::Vector3d::Zero();
         xyzArmTgt[1] << xyzArmInit[1].x(), xyzArmInit[1].y(), xyzArmInit[1].z()+configParams.height*(sin((time+0.5)*PI)-1);
         xyzDotArmTgt[1] << xyzDotArmInit[1].x(), xyzDotArmInit[1].y(), xyzDotArmInit[1].z()+configParams.height*PI*cos((time+0.5)*PI);
         rpyArmTgt[1] = rpyArmInit[1];
@@ -342,23 +320,23 @@ bool RobotController::taskControl(){
 
 
     // Update task & constraint             
-    myWbc->updateTask("BipedPelvisPosRpy", pelvisRpyRef, configParams.weightPelvisOrientation);
-    myWbc->updateTask("BipedPelvisPosXyz", pelvisXyzRef, configParams.weightPelvisPosition);
-    myWbc->updateTask("BipedTorsoPosRpy", torsoRpyRef, configParams.weightTorsoOrientation);
-    myWbc->updateTask("BipedTorsoPosXyz", torsoXyzRef, configParams.weightTorsoPosition);
+    myWbc->updateTask("PelvisPosRpy", pelvisRpyRef, configParams.weightPelvisOrientation);
+    myWbc->updateTask("PelvisPosXyz", pelvisXyzRef, configParams.weightPelvisPosition);
+    myWbc->updateTask("TorsoPosRpy", torsoRpyRef, configParams.weightTorsoOrientation);
+    myWbc->updateTask("TorsoPosXyz", torsoXyzRef, configParams.weightTorsoPosition);
     myWbc->updateTask("Position", footArmPosRef, configParams.weightFootArmPosition);
     myWbc->updateTask("Force4", footArmForceRef, configParams.weightFootArmForce);
-    // myWbc->updateTask("ForceChange4", footArmForceChangeRef, configParams.weightFootArmForceChange);
     myWbc->updateTask("GlobalVelocityLimitation", GlobalVelocityLimitationRef, configParams.weightGlobalVelLimitation);
     myWbc->updateTask("Dynamics", floatBaseDynamicRef, configParams.weightFloatBaseDynamic);
 
+    myWbc->updateConstraint("DynamicConsistency");
+    myWbc->updateConstraint("FrictionCone");
+    myWbc->updateConstraint("CenterOfPressure");
+    myWbc->updateConstraint("JointTorqueSaturation");
+    // myWbc->updateTask("ForceChange4", footArmForceChangeRef, configParams.weightFootArmForceChange);
     // myWbc->updateTask("ForceChange4", footArmForceChangeRef, weightFootArmForceChange);
     // myWbc->updateTask("ForceChange", footForceChangeRef, weightFootForceChange);
     // myWbc->updateTask("Force", footForceRef, weightFootForce);
-    myWbc->updateConstraint("BipedDynamicConsistency");
-    myWbc->updateConstraint("BipedFrictionCone");
-    myWbc->updateConstraint("BipedCenterOfPressure");
-    myWbc->updateConstraint("BipedJointTorqueSaturation");
 
     // Update bounds
     lowerbounds(NG+5) = 0.0;

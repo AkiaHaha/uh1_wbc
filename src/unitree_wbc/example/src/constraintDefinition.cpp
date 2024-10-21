@@ -1,8 +1,8 @@
-#include "constraintDefinitionBiped.h"
+#include "constraintDefinition.h"
 using namespace std;
 
 // Dynamic consistency
-bool BipedDynamicConsistency::update(const AGIROBOT::RobotDynamics &robot){
+bool DynamicConsistency::update(const AGIROBOT::RobotDynamics &robot){
     cstrMatC.leftCols(robot.NJG) = robot.selMatFloatingBase * robot.inertiaMat;
     // cstrMatC.rightCols(robot.NFC) = -robot.selMatFloatingBase * robot.biContactJacoTc.J.transpose();//Force@@
     cstrMatC.rightCols(robot.NFC) = -robot.selMatFloatingBase * robot.quadContactJacoTc.J.transpose();//Force@@
@@ -12,11 +12,11 @@ bool BipedDynamicConsistency::update(const AGIROBOT::RobotDynamics &robot){
 }
 
 // Friction cone
-BipedFrictionCone::BipedFrictionCone(const std::string & constrName, int constrDim, int varDim) : Constraint(constrName, constrDim, varDim){
+FrictionCone::FrictionCone(const std::string & constrName, int constrDim, int varDim) : Constraint(constrName, constrDim, varDim){
     fricMat = Eigen::MatrixXd::Zero(4, 6);
 }
 
-bool BipedFrictionCone::setParameter(const std::vector<double> &params){
+bool FrictionCone::setParameter(const std::vector<double> &params){
     if (params.size() >= 2){
         muStaticFriction = params.at(0);
         myInfinity = params.at(1);
@@ -27,7 +27,7 @@ bool BipedFrictionCone::setParameter(const std::vector<double> &params){
     return true;
 }
 
-bool BipedFrictionCone::update(const AGIROBOT::RobotDynamics &robot){
+bool FrictionCone::update(const AGIROBOT::RobotDynamics &robot){
     fricMat <<  0.0, 0.0, 0.0, 1.0, 0.0, -muStaticFriction,
                 0.0, 0.0, 0.0, -1.0, 0.0, -muStaticFriction,
                 0.0, 0.0, 0.0, 0.0, 1.0, -muStaticFriction,
@@ -40,11 +40,11 @@ bool BipedFrictionCone::update(const AGIROBOT::RobotDynamics &robot){
 }
 
 // Center of pressure
-BipedCenterOfPressure::BipedCenterOfPressure(const std::string & constrName, int constrDim, int varDim) : Constraint(constrName, constrDim, varDim){
+CenterOfPressure::CenterOfPressure(const std::string & constrName, int constrDim, int varDim) : Constraint(constrName, constrDim, varDim){
     copMat = Eigen::MatrixXd::Zero(4, 6);
 }
 
-bool BipedCenterOfPressure::setParameter(const std::vector<double> &params){
+bool CenterOfPressure::setParameter(const std::vector<double> &params){
     if (params.size() >= 6){
         sole2Front = params.at(0);
         sole2Back = params.at(1);
@@ -59,7 +59,7 @@ bool BipedCenterOfPressure::setParameter(const std::vector<double> &params){
     return true;
 }
 
-bool BipedCenterOfPressure::update(const AGIROBOT::RobotDynamics &robot){
+bool CenterOfPressure::update(const AGIROBOT::RobotDynamics &robot){
     copMat <<   0.0, -1.0, 0.0, 0.0, 0.0, -sole2Front * copFactor,
                 0.0, 1.0, 0.0, 0.0, 0.0, -sole2Back * copFactor,
                 1.0, 0.0, 0.0, 0.0, 0.0, -sole2Left * copFactor,
@@ -72,7 +72,7 @@ bool BipedCenterOfPressure::update(const AGIROBOT::RobotDynamics &robot){
 }
 
 // Joint torque limitation
-bool BipedJointTorqueSaturation::setParameter(const std::vector<double> &params){
+bool JointTorqueSaturation::setParameter(const std::vector<double> &params){
     if(params.size() >= 1){
         jointTauLimit = params.at(0);
     }else{
@@ -82,7 +82,7 @@ bool BipedJointTorqueSaturation::setParameter(const std::vector<double> &params)
     return true;
 }
 
-bool BipedJointTorqueSaturation::update(const AGIROBOT::RobotDynamics &robot){
+bool JointTorqueSaturation::update(const AGIROBOT::RobotDynamics &robot){
     cstrMatC = robot.eqCstrMatTau;///< NJA, NJG+NFC
     lbC = - jointTauLimit * Eigen::VectorXd::Ones(robot.NJA) - robot.eqCstrMatTauBias;
     ubC = jointTauLimit * Eigen::VectorXd::Ones(robot.NJA) - robot.eqCstrMatTauBias;

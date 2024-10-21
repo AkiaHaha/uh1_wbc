@@ -7,7 +7,7 @@
 #include <vector>
 #include <cstdarg>
 
-#include "robotDynamics.h"
+#include "dynamics.h"
 
 #ifndef NG
     #define NG 25

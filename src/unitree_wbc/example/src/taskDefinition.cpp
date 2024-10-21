@@ -1,73 +1,73 @@
-#include "taskDefinitionBiped.h"
+#include "taskDefinition.h"
 
-bool BipedFloatingBaseDynamics::update(const AGIROBOT::RobotDynamics &robot){
+bool FloatingBaseDynamics::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA << robot.selMatFloatingBase * robot.inertiaMat,
                 -robot.selMatFloatingBase * robot.quadContactJacoTc.J.transpose();
     taskVecB = - robot.selMatFloatingBase * robot.nonlinearBias;
     return true;
 }
 
-bool BipedCentroidalMomentum::update(const AGIROBOT::RobotDynamics &robot){
+bool CentroidalMomentum::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.centroidalMomentumMatrix;
     taskVecB = ref - robot.centroidalMomentumBiased;
     return true;
 }
 
-bool BipedLinearMomentum::update(const AGIROBOT::RobotDynamics &robot){
+bool LinearMomentum::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.centroidalMomentumMatrix.bottomRows(3);
     taskVecB = ref - robot.centroidalMomentumBiased.tail(3);
     return true;
 }
 
-bool BipedAngularMomentum::update(const AGIROBOT::RobotDynamics &robot){
+bool AngularMomentum::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.centroidalMomentumMatrix.topRows(3);
     taskVecB = ref - robot.centroidalMomentumBiased.head(3);
     return true;
 } 
 
-bool BipedPelvisPosition::update(const AGIROBOT::RobotDynamics &robot){
+bool PelvisPosition::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J;
     taskVecB = ref - robot.floatBaseJacoTc.JdotQdot;
     return true;
 }
 
-bool BipedPelvisPosRpy::update(const AGIROBOT::RobotDynamics &robot){
+bool PelvisPosRpy::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J.topRows(3);
     taskVecB = ref - robot.floatBaseJacoTc.JdotQdot.head(3);
     return true;
 }
 
-bool BipedPelvisPosXyz::update(const AGIROBOT::RobotDynamics &robot){
+bool PelvisPosXyz::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J.bottomRows(3);
     taskVecB = ref - robot.floatBaseJacoTc.JdotQdot.tail(3);
     return true;
 }
 
-bool BipedTorsoPosRpy::update(const AGIROBOT::RobotDynamics &robot){
+bool TorsoPosRpy::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J.topRows(3);
     taskVecB = ref - robot.floatBaseJacoTc.JdotQdot.head(3);
     return true;
 }
 
-bool BipedTorsoPosXyz::update(const AGIROBOT::RobotDynamics &robot){
+bool TorsoPosXyz::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J.bottomRows(3);
     taskVecB = ref - robot.floatBaseJacoTc.JdotQdot.tail(3);
     return true;
 }
 
-bool BipedFootPosition::update(const AGIROBOT::RobotDynamics &robot){
+bool FootPosition::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.biContactJacoTc.J;
     taskVecB = ref - robot.biContactJacoTc.JdotQdot;
     return true;
 }
 
-bool BipedFootForce::update(const AGIROBOT::RobotDynamics &robot){
+bool FootForce::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.rightCols(robot.NFC) = Eigen::MatrixXd::Identity(robot.NFC, robot.NFC);
     taskVecB = ref;
     return true;
 }
 
-bool BipedFootForceChange::update(const AGIROBOT::RobotDynamics &robot){
+bool FootForceChange::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.rightCols(robot.NFC) = Eigen::MatrixXd::Identity(robot.NFC, robot.NFC);
     taskVecB = ref;
     return true;

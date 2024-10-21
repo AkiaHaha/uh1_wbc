@@ -1,4 +1,4 @@
-#include "robotDynamics.h"
+#include "dynamics.h"
 #include <ErrorMsg.h>
 
 namespace AGIROBOT {

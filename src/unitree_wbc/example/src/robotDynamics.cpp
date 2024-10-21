@@ -1,10 +1,10 @@
-#include "robotDynamicsBiped.h"
+#include "robotDynamics.h"
 using namespace std;
 
 //===========================================================================
 // Public functions for invocation
 //===========================================================================
-RobotDynamicsBiped::RobotDynamicsBiped() {
+RobotDynamics::RobotDynamics() {
     // Basic elements
     NJG = NG;///< NJG = NJF + NJJ
     NJF = 6;  //< Number of Joints Free-floating
@@ -205,18 +205,18 @@ RobotDynamicsBiped::RobotDynamicsBiped() {
     quadSoleJDotQDot = VectorNd::Zero(4*NJF);
 }
 
-RobotDynamicsBiped::~RobotDynamicsBiped(){
+RobotDynamics::~RobotDynamics(){
     delete model;
     model = nullptr;
 }
 
-bool RobotDynamicsBiped::setJntStates(const Eigen::VectorXd &q, const Eigen::VectorXd &qdot){
+bool RobotDynamics::setJntStates(const Eigen::VectorXd &q, const Eigen::VectorXd &qdot){
     AGIROBOT::RobotDynamics::setJntStates(q, qdot);
     isPosVelUpdated = false;
     return true;
 }
 
-bool RobotDynamicsBiped::calcWbcDependence(){
+bool RobotDynamics::calcWbcDependence(){
     if (!isPosVelUpdated){
         updateKinematicsPosVel();
     }
@@ -242,14 +242,14 @@ bool RobotDynamicsBiped::calcWbcDependence(){
     return true;
 }
 
-double RobotDynamicsBiped::getTotalMass(){
+double RobotDynamics::getTotalMass(){
     return massAll;
 }
 
 //===========================================================================
 // Update and calculate dynamics params
 //===========================================================================
-VectorNd RobotDynamicsBiped::estPelvisPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
+VectorNd RobotDynamics::estPelvisPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
     VectorNd qTemp = VectorNd::Zero(NJG);
     VectorNd qDotTemp = VectorNd::Zero(NJG);
     Vector3d sole2PelvisPos = Vector3d::Zero();
@@ -276,7 +276,7 @@ VectorNd RobotDynamicsBiped::estPelvisPosVelInWorld(const VectorNd& jointPos, co
     return posVelRes;
 }
 
-VectorNd RobotDynamicsBiped::estBodyPosInWorldAkia(const VectorNd& jointPos, const VectorNd& jointVel, const unsigned int& bodyId) {//Daniel 5.27
+VectorNd RobotDynamics::estBodyPosInWorldAkia(const VectorNd& jointPos, const VectorNd& jointVel, const unsigned int& bodyId) {//Daniel 5.27
     VectorNd qTemp = VectorNd::Zero(NJG);                                                                                           //0: pelvis; 1:LS; 2:RS; 3:LF; 4:RF
     VectorNd qDotTemp = VectorNd::Zero(NJG);
     Vector3d bodyPos = Vector3d::Zero(3);
@@ -308,7 +308,7 @@ VectorNd RobotDynamicsBiped::estBodyPosInWorldAkia(const VectorNd& jointPos, con
     return bodyPos;
 }
 
-VectorNd RobotDynamicsBiped::estFootArmPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
+VectorNd RobotDynamics::estFootArmPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
     VectorNd qTemp = VectorNd::Zero(NJG);
     VectorNd qDotTemp = VectorNd::Zero(NJG);
     Vector3d sole2WorldPos = Vector3d::Zero();
@@ -359,7 +359,7 @@ VectorNd RobotDynamicsBiped::estFootArmPosVelInWorld(const VectorNd& jointPos, c
 }
 
 
-VectorNd RobotDynamicsBiped::getRootXyzRpy(const Eigen::VectorXd & q){//Daniel 5.26
+VectorNd RobotDynamics::getRootXyzRpy(const Eigen::VectorXd & q){//Daniel 5.26
      Eigen::VectorXd rootPose(6);
 
     // Obtain root node pos.
@@ -374,7 +374,7 @@ VectorNd RobotDynamicsBiped::getRootXyzRpy(const Eigen::VectorXd & q){//Daniel 5
     return rootPose;
 }
 
-VectorNd RobotDynamicsBiped::getRootXyzRpyDot(const Eigen::VectorXd &q, const Eigen::VectorXd &qDot) {//Daniel 5.27
+VectorNd RobotDynamics::getRootXyzRpyDot(const Eigen::VectorXd &q, const Eigen::VectorXd &qDot) {//Daniel 5.27
     Eigen::VectorXd rootPoseDot(6);
 
     // Obtain root node Velocity screw  
@@ -390,39 +390,39 @@ VectorNd RobotDynamicsBiped::getRootXyzRpyDot(const Eigen::VectorXd &q, const Ei
     return rootPoseDot;
 }
 
-bool RobotDynamicsBiped::updateKinematicsPosVel() {
+bool RobotDynamics::updateKinematicsPosVel() {
     UpdateKinematicsCustom(*model, &jntPositions, &jntVelocities, NULL);
     isPosVelUpdated = true;
     return true;
 }
 
-bool RobotDynamicsBiped::updateKinematicsAcc() {
+bool RobotDynamics::updateKinematicsAcc() {
     VectorNd qDDotZero = VectorNd::Zero(NJG);
     UpdateKinematicsCustom(*model, NULL, NULL, &qDDotZero);
     return true;
 }
 
-bool RobotDynamicsBiped::calcPelvisJacob() {
+bool RobotDynamics::calcPelvisJacob() {
     CalcPointJacobian6D(*model, jntPositions, idPelvis, Vector3d::Zero(), pelvisJacob, false);
     return true;
 }
 
-bool RobotDynamicsBiped::calcPelvisJDotQDot() {
+bool RobotDynamics::calcPelvisJDotQDot() {
     pelvisJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idPelvis, Vector3d::Zero(), false);
     return true;
 }
 
-bool RobotDynamicsBiped::calcTorsoJacob() {
+bool RobotDynamics::calcTorsoJacob() {
     CalcPointJacobian6D(*model, jntPositions, idTorso, Vector3d::Zero(), torsoJacob, false);
     return true;
 }
 
-bool RobotDynamicsBiped::calcTorsoJDotQDot() {
+bool RobotDynamics::calcTorsoJDotQDot() {
     torsoJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idTorso, Vector3d::Zero(), false);
     return true;
 }
 
-bool RobotDynamicsBiped::calcSoleJacob() {
+bool RobotDynamics::calcSoleJacob() {
     CalcPointJacobian6D(*model, jntPositions, idLeftSoleGround, Vector3d::Zero(), leftLegSoleJacob, false);
     CalcPointJacobian6D(*model, jntPositions, idRightSoleGround, Vector3d::Zero(), rightLegSoleJacob, false);
     CalcPointJacobian6D(*model, jntPositions, idLeftArmEnd, Vector3d::Zero(), leftArmSoleJacob, false);
@@ -437,7 +437,7 @@ bool RobotDynamicsBiped::calcSoleJacob() {
     return true;
 }
 
-bool RobotDynamicsBiped::calcSoleJDotQDot() {
+bool RobotDynamics::calcSoleJDotQDot() {
     leftLegSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idLeftSoleGround, Vector3d::Zero(), false);
     rightLegSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idRightSoleGround, Vector3d::Zero(), false);
     leftArmSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idLeftArmEnd, Vector3d::Zero(), false);
@@ -452,13 +452,13 @@ bool RobotDynamicsBiped::calcSoleJDotQDot() {
     return true;
 }
 
-bool RobotDynamicsBiped::calcMassMatrixCRBA() {
+bool RobotDynamics::calcMassMatrixCRBA() {
     inertiaMat.setZero();
     CompositeRigidBodyAlgorithm(*model, jntPositions, inertiaMat, false);
     return true;
 }
 
-bool RobotDynamicsBiped::calcNonlinearBiasRNEA() {
+bool RobotDynamics::calcNonlinearBiasRNEA() {
     gravityBias.setZero();
     VectorNd qDotZero = VectorNd::Zero(NJG);
     NonlinearEffects(*model, jntPositions, qDotZero, gravityBias);
@@ -468,13 +468,13 @@ bool RobotDynamicsBiped::calcNonlinearBiasRNEA() {
     return true;
 }
 
-bool RobotDynamicsBiped::calcRigidBodyDynamicsDescriptors() {
+bool RobotDynamics::calcRigidBodyDynamicsDescriptors() {
     calcMassMatrixCRBA();
     calcNonlinearBiasRNEA();
     return true;
 }
 
-bool RobotDynamicsBiped::calcCentroidalDynamicsDescriptors() {
+bool RobotDynamics::calcCentroidalDynamicsDescriptors() {
     SpatialMatrix phiR = SpatialMatrix::Zero(6,6);
     SpatialMatrix phi = SpatialMatrix::Zero(6,6);
     SpatialMatrix phiT = SpatialMatrix::Zero(6,6);
@@ -533,13 +533,13 @@ bool RobotDynamicsBiped::calcCentroidalDynamicsDescriptors() {
     return true;
 }
 
-bool RobotDynamicsBiped::calcSoleTask() {
+bool RobotDynamics::calcSoleTask() {
     calcSoleJacob();
     calcSoleJDotQDot();
     return true;
 }
 
-bool RobotDynamicsBiped::calcPelvisTask() {
+bool RobotDynamics::calcPelvisTask() {
     calcTorsoJacob();
     calcTorsoJDotQDot();  
     calcPelvisJacob();
@@ -547,15 +547,15 @@ bool RobotDynamicsBiped::calcPelvisTask() {
     return true;
 }
 
-bool RobotDynamicsBiped::calcCOMPosVel() {
+bool RobotDynamics::calcCOMPosVel() {
     Utils::CalcCenterOfMass(*model, jntPositions, jntVelocities, NULL, massAll, comPos2World, &comVel2World, NULL, NULL, NULL, false);
     return true;
 }
-bool RobotDynamicsBiped::calcCOMState() {
+bool RobotDynamics::calcCOMState() {
     Utils::CalcCenterOfMass(*model, jntPositions, jntVelocities, NULL, massAll, comPos2World, &comVel2World, NULL, &angularMomentum, NULL, false);
     return true;
 }
-bool RobotDynamicsBiped::calcCentroidalMomentum() {
+bool RobotDynamics::calcCentroidalMomentum() {
     centroidMomentum = centroidAG * jntVelocities;
     centroidMomentumICS = centroidAICS * jntVelocities;
     return true;
@@ -564,7 +564,7 @@ bool RobotDynamicsBiped::calcCentroidalMomentum() {
 //===========================================================================
 // Math operations
 //===========================================================================
-Vector3d RobotDynamicsBiped::rotaitonMatrix2EulerRPY(const Matrix3d& rotMat) {
+Vector3d RobotDynamics::rotaitonMatrix2EulerRPY(const Matrix3d& rotMat) {
     Vector3d rpy = Vector3d::Zero();
     rpy(0) = std::atan2(rotMat(2,1), rotMat(2,2));
     rpy(1) = std::atan2(-rotMat(2,0), std::sqrt(rotMat(2,1) * rotMat(2,1) + rotMat(2,2) * rotMat(2,2)));
@@ -572,7 +572,7 @@ Vector3d RobotDynamicsBiped::rotaitonMatrix2EulerRPY(const Matrix3d& rotMat) {
     return rpy;
 }
 
-Vector3d RobotDynamicsBiped::angleDot2EulerDot(const Vector3d& angleDot, const Vector3d& rpy) {
+Vector3d RobotDynamics::angleDot2EulerDot(const Vector3d& angleDot, const Vector3d& rpy) {
     // rollDot       | cos(yaw)/cos(pitch) sin(yaw)/cos(pitch) 0 |
     // pitchDot   =  | -sin(yaw)           cos(yaw)            0 | *  angleDot
     // yawDOt        | cos(yaw)tan(pitch)  sin(yaw)tan(pitch)  1 |
@@ -587,7 +587,7 @@ Vector3d RobotDynamicsBiped::angleDot2EulerDot(const Vector3d& angleDot, const V
     return rpyEulerDot;
 }
 
-Matrix3d RobotDynamicsBiped::skew(const Vector3d& omg) {
+Matrix3d RobotDynamics::skew(const Vector3d& omg) {
     Matrix3d matRes;
     matRes << 0, -omg(2), omg(1),
             omg(2), 0, -omg(0),

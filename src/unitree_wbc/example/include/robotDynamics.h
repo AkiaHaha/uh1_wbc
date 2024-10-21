@@ -6,24 +6,24 @@
 #define GRAVITY_CONST 9.81
 
 //#include "AGIROBOT/robotDynamics.h"
-#include "robotDynamics.h"
+#include "dynamics.h"
 #include "operation.h"
 
 using namespace RigidBodyDynamics;
 using namespace RigidBodyDynamics::Math;
 
 /**
- * @brief The RobotDynamicsBiped class
+ * @brief The RobotDynamics class
  */
 
-class RobotDynamicsBiped : public AGIROBOT::RobotDynamics{
+class RobotDynamics : public AGIROBOT::RobotDynamics{
 public:
 
     /**
      * @brief Constructor function
      */
-    RobotDynamicsBiped();
-    ~RobotDynamicsBiped();
+    RobotDynamics();
+    ~RobotDynamics();
 
     /**
      * @brief setJntStates set value of joint states and some flags

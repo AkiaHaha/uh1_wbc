@@ -11,9 +11,9 @@
 #include "wqpWbc.h"
 #include "hqpWbc.h"
 
-#include "robotDynamicsBiped.h"
-#include "taskDefinitionBiped.h"
-#include "constraintDefinitionBiped.h"
+#include "dynamics.h"
+#include "taskDefinition.h"
+#include "constraintDefinition.h"
 #include "webotsInterface.h"
 #include "operation.h"
 #include "configParams.h"
@@ -59,7 +59,7 @@ private:
     //=====================================================
     // Pointers of main class
     //=====================================================
-    RobotDynamicsBiped * robotDynamics;
+    RobotDynamics * robotDynamics;
     AGIROBOT::Wbc * myWbc;
 
 

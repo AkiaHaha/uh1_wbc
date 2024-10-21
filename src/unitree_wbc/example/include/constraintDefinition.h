@@ -6,7 +6,7 @@
 //#include "AGIROBOT/constraint.h"
 
 
-class BipedDynamicConsistency : public AGIROBOT::Constraint{
+class DynamicConsistency : public AGIROBOT::Constraint{
 public:
     /**
      * @brief Constructor
@@ -14,12 +14,12 @@ public:
      * @param constrDim The dimension of Constraint
      * @param varDim The DoF of variables in the WBC problem
      */
-    BipedDynamicConsistency(const std::string & constrName, int constrDim, int varDim) : Constraint(constrName, constrDim, varDim){}
-    ~BipedDynamicConsistency() = default;
+    DynamicConsistency(const std::string & constrName, int constrDim, int varDim) : Constraint(constrName, constrDim, varDim){}
+    ~DynamicConsistency() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class BipedFrictionCone : public AGIROBOT::Constraint{
+class FrictionCone : public AGIROBOT::Constraint{
 public:
     /**
      * @brief Constructor
@@ -27,8 +27,8 @@ public:
      * @param constrDim The dimension of Constraint
      * @param varDim The DoF of variables in the WBC problem
      */
-    BipedFrictionCone(const std::string & constrName, int constrDim, int varDim);
-    ~BipedFrictionCone() = default;
+    FrictionCone(const std::string & constrName, int constrDim, int varDim);
+    ~FrictionCone() = default;
     /**
      * @brief setParameter
      * @param params
@@ -43,7 +43,7 @@ private:
     Eigen::MatrixXd fricMat;
 };
 
-class BipedCenterOfPressure : public AGIROBOT::Constraint{
+class CenterOfPressure : public AGIROBOT::Constraint{
 public:
     /**
      * @brief Constructor
@@ -51,8 +51,8 @@ public:
      * @param constrDim The dimension of Constraint
      * @param varDim The DoF of variables in the WBC problem
      */
-    BipedCenterOfPressure(const std::string & constrName, int constrDim, int varDim);
-    ~BipedCenterOfPressure() = default;
+    CenterOfPressure(const std::string & constrName, int constrDim, int varDim);
+    ~CenterOfPressure() = default;
     /**
      * @brief setParameter
      * @param params
@@ -76,7 +76,7 @@ private:
     Eigen::MatrixXd copMat;
 };
 
-class BipedJointTorqueSaturation : public AGIROBOT::Constraint{
+class JointTorqueSaturation : public AGIROBOT::Constraint{
 public:
     /**
      * @brief Constructor
@@ -84,8 +84,8 @@ public:
      * @param constrDim The dimension of Constraint
      * @param varDim The DoF of variables in the WBC problem
      */
-    BipedJointTorqueSaturation(const std::string & constrName, int constrDim, int varDim) : Constraint(constrName, constrDim, varDim){}
-    ~BipedJointTorqueSaturation() = default;
+    JointTorqueSaturation(const std::string & constrName, int constrDim, int varDim) : Constraint(constrName, constrDim, varDim){}
+    ~JointTorqueSaturation() = default;
     /**
      * @brief setParameter
      * @param params
