@@ -23,7 +23,6 @@ struct ConfigParams {
     double weightArmForceR, weightArmForceP, weightArmForceYaw;
     double weightArmForceX, weightArmForceY, weightArmForceZ;
     double weightFBD, weightFootPos, weightFootYaw, weightArmPos, weightArmRPY, weightArmZ;
-    double weightPelvisPos, weightPelvisRPY;
 
     double weightPelvisX, weightPelvisYY, weightPelvisZ, weightPelvisR, weightPelvisP, weightPelvisY;
     double weightTorsoX, weightTorsoYY, weightTorsoZ, weightTorsoR, weightTorsoP, weightTorsoY;
@@ -150,8 +149,6 @@ struct ConfigParams {
         weightArmPos = jsonData["weightArmPos"];
         weightArmRPY = jsonData["weightArmRPY"];
         weightArmZ = jsonData["weightArmZ"];
-        weightPelvisPos = jsonData["weightPelvisPos"];
-        weightPelvisRPY = jsonData["weightPelvisRPY"];
 
         weightPelvisR = jsonData["weightPelvisR"];
         weightPelvisP = jsonData["weightPelvisP"];
