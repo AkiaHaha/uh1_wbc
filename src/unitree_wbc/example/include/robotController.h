@@ -36,7 +36,7 @@
     #define DT 1e-3
 #endif // DELTA-T
 
-#define USING_TWIST
+// #define USING_TWIST
 
 class RobotController
 {

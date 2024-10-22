@@ -402,10 +402,10 @@ bool RobotController::taskControl(){
 
 
     // Update task & constraint             
-    myWbc->updateTask("PelvisPosRpy", pelvisRpyRef, configParams.weightPelvisOrientation);
-    myWbc->updateTask("PelvisPosXyz", pelvisXyzRef, configParams.weightPelvisPosition);
-    myWbc->updateTask("TorsoPosRpy", torsoRpyRef, configParams.weightTorsoOrientation);
-    myWbc->updateTask("TorsoPosXyz", torsoXyzRef, configParams.weightTorsoPosition);
+    myWbc->updateTask("PelvisPosRpy", pelvisRpyRef, configParams.weightPelvisRpy);
+    myWbc->updateTask("PelvisPosXyz", pelvisXyzRef, configParams.weightPelvisXyz);
+    myWbc->updateTask("TorsoPosRpy", torsoRpyRef, configParams.weightTorsoRpy);
+    myWbc->updateTask("TorsoPosXyz", torsoXyzRef, configParams.weightTorsoXyz);
     myWbc->updateTask("Position", footArmPosRef, configParams.weightFootArmPosition);
     myWbc->updateTask("Force4", footArmForceRef, configParams.weightFootArmForce);
     myWbc->updateTask("GlobalVelocityLimitation", GlobalVelocityLimitationRef, 

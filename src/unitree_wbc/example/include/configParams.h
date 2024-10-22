@@ -11,7 +11,12 @@ struct ConfigParams {
     double kpPelvisX, kpPelvisYY, kpPelvisZ, kdPelvisX, kdPelvisYY, kdPelvisZ;
     double kpTorsoR, kpTorsoP, kpTorsoY, kdTorsoR, kdTorsoP, kdTorsoY;
     double kpTorsoX, kpTorsoYY, kpTorsoZ, kdTorsoX, kdTorsoYY, kdTorsoZ;
+
     double kpFootR, kpFootP, kpFootY, kdFootR, kdFootP, kdFootY;
+    double kpArmR, kpArmP, kpArmY, kdArmR, kdArmP, kdArmY;
+    double kpFootX, kpFootYY, kpFootZ, kdFootX, kdFootYY, kdFootZ;
+    double kpArmX, kpArmYY, kpArmZ, kdArmX, kdArmYY, kdArmZ;
+
     double weightGVL, weightGVL10, weightGVLKnee, weightGVLAnkle;
     double weightFootForceR, weightFootForceP, weightFootForceYaw;
     double weightFootForceX, weightFootForceY, weightFootForceZ;
@@ -19,6 +24,9 @@ struct ConfigParams {
     double weightArmForceX, weightArmForceY, weightArmForceZ;
     double weightFBD, weightFootPos, weightFootYaw, weightArmPos, weightArmRPY, weightArmZ;
     double weightPelvisPos, weightPelvisRPY;
+
+    double weightPelvisX, weightPelvisYY, weightPelvisZ, weightPelvisR, weightPelvisP, weightPelvisY;
+    double weightTorsoX, weightTorsoYY, weightTorsoZ, weightTorsoR, weightTorsoP, weightTorsoY;
 
     // Params for motion plan
     double height, pitchApt, pitchFrq;
@@ -42,10 +50,10 @@ struct ConfigParams {
     std::vector<double> kdArmRpy{0., 0., 0.};
 
     // Weight value of tasks and constraints
-    Eigen::Vector3d weightPelvisPosition = Eigen::Vector3d::Zero();
-    Eigen::Vector3d weightPelvisOrientation = Eigen::Vector3d::Zero();
-    Eigen::Vector3d weightTorsoPosition = Eigen::Vector3d::Zero();
-    Eigen::Vector3d weightTorsoOrientation = Eigen::Vector3d::Zero();
+    Eigen::Vector3d weightPelvisXyz = Eigen::Vector3d::Zero();
+    Eigen::Vector3d weightPelvisRpy = Eigen::Vector3d::Zero();
+    Eigen::Vector3d weightTorsoXyz = Eigen::Vector3d::Zero();
+    Eigen::Vector3d weightTorsoRpy = Eigen::Vector3d::Zero();
     Eigen::VectorXd weightFootArmPosition = Eigen::VectorXd::Zero(NFCC4);// @Daniel240521
     Eigen::VectorXd weightFootForce = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd weightFootForceChange = Eigen::VectorXd::Zero(NFCC2);
@@ -96,6 +104,27 @@ struct ConfigParams {
         kdFootP = jsonData["kdFootP"];
         kdFootY = jsonData["kdFootY"];
 
+        kpArmR = jsonData["kpArmR"];
+        kpArmP = jsonData["kpArmP"];
+        kpArmY = jsonData["kpArmY"];
+        kdArmR = jsonData["kdArmR"];
+        kdArmP = jsonData["kdArmP"];
+        kdArmY = jsonData["kdArmY"];
+
+        kpFootX = jsonData["kpFootX"];
+        kpFootYY = jsonData["kpFootYY"];
+        kpFootZ = jsonData["kpFootZ"];
+        kdFootX = jsonData["kdFootX"];
+        kdFootYY = jsonData["kdFootYY"];
+        kdFootZ = jsonData["kdFootZ"];
+
+        kpArmX = jsonData["kpArmX"];
+        kpArmYY = jsonData["kpArmYY"];
+        kpArmZ = jsonData["kpArmZ"];
+        kdArmX = jsonData["kdArmX"];
+        kdArmYY = jsonData["kdArmYY"];
+        kdArmZ = jsonData["kdArmZ"];
+
         weightGVL = jsonData["weightGVL"];
         weightGVL10 = jsonData["weightGVL10"];
         weightGVLKnee = jsonData["weightGVLKnee"];
@@ -124,6 +153,20 @@ struct ConfigParams {
         weightPelvisPos = jsonData["weightPelvisPos"];
         weightPelvisRPY = jsonData["weightPelvisRPY"];
 
+        weightPelvisR = jsonData["weightPelvisR"];
+        weightPelvisP = jsonData["weightPelvisP"];
+        weightPelvisY = jsonData["weightPelvisY"];
+        weightPelvisX = jsonData["weightPelvisX"];
+        weightPelvisYY = jsonData["weightPelvisYY"];
+        weightPelvisZ = jsonData["weightPelvisZ"];
+
+        weightTorsoR = jsonData["weightTorsoR"];
+        weightTorsoP = jsonData["weightTorsoP"];
+        weightTorsoY = jsonData["weightTorsoY"];
+        weightTorsoX = jsonData["weightTorsoX"];
+        weightTorsoYY = jsonData["weightTorsoYY"];
+        weightTorsoZ = jsonData["weightTorsoZ"];
+
         // Set PD gains
         kpPelvisRpy = {kpPelvisR, kpPelvisP, kpPelvisY};
         kdPelvisRpy = {kdPelvisR, kdPelvisP, kdPelvisY};
@@ -135,22 +178,21 @@ struct ConfigParams {
         kpTorsoXyz = {kpTorsoX, kpTorsoYY, kpTorsoZ};
         kdTorsoXyz = {kdTorsoX, kdTorsoYY, kdTorsoZ};
 
-
-        kpFootXyz = {800., 800., 800.};
-        kdFootXyz = {15., 15., 15.};
+        kpFootXyz = {kpFootX, kpFootYY, kpFootZ};
+        kdFootXyz = {kdFootX, kdFootYY, kdFootZ};
         kpFootRpy = {kpFootR, kpFootP, kpFootY};
         kdFootRpy = {kdFootR, kdFootP, kdFootY};
 
-        kpArmXyz = fillVector2(1200, 3);
-        kdArmXyz = fillVector2(120, 3);
-        kpArmRpy = fillVector2(1000, 3);
-        kdArmRpy = fillVector2(100, 3);
+        kpArmXyz = {kpArmX, kpArmYY, kpArmZ};
+        kdArmXyz = {kdArmX, kdArmYY, kdArmZ};
+        kpArmRpy = {kpArmR, kpArmP, kpArmY};
+        kdArmRpy = {kdArmR, kdArmP, kdArmY};
 
         // Set weights 
-        weightPelvisPosition = fillVector3(600000);                                           
-        weightPelvisOrientation = fillVector3(600000); 
-        weightTorsoPosition = fillVector3(300000);                                        
-        weightTorsoOrientation << 300000, 300000, 3000000;
+        weightPelvisXyz = {weightPelvisX, weightPelvisY, weightPelvisZ};                                           
+        weightPelvisRpy = {weightPelvisR, weightPelvisP, weightPelvisY}; 
+        weightTorsoXyz = {weightTorsoX, weightTorsoY, weightTorsoZ};                                       
+        weightTorsoRpy = {weightTorsoR, weightTorsoP, weightTorsoY};
 
         weightFootArmPosition = fillVector(weightFootPos, weightArmPos);   
         weightFootArmPosition(2) = weightFootYaw;
