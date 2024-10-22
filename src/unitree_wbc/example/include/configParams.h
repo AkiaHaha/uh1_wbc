@@ -26,12 +26,12 @@ struct ConfigParams {
     // PD gains
     std::vector<double> kpPelvisXyz{0., 0., 0.};
     std::vector<double> kdPelvisXyz{0., 0., 0.};
-    std::vector<double> kpPelvisRpy = {0., 0., 0.};
-    std::vector<double> kdPelvisRpy = {0., 0., 0.};
+    std::vector<double> kpPelvisRpy{0., 0., 0.};
+    std::vector<double> kdPelvisRpy{0., 0., 0.};
     std::vector<double> kpTorsoXyz{0., 0., 0.};
     std::vector<double> kdTorsoXyz{0., 0., 0.};
-    std::vector<double> kpTorsoRpy = {0., 0., 0.};
-    std::vector<double> kdTorsoRpy = {0., 0., 0.};
+    std::vector<double> kpTorsoRpy{0., 0., 0.};
+    std::vector<double> kdTorsoRpy{0., 0., 0.};
     std::vector<double> kpFootXyz{0., 0., 0.};
     std::vector<double> kdFootXyz{0., 0., 0.};
     std::vector<double> kpFootRpy{0., 0., 0.};
