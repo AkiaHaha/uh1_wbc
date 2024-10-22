@@ -155,7 +155,7 @@ private:
     Eigen::VectorXd footArmForceRef = Eigen::VectorXd::Zero(NFCC4);
     Eigen::VectorXd footArmForceChangeRef = Eigen::VectorXd::Zero(NFCC4);
     Eigen::VectorXd floatBaseDynamicRef = Eigen::VectorXd::Zero(6);
-    Eigen::VectorXd GlobalVelocityLimitationRef = Eigen::VectorXd::Zero(19);
+    Eigen::VectorXd GVLimitationRef = Eigen::VectorXd::Zero(19);
 
     // Result of QP
     int nV{NV};

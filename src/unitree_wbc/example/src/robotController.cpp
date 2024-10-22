@@ -19,7 +19,7 @@ RobotController::RobotController(){
     AGIROBOT::Task * ptrForceChange4 = new QuadSoleForceChange("ForceChange4", NFCC4, nV);
     AGIROBOT::Task * ptrPosition = new QuadSolePosition("Position", NFCC4, nV);
     AGIROBOT::Task * ptrDynamic = new FloatingBaseDynamics("Dynamics", 6, nV);
-    AGIROBOT::Task * ptrGblVelLimits = new GlobalVelocityLimitation("GlobalVelocityLimitation", 19, nV); 
+    AGIROBOT::Task * ptrGblVelLimits = new GVLimitation("GVLimitation", 19, nV); 
     AGIROBOT::Constraint * ptrDynamicConsistency = new DynamicConsistency("DynamicConsistency", 6, nV);
     AGIROBOT::Constraint * ptrFrictionCone = new FrictionCone("FrictionCone", 8, nV);
     AGIROBOT::Constraint * ptrJointTorqueSaturation = new JointTorqueSaturation("JointTorqueSaturation", NJ, nV);
@@ -393,53 +393,40 @@ bool RobotController::taskControl(){
                                 + configParams.kdArmXyzDiag * (xyzDotArmTgt[1] - xyzDotArmEst[1]);                                                                                                
 #endif
     
-    GlobalVelocityLimitationRef = -qDotActuated;
+    GVLimitationRef = -qDotActuated;
     footArmForceRef = forceOpt;
-    // footArmForceRef.tail(12) = Eigen::VectorXd::Zero(12);
 
-
-    // Update task & constraint             
+    // Update task & constraint & bounds        
     myWbc->updateTask("PelvisPosRpy", pelvisRpyRef, configParams.weightPelvisRpy);
     myWbc->updateTask("PelvisPosXyz", pelvisXyzRef, configParams.weightPelvisXyz);
     myWbc->updateTask("TorsoPosRpy", torsoRpyRef, configParams.weightTorsoRpy);
     myWbc->updateTask("TorsoPosXyz", torsoXyzRef, configParams.weightTorsoXyz);
     myWbc->updateTask("Position", footArmPosRef, configParams.weightFootArmPosition);
     myWbc->updateTask("Force4", footArmForceRef, configParams.weightFootArmForce);
-    myWbc->updateTask("GlobalVelocityLimitation", GlobalVelocityLimitationRef, 
-                                        configParams.weightGlobalVelLimitation);
+    myWbc->updateTask("GVLimitation", GVLimitationRef, configParams.weightGVLimitation);
     myWbc->updateTask("Dynamics", floatBaseDynamicRef, configParams.weightFloatBaseDynamic);
-
     myWbc->updateConstraint("DynamicConsistency");
     myWbc->updateConstraint("FrictionCone");
     myWbc->updateConstraint("CenterOfPressure");
     myWbc->updateConstraint("JointTorqueSaturation");
-    // myWbc->updateTask("ForceChange4", footArmForceChangeRef, configParams.weightFootArmForceChange);
-    // myWbc->updateTask("ForceChange4", footArmForceChangeRef, weightFootArmForceChange);
-    // myWbc->updateTask("ForceChange", footForceChangeRef, weightFootForceChange);
-    // myWbc->updateTask("Force", footForceRef, weightFootForce);
-
-    // Update bounds
     lowerbounds(NG+5) = 0.0;
     upperbounds(NG+5) = 1000.0*GRAVITY;
     lowerbounds(NG+11) = 0.0;
     upperbounds(NG+11) = 1000.0*GRAVITY;
     myWbc->updateBound(lowerbounds, upperbounds);
 
-    // WBC solve
+    // WBC solve & progress observation
     myWbc->wbcSolve();
-
-    // Get some data from solved wbc
     myWbc->getAuxiliaryDataInt(intData);
     nWsrRes = intData.at(0);
     double Nlevel = myWbc->getNlevel();
     for (int i = Nlevel; i < Nlevel*2; i++){
-        simpleStatus += intData.at(i);
-    }
+        simpleStatus += intData.at(i);}
     myWbc->getAuxiliaryDataDouble(doubleData);
     costOpt = doubleData.at(0);
     cpuTimeRes = doubleData.at(1);
 
-    // Get wbc variables output and clac toq //
+    // Get wbc variables output and clac toq 
     if (simpleStatus == 0){
         myWbc->getResultOpt(varOpt);
         qDDotOpt = varOpt.head(nJg);

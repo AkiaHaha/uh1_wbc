@@ -202,7 +202,7 @@ public:
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class GlobalVelocityLimitation : public AGIROBOT::Task{
+class GVLimitation : public AGIROBOT::Task{
 public:
     /**
      * @brief Constructor
@@ -210,8 +210,8 @@ public:
      * @param taskDim The dimension of Task
      * @param varDim The DoF of variables in the WBC problem
      */
-    GlobalVelocityLimitation(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~GlobalVelocityLimitation() = default;
+    GVLimitation(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~GVLimitation() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 

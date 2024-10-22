@@ -80,7 +80,7 @@ struct ConfigParams {
     Eigen::VectorXd weightFootArmForce = Eigen::VectorXd::Zero(NFCC4);
     Eigen::VectorXd weightFootArmForceChange = Eigen::VectorXd::Zero(NFCC4);
     Eigen::VectorXd weightFloatBaseDynamic = Eigen::VectorXd::Zero(6);
-    Eigen::VectorXd weightGlobalVelLimitation = Eigen::VectorXd::Constant(19,weightGVL);
+    Eigen::VectorXd weightGVLimitation = Eigen::VectorXd::Constant(19,weightGVL);
 
 
     ConfigParams() {
@@ -259,11 +259,11 @@ struct ConfigParams {
 
         weightFloatBaseDynamic = Eigen::VectorXd::Constant(6,weightFBD);
 
-        weightGlobalVelLimitation(10) = weightGVL10;
-        weightGlobalVelLimitation(3) = weightGVLKnee;
-        weightGlobalVelLimitation(8) = weightGVLKnee;
-        weightGlobalVelLimitation(4) = weightGVLAnkle;
-        weightGlobalVelLimitation(9) = weightGVLAnkle;
+        weightGVLimitation(10) = weightGVL10;
+        weightGVLimitation(3) = weightGVLKnee;
+        weightGVLimitation(8) = weightGVLKnee;
+        weightGVLimitation(4) = weightGVLAnkle;
+        weightGVLimitation(9) = weightGVLAnkle;
 
         height = jsonData["height"];
         pitchApt = jsonData["pitchApt"];
