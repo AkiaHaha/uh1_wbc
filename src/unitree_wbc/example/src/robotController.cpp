@@ -231,6 +231,44 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
         xyzDotArmInit[1] = xyzDotArmEst[1];
 #endif
     }
+
+    //===============================================================
+    // Test wrench feedback for interaction @Danny241022
+    //===============================================================
+    Eigen::VectorXd wrenchFoot = Eigen::VectorXd::Zero(6);
+    wrenchFoot = robotStateSim.footGrfAct;
+    cout << "wrenchFoot: " << endl
+         << wrenchFoot.transpose() << endl;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //_____________________________________________________________//
     return true;
 }
 

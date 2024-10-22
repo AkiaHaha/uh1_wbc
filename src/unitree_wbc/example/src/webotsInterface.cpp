@@ -48,8 +48,13 @@ void WebotsRobot::initWebots()
     legSensor[16] = robot->getPositionSensor("right_shoulder_roll_joint_sensor");
     legSensor[17] = robot->getPositionSensor("right_shoulder_yaw_joint_sensor");
     legSensor[18] = robot->getPositionSensor("right_elbow_joint_sensor");
+
+    // Force sensors
+    forceSensorFootSole.resize(2);
+    forceSensorFootSole[0] = robot->getTouchSensor("left_foot_sole_touch_sensor_3d");
+    forceSensorFootSole[1] = robot->getTouchSensor("right_foot_sole_touch_sensor_3d");
     
-    // other sensors
+    // Other sensors
     imu = robot->getInertialUnit("inertial_unit_upperBody");
     accelerometer = robot->getAccelerometer("accelerometer_upperBody");
     
@@ -67,6 +72,9 @@ void WebotsRobot::initWebots()
     }
     imu->enable(TIME_STEP);
     accelerometer->enable(TIME_STEP);
+    for (int i = 0; i < 2; i++) {
+        forceSensorFootSole[i]->enable(TIME_STEP);
+    }
 
     // Derivative
     dRpy.resize(3);
@@ -122,7 +130,6 @@ bool WebotsRobot::readData(double simTime, webotsState & robotStateSim)
     for (int i = 0; i < 3; i++) {
         robotStateSim.pelvisDRpyAct(i) = dRpy.at(i).mSig(robotStateSim.pelvisRpyAct(i));
     }
-    //data summary//
     robotStateSim.imuAct << robotStateSim.pelvisRpyAct, robotStateSim.pelvisDRpyAct;
 
     // Pelvis's ddXYZ;
@@ -134,7 +141,7 @@ bool WebotsRobot::readData(double simTime, webotsState & robotStateSim)
     robotStateSim.pelvisXyzDXyzAct << xyzArray1[0], xyzArray1[1], xyzArray1[2], xyzArray2[0], xyzArray2[1], xyzArray2[2];
 
     //External Force
-    robotStateSim.footGrfAct = getFootForce2D();
+    robotStateSim.footGrfAct = getBiFootForce6D();
 
     //Foot xyz and rpy @Danny240516
     const double* a1 = SoleLeft->getPosition();
@@ -187,29 +194,15 @@ Eigen::Vector3d WebotsRobot::getPelvisAcc() {
     return acceleration;
 }
 
-Eigen::VectorXd WebotsRobot::getFootForce(const int& footFlag) {
-    Eigen::VectorXd torqueY(1); 
-    double toq;
-    switch (footFlag) {
-        case LEFTFOOT: {
-            toq = legMotor[4]->getTorqueFeedback();
-            break;
-        }
-        case RIGHTFOOT: {
-            toq = legMotor[9]->getTorqueFeedback();
-            break;
-        }
-    }
-    torqueY(0) = toq; 
-    return torqueY; ///< Only torque on y_axis @Danny240520
-}
+Eigen::VectorXd WebotsRobot::getBiFootForce6D() {
+    Eigen::VectorXd vec(6);
+    const double* forceL;
+    const double* forceR;
+    forceL = forceSensorFootSole[0]->getValues();
+    forceR = forceSensorFootSole[1]->getValues();
+    vec << forceL[0], forceL[1], forceL[2], forceR[0], forceR[1], forceR[2];
 
-Eigen::VectorXd WebotsRobot::getFootForce2D() {
-    Eigen::VectorXd LFootForce = getFootForce(LEFTFOOT);
-    Eigen::VectorXd RFootForce = getFootForce(RIGHTFOOT);
-    Eigen::VectorXd FootForce = Eigen::VectorXd::Zero(2);
-    FootForce << LFootForce,  RFootForce;
-    return FootForce;
+    return vec;
 }
 
 //=================================================================================/
