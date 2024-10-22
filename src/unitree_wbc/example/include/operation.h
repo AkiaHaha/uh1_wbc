@@ -53,4 +53,7 @@ private:
 Eigen::VectorXd fillVector(double firstValue, double secondValue);
 std::vector<double> fillVector2(double value, int length);
 Eigen::Vector3d fillVector3(double value);
+
+Eigen::MatrixXd createDiagonalMatrix(const Eigen::VectorXd& vec);
+
 #endif//OPERATION_H_

@@ -215,3 +215,10 @@ Eigen::Vector3d fillVector3(double value){
     }
     return vector;
 }
+
+Eigen::MatrixXd createDiagonalMatrix(const Eigen::VectorXd& vec) {
+    Eigen::MatrixXd mat(vec.size(), vec.size());
+    mat.setZero();
+    mat.diagonal() = vec;
+    return mat;
+}
