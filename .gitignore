@@ -1,4 +1,4 @@
 build/
 devel/
 src/example/
-wwbicController
+/wwbicController
