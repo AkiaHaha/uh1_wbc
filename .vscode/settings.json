@@ -133,5 +133,9 @@
     "/opt/ros/noetic/lib/python3/dist-packages"
   ],
   "cmake.sourceDirectory": "/home/ukia/gitRepo/uh1_wbc/src/unitree_wbc",
-  "C_Cpp.errorSquiggles": "disabled"
+  "C_Cpp.errorSquiggles": "disabled",
+  "Codegeex.CompletionDelay": 0.2,
+  "Codegeex.Chat.LanguagePreference": "English",
+  "Codegeex.Comment.LanguagePreference": "English",
+  "Codegeex.CommitMessage.LanguagePreference": "English"
 }

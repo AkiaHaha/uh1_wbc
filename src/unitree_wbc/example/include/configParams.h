@@ -31,22 +31,43 @@ struct ConfigParams {
     double height, pitchApt, pitchFrq;
 
     // PD gains
-    std::vector<double> kpPelvisXyz{0., 0., 0.};
-    std::vector<double> kdPelvisXyz{0., 0., 0.};
-    std::vector<double> kpPelvisRpy{0., 0., 0.};
-    std::vector<double> kdPelvisRpy{0., 0., 0.};
-    std::vector<double> kpTorsoXyz{0., 0., 0.};
-    std::vector<double> kdTorsoXyz{0., 0., 0.};
-    std::vector<double> kpTorsoRpy{0., 0., 0.};
-    std::vector<double> kdTorsoRpy{0., 0., 0.};
-    std::vector<double> kpFootXyz{0., 0., 0.};
-    std::vector<double> kdFootXyz{0., 0., 0.};
-    std::vector<double> kpFootRpy{0., 0., 0.};
-    std::vector<double> kdFootRpy{0., 0., 0.};
-    std::vector<double> kpArmXyz{0., 0., 0.};
-    std::vector<double> kdArmXyz{0., 0., 0.};
-    std::vector<double> kpArmRpy{0., 0., 0.};
-    std::vector<double> kdArmRpy{0., 0., 0.};
+    Eigen::Vector3d kpPelvisXyz = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kdPelvisXyz = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kpPelvisRpy = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kdPelvisRpy = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kpTorsoXyz = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kdTorsoXyz = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kpTorsoRpy = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kdTorsoRpy = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kpFootXyz = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kdFootXyz = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kpFootRpy = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kdFootRpy = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kpArmXyz = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kdArmXyz = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kpArmRpy = Eigen::Vector3d::Zero();
+    Eigen::Vector3d kdArmRpy = Eigen::Vector3d::Zero();
+
+    // Diag matrix of PD gains
+    Eigen::Matrix3d kpPelvisRpyDiag = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d kdPelvisRpyDiag = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d kpPelvisXyzDiag = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d kdPelvisXyzDiag = Eigen::Matrix3d::Zero();
+
+    Eigen::Matrix3d kpTorsoRpyDiag = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d kdTorsoRpyDiag = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d kpTorsoXyzDiag = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d kdTorsoXyzDiag = Eigen::Matrix3d::Zero();
+
+    Eigen::Matrix3d kpFootXyzDiag = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d kdFootXyzDiag = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d kpFootRpyDiag = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d kdFootRpyDiag = Eigen::Matrix3d::Zero();
+
+    Eigen::Matrix3d kpArmXyzDiag = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d kdArmXyzDiag = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d kpArmRpyDiag = Eigen::Matrix3d::Zero();
+    Eigen::Matrix3d kdArmRpyDiag = Eigen::Matrix3d::Zero();
 
     // Weight value of tasks and constraints
     Eigen::Vector3d weightPelvisXyz = Eigen::Vector3d::Zero();
@@ -165,25 +186,44 @@ struct ConfigParams {
         weightTorsoZ = jsonData["weightTorsoZ"];
 
         // Set PD gains
-        kpPelvisRpy = {kpPelvisR, kpPelvisP, kpPelvisY};
-        kdPelvisRpy = {kdPelvisR, kdPelvisP, kdPelvisY};
-        kpPelvisXyz = {kpPelvisX, kpPelvisYY, kpPelvisZ};
-        kdPelvisXyz = {kdPelvisX, kdPelvisYY, kdPelvisZ};
+        Eigen::Vector3d kpPelvisXyz(kpPelvisX, kpPelvisYY, kpPelvisZ);
+        Eigen::Vector3d kdPelvisXyz(kdPelvisX, kdPelvisYY, kdPelvisZ);
+        Eigen::Vector3d kpPelvisRpy(kpPelvisR, kpPelvisP, kpPelvisY);
+        Eigen::Vector3d kdPelvisRpy(kdPelvisR, kdPelvisP, kdPelvisY);
+        Eigen::Vector3d kpTorsoXyz(kpTorsoX, kpTorsoYY, kpTorsoZ);
+        Eigen::Vector3d kdTorsoXyz(kdTorsoX, kdTorsoYY, kdTorsoZ);
+        Eigen::Vector3d kpTorsoRpy(kpTorsoR, kpTorsoP, kpTorsoY);
+        Eigen::Vector3d kdTorsoRpy(kdTorsoR, kdTorsoP, kdTorsoY);
+        Eigen::Vector3d kpFootXyz(kpFootX, kpFootYY, kpFootZ);
+        Eigen::Vector3d kdFootXyz(kdFootX, kdFootYY, kdFootZ);
+        Eigen::Vector3d kpFootRpy(kpFootR, kpFootP, kpFootY);
+        Eigen::Vector3d kdFootRpy(kdFootR, kdFootP, kdFootY);
+        Eigen::Vector3d kpArmXyz(kpArmX, kpArmYY, kpArmZ);
+        Eigen::Vector3d kdArmXyz(kdArmX, kdArmYY, kdArmZ);
+        Eigen::Vector3d kpArmRpy(kpArmR, kpArmP, kpArmY);
+        Eigen::Vector3d kdArmRpy(kdArmR, kdArmP, kdArmY);
+        
+        
+        // Calculate diagonal matrix 
+        kpPelvisRpyDiag = createDiagonalMatrix(kpPelvisRpy);
+        kdPelvisRpyDiag = createDiagonalMatrix(kdPelvisRpy);
+        kpPelvisXyzDiag = createDiagonalMatrix(kpPelvisXyz);
+        kdPelvisXyzDiag = createDiagonalMatrix(kdPelvisXyz);
 
-        kpTorsoRpy = {kpTorsoR, kpTorsoP, kpTorsoY};
-        kdTorsoRpy = {kdTorsoR, kdTorsoP, kdTorsoY};
-        kpTorsoXyz = {kpTorsoX, kpTorsoYY, kpTorsoZ};
-        kdTorsoXyz = {kdTorsoX, kdTorsoYY, kdTorsoZ};
+        kpTorsoRpyDiag = createDiagonalMatrix(kpTorsoRpy);
+        kdTorsoRpyDiag = createDiagonalMatrix(kdTorsoRpy);
+        kpTorsoXyzDiag = createDiagonalMatrix(kpTorsoXyz);
+        kdTorsoXyzDiag = createDiagonalMatrix(kdTorsoXyz);
 
-        kpFootXyz = {kpFootX, kpFootYY, kpFootZ};
-        kdFootXyz = {kdFootX, kdFootYY, kdFootZ};
-        kpFootRpy = {kpFootR, kpFootP, kpFootY};
-        kdFootRpy = {kdFootR, kdFootP, kdFootY};
+        kpFootRpyDiag = createDiagonalMatrix(kpFootRpy);
+        kdFootRpyDiag = createDiagonalMatrix(kdFootRpy);
+        kpFootXyzDiag = createDiagonalMatrix(kpFootXyz);
+        kdFootXyzDiag = createDiagonalMatrix(kdFootXyz);
 
-        kpArmXyz = {kpArmX, kpArmYY, kpArmZ};
-        kdArmXyz = {kdArmX, kdArmYY, kdArmZ};
-        kpArmRpy = {kpArmR, kpArmP, kpArmY};
-        kdArmRpy = {kdArmR, kdArmP, kdArmY};
+        kpArmRpyDiag = createDiagonalMatrix(kpArmRpy);
+        kdArmRpyDiag = createDiagonalMatrix(kdArmRpy);
+        kpArmXyzDiag = createDiagonalMatrix(kpArmXyz);
+        kdArmXyzDiag = createDiagonalMatrix(kdArmXyz);
 
         // Set weights 
         weightPelvisXyz = {weightPelvisX, weightPelvisY, weightPelvisZ};                                           

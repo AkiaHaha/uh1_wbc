@@ -335,65 +335,62 @@ bool RobotController::taskControl(){
     leftArmTwistErr = leftArmTwistTgt - leftArmTwistEst;
     rightArmTwistErr = rightArmTwistTgt - rightArmTwistEst;
 
-    pelvisRpyRef = diag(configParams.kpPelvisRpy) * pelvisTwistErr.segment(0,3)
-                 + diag(configParams.kdPelvisRpy) * pelvisTwistErr.segment(6,3);
-    pelvisXyzRef = diag(configParams.kpPelvisXyz) * pelvisTwistErr.segment(3,3)
-                 + diag(configParams.kdPelvisXyz) * pelvisTwistErr.segment(9,3);
+    pelvisRpyRef = configParams.kpPelvisRpyDiag * pelvisTwistErr.segment(0,3)
+                + configParams.kdPelvisRpyDiag * pelvisTwistErr.segment(6,3);
+    pelvisXyzRef = configParams.kpPelvisXyzDiag * pelvisTwistErr.segment(3,3)
+                + configParams.kdPelvisXyzDiag * pelvisTwistErr.segment(9,3);
 
-    torsoRpyRef = diag(configParams.kpTorsoRpy) * torsoTwistErr.segment(0,3)
-                + diag(configParams.kdTorsoRpy) * torsoTwistErr.segment(6,3);
-    torsoXyzRef = diag(configParams.kpTorsoXyz) * torsoTwistErr.segment(3,3)
-                + diag(configParams.kdTorsoXyz) * torsoTwistErr.segment(9,3);
+    torsoRpyRef = configParams.kpTorsoRpyDiag * torsoTwistErr.segment(0,3)
+                + configParams.kdTorsoRpyDiag * torsoTwistErr.segment(6,3);
+    torsoXyzRef = configParams.kpTorsoXyzDiag * torsoTwistErr.segment(3,3)
+                + configParams.kdTorsoXyzDiag * torsoTwistErr.segment(9,3);
 
-    footArmPosRef.segment(0,3) = diag(configParams.kpFootRpy) * leftFootTwistErr.segment(0,3)
-                               + diag(configParams.kdFootRpy) * leftFootTwistErr.segment(6,3);
-    footArmPosRef.segment(3,3) = diag(configParams.kpFootXyz) * leftFootTwistErr.segment(3,3)
-                               + diag(configParams.kdFootXyz) * leftFootTwistErr.segment(9,3);
+    footArmPosRef.segment(0,3) = configParams.kpFootRpyDiag * leftFootTwistErr.segment(0,3)
+                            + configParams.kdFootRpyDiag * leftFootTwistErr.segment(6,3);
+    footArmPosRef.segment(3,3) = configParams.kpFootXyzDiag * leftFootTwistErr.segment(3,3)
+                            + configParams.kdFootXyzDiag * leftFootTwistErr.segment(9,3);
 
-    footArmPosRef.segment(6,3) = diag(configParams.kpFootRpy) * rightFootTwistErr.segment(0,3)
-                               + diag(configParams.kdFootRpy) * rightFootTwistErr.segment(6,3);
-    footArmPosRef.segment(9,3) = diag(configParams.kpFootXyz) * rightFootTwistErr.segment(3,3)
-                               + diag(configParams.kdFootXyz) * rightFootTwistErr.segment(9,3);
+    footArmPosRef.segment(6,3) = configParams.kpFootRpyDiag * rightFootTwistErr.segment(0,3)
+                            + configParams.kdFootRpyDiag * rightFootTwistErr.segment(6,3);
+    footArmPosRef.segment(9,3) = configParams.kpFootXyzDiag * rightFootTwistErr.segment(3,3)
+                            + configParams.kdFootXyzDiag * rightFootTwistErr.segment(9,3);
 
-    footArmPosRef.segment(12,3) = diag(configParams.kpArmRpy) * leftArmTwistErr.segment(0,3)
-                                + diag(configParams.kdArmRpy) * leftArmTwistErr.segment(6,3);
-    footArmPosRef.segment(15,3) = diag(configParams.kpArmXyz) * leftArmTwistErr.segment(3,3)
-                                + diag(configParams.kdArmXyz) * leftArmTwistErr.segment(9,3);
+    footArmPosRef.segment(12,3) = configParams.kpArmRpyDiag * leftArmTwistErr.segment(0,3)
+                                + configParams.kdArmRpyDiag * leftArmTwistErr.segment(6,3);
+    footArmPosRef.segment(15,3) = configParams.kpArmXyzDiag * leftArmTwistErr.segment(3,3)
+                                + configParams.kdArmXyzDiag * leftArmTwistErr.segment(9,3);
 
-    footArmPosRef.segment(18,3) = diag(configParams.kpArmRpy) * rightArmTwistErr.segment(0,3)
-                                + diag(configParams.kdArmRpy) * rightArmTwistErr.segment(6,3);
-    footArmPosRef.segment(21,3) = diag(configParams.kpArmXyz) * rightArmTwistErr.segment(3,3)
-                                + diag(configParams.kdArmXyz) * rightArmTwistErr.segment(9,3);
+    footArmPosRef.segment(18,3) = configParams.kpArmRpyDiag * rightArmTwistErr.segment(0,3)
+                                + configParams.kdArmRpyDiag * rightArmTwistErr.segment(6,3);
+    footArmPosRef.segment(21,3) = configParams.kpArmXyzDiag * rightArmTwistErr.segment(3,3)
+                                + configParams.kdArmXyzDiag * rightArmTwistErr.segment(9,3);
 #else
-    pelvisRpyRef = diag(configParams.kpPelvisRpy)*(rpyPelvisTgt - rpyPelvisEst) 
-                    + diag(configParams.kdPelvisRpy)*(rpyDotPelvisTgt - rpyDotPelvisEst);
-    pelvisXyzRef = diag(configParams.kpPelvisXyz)*(xyzPelvisTgt - xyzPelvisEst) 
-                    + diag(configParams.kdPelvisXyz)*(xyzDotPelvisTgt - xyzDotPelvisEst);
+    pelvisRpyRef = configParams.kpPelvisRpyDiag * (rpyPelvisTgt - rpyPelvisEst)
+                +  configParams.kdPelvisRpyDiag * (rpyDotPelvisTgt - rpyDotPelvisEst);
+    pelvisXyzRef = configParams.kpPelvisXyzDiag * (xyzPelvisTgt - xyzPelvisEst)
+                +  configParams.kdPelvisXyzDiag * (xyzDotPelvisTgt - xyzDotPelvisEst);
 
-    torsoRpyRef = diag(configParams.kpTorsoRpy)*(rpyTorsoTgt - rpyTorsoEst) 
-                    + diag(configParams.kdTorsoRpy)*(rpyDotTorsoTgt - rpyDotTorsoEst);
-    torsoXyzRef = diag(configParams.kpTorsoXyz)*(xyzTorsoTgt - xyzTorsoEst) 
-                    + diag(configParams.kdTorsoXyz)*(xyzDotTorsoTgt - xyzDotTorsoEst);
+    torsoRpyRef = configParams.kpTorsoRpyDiag * (rpyTorsoTgt - rpyTorsoEst)
+                +  configParams.kdTorsoRpyDiag * (rpyDotTorsoTgt - rpyDotTorsoEst);
+    torsoXyzRef = configParams.kpTorsoXyzDiag * (xyzTorsoTgt - xyzTorsoEst) 
+                +  configParams.kdTorsoXyzDiag * (xyzDotTorsoTgt - xyzDotTorsoEst);    
 
-    footArmPosRef.segment(0,3) = diag(configParams.kpFootRpy)*(rpyFootTgt[0] - rpyFootEst[0]) 
-                                + diag(configParams.kdFootRpy)*(rpyDotFootTgt[0] - rpyDotFootEst[0]);
-    footArmPosRef.segment(3,3) = diag(configParams.kpFootXyz)*(xyzFootTgt[0] - xyzFootEst[0]) 
-                                + diag(configParams.kdFootXyz)*(xyzDotFootTgt[0] - xyzDotFootEst[0]); 
-
-    footArmPosRef.segment(6,3) = diag(configParams.kpFootRpy)*(rpyFootTgt[1] - rpyFootEst[1]) 
-                                + diag(configParams.kdFootRpy)*(rpyDotFootTgt[1] - rpyDotFootEst[1]);
-    footArmPosRef.segment(9,3) = diag(configParams.kpFootXyz)*(xyzFootTgt[1] - xyzFootEst[1]) 
-                                + diag(configParams.kdFootXyz)*(xyzDotFootTgt[1] - xyzDotFootEst[1]); 
-
-    footArmPosRef.segment(12,3) = diag(configParams.kpArmRpy)*(rpyArmTgt[0] - rpyArmEst[0]) 
-                                + diag(configParams.kdArmRpy)*(rpyDotArmTgt[0] - rpyDotArmEst[0]);
-    footArmPosRef.segment(15,3) = diag(configParams.kpArmXyz)*(xyzArmTgt[0] - xyzArmEst[0]) 
-                                + diag(configParams.kdArmXyz)*(xyzDotArmTgt[0] - xyzDotArmEst[0]); 
-
-    footArmPosRef.segment(18,3) = diag(configParams.kpArmRpy)*(rpyArmTgt[1] - rpyArmEst[1]) 
-                                + diag(configParams.kdArmRpy)*(rpyDotArmTgt[1] - rpyDotArmEst[1]);
-    footArmPosRef.segment(21,3) = diag(configParams.kpArmXyz)*(xyzArmTgt[1] - xyzArmEst[1]) 
-                                + diag(configParams.kdArmXyz)*(xyzDotArmTgt[1] - xyzDotArmEst[1]);  
+    footArmPosRef.segment(0,3) = configParams.kpFootRpyDiag * (rpyFootTgt[0] - rpyFootEst[0])
+                                + configParams.kdFootRpyDiag * (rpyDotFootTgt[0] - rpyDotFootEst[0]);
+    footArmPosRef.segment(3,3) = configParams.kpFootXyzDiag * (xyzFootTgt[0] - xyzFootEst[0])
+                                + configParams.kdFootXyzDiag * (xyzDotFootTgt[0] - xyzDotFootEst[0]);
+    footArmPosRef.segment(6,3) = configParams.kpFootRpyDiag * (rpyFootTgt[1] - rpyFootEst[1])
+                                + configParams.kdFootRpyDiag * (rpyDotFootTgt[1] - rpyDotFootEst[1]);
+    footArmPosRef.segment(9,3) = configParams.kpFootXyzDiag * (xyzFootTgt[1] - xyzFootEst[1])
+                                + configParams.kdFootXyzDiag * (xyzDotFootTgt[1] - xyzDotFootEst[1]);
+    footArmPosRef.segment(12,3) = configParams.kpArmRpyDiag * (rpyArmTgt[0] - rpyArmEst[0])
+                                + configParams.kdArmRpyDiag * (rpyDotArmTgt[0] - rpyDotArmEst[0]);
+    footArmPosRef.segment(15,3) = configParams.kpArmXyzDiag * (xyzArmTgt[0] - xyzArmEst[0])
+                                + configParams.kdArmXyzDiag * (xyzDotArmTgt[0] - xyzDotArmEst[0]);
+    footArmPosRef.segment(18,3) = configParams.kpArmRpyDiag * (rpyArmTgt[1] - rpyArmEst[1])
+                                + configParams.kdArmRpyDiag * (rpyDotArmTgt[1] - rpyDotArmEst[1]);
+    footArmPosRef.segment(21,3) = configParams.kpArmXyzDiag * (xyzArmTgt[1] - xyzArmEst[1])
+                                + configParams.kdArmXyzDiag * (xyzDotArmTgt[1] - xyzDotArmEst[1]);                                                                                                
 #endif
     
     GlobalVelocityLimitationRef = -qDotActuated;
