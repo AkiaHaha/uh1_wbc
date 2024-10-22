@@ -53,7 +53,6 @@ private:
     bool stateEstimation(webotsState & robotStateSim);                         
     bool motionPlan();
     bool taskControl();
-    Eigen::MatrixXd diag(const std::vector<double>& diagElement);
     RobotDynamics * robotDynamics;
     AGIROBOT::Wbc * myWbc;
 

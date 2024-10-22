@@ -77,15 +77,6 @@ RobotController::~RobotController(){
     myWbc = nullptr;
 }
 
-Eigen::MatrixXd RobotController::diag(const std::vector<double>& diagElement){
-    int dim = static_cast<int>(diagElement.size());
-    Eigen::MatrixXd diagM = Eigen::MatrixXd::Zero(dim, dim);
-    for (int i = 0; i != dim; i++){
-        diagM(i, i) = diagElement.at(i);
-    }
-    return diagM;
-}
-
 bool RobotController::getValueTauOpt(Eigen::VectorXd &jntTorOpt){
     for (int i = 0; i < nJa; i++){
         jntTorOpt(i) = tauOpt(i);
@@ -125,7 +116,6 @@ bool RobotController::update(double timeCtrlSys, webotsState& robotStateSim){
 
     return true;
 }
-
 
 //================================================================
 // Use sensor data for state estimation

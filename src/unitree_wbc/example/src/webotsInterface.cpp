@@ -181,6 +181,81 @@ bool WebotsRobot::readData(double simTime, webotsState & robotStateSim)
     return true;
 }
 
+Eigen::Vector3d WebotsRobot::getPelvisAcc() {
+    const double* data = accelerometer->getValues();
+    Eigen::Vector3d acceleration(data[0], data[1], data[2]);
+    return acceleration;
+}
+
+Eigen::VectorXd WebotsRobot::getFootForce(const int& footFlag) {
+    Eigen::VectorXd torqueY(1); 
+    double toq;
+    switch (footFlag) {
+        case LEFTFOOT: {
+            toq = legMotor[4]->getTorqueFeedback();
+            break;
+        }
+        case RIGHTFOOT: {
+            toq = legMotor[9]->getTorqueFeedback();
+            break;
+        }
+    }
+    torqueY(0) = toq; 
+    return torqueY; ///< Only torque on y_axis @Danny240520
+}
+
+Eigen::VectorXd WebotsRobot::getFootForce2D() {
+    Eigen::VectorXd LFootForce = getFootForce(LEFTFOOT);
+    Eigen::VectorXd RFootForce = getFootForce(RIGHTFOOT);
+    Eigen::VectorXd FootForce = Eigen::VectorXd::Zero(2);
+    FootForce << LFootForce,  RFootForce;
+    return FootForce;
+}
+
+//=================================================================================/
+// Math functions & simple opeartions
+//=================================================================================/
+Eigen::Vector3d WebotsRobot::rotm2Rpy(const Eigen::Matrix3d & rotm) {
+    Eigen::Vector3d rpy = Eigen::Vector3d::Zero();
+    rpy(0) = atan2(rotm(2,1), rotm(2,2));
+    rpy(1) = atan2(-rotm(2,0), sqrt(rotm(2,1) * rotm(2,1) + rotm(2,2) * rotm(2,2)));
+    rpy(2) = atan2(rotm(1,0), rotm(0,0));
+    return rpy;
+}
+
+Derivative :: Derivative () {}
+
+Derivative :: Derivative ( double dT, double c ) {
+    double alpha( 2. / dT );
+    this -> a0 = c * alpha + 1.;
+    this -> a1 = ( 1. - c * alpha ) / this -> a0;
+    this -> b0 = alpha / this -> a0;
+    this -> b1 = -alpha / this -> a0;
+    this -> a0 = 1.;
+    this -> sigInPrev = 0.;
+    this -> sigOutPrev = 0.;
+}
+
+void Derivative :: init ( double dT, double c, double initValue ) {
+    double alpha( 2. / dT );
+    this -> a0 = c * alpha + 1.;
+    this -> a1 = ( 1. - c * alpha ) / this -> a0;
+    this -> b0 = alpha / this -> a0;
+    this -> b1 = -alpha / this -> a0;
+    this -> a0 = 1.;
+    this -> sigInPrev = initValue;
+    this -> sigOutPrev = initValue;
+}
+
+double Derivative :: mSig( double sigIn ) {
+    double sigOut( 0. );
+    sigOut = (sigIn - sigInPrev) * 1000.;
+    // sigOut = b0 * sigIn + b1 * sigInPrev - a1 * sigOutPrev;
+    sigOutPrev = sigOut;
+    sigInPrev = sigIn;
+    return sigOut;
+}
+
 bool WebotsRobot::setMotorPos(const Eigen::VectorXd& jointPosTar) {
     for (int i = 0; i < NJ; i++) {
         legMotor[i]->setPosition(jointPosTar(i, 0));
@@ -251,84 +326,4 @@ Eigen::VectorXd WebotsRobot::getMotorTau() {
         Tau(i, 0) = legMotor[i]->getTorqueFeedback();
     }
     return Tau;
-}
-
-Eigen::Vector3d WebotsRobot::getPelvisAcc() {
-    const double* data = accelerometer->getValues();
-    Eigen::Vector3d acceleration(data[0], data[1], data[2]);
-    return acceleration;
-}
-
-Eigen::VectorXd WebotsRobot::getFootForce(const int& footFlag) {
-    Eigen::VectorXd torqueY(1); 
-    double toq;
-    switch (footFlag) {
-        case LEFTFOOT: {
-            toq = legMotor[4]->getTorqueFeedback();
-            break;
-        }
-        case RIGHTFOOT: {
-            toq = legMotor[9]->getTorqueFeedback();
-            break;
-        }
-        default: {
-            std::cout << "footFlag is wrong" << std::endl;
-            toq = legMotor[4]->getTorqueFeedback();
-            break;
-        }
-    }
-    torqueY(0) = toq; 
-    return torqueY; ///< Only torque on y_axis @Danny240520
-}
-
-Eigen::VectorXd WebotsRobot::getFootForce2D() {
-    Eigen::VectorXd LFootForce = getFootForce(LEFTFOOT);
-    Eigen::VectorXd RFootForce = getFootForce(RIGHTFOOT);
-    Eigen::VectorXd FootForce = Eigen::VectorXd::Zero(2);
-    FootForce << LFootForce,  RFootForce;
-    return FootForce;
-}
-
-//=================================================================================/
-// Math functions
-//=================================================================================/
-Eigen::Vector3d WebotsRobot::rotm2Rpy(const Eigen::Matrix3d & rotm) {
-    Eigen::Vector3d rpy = Eigen::Vector3d::Zero();
-    rpy(0) = atan2(rotm(2,1), rotm(2,2));
-    rpy(1) = atan2(-rotm(2,0), sqrt(rotm(2,1) * rotm(2,1) + rotm(2,2) * rotm(2,2)));
-    rpy(2) = atan2(rotm(1,0), rotm(0,0));
-    return rpy;
-}
-
-Derivative :: Derivative () {}
-
-Derivative :: Derivative ( double dT, double c ) {
-    double alpha( 2. / dT );
-    this -> a0 = c * alpha + 1.;
-    this -> a1 = ( 1. - c * alpha ) / this -> a0;
-    this -> b0 = alpha / this -> a0;
-    this -> b1 = -alpha / this -> a0;
-    this -> a0 = 1.;
-    this -> sigInPrev = 0.;
-    this -> sigOutPrev = 0.;
-}
-
-void Derivative :: init ( double dT, double c, double initValue ) {
-    double alpha( 2. / dT );
-    this -> a0 = c * alpha + 1.;
-    this -> a1 = ( 1. - c * alpha ) / this -> a0;
-    this -> b0 = alpha / this -> a0;
-    this -> b1 = -alpha / this -> a0;
-    this -> a0 = 1.;
-    this -> sigInPrev = initValue;
-    this -> sigOutPrev = initValue;
-}
-
-double Derivative :: mSig( double sigIn ) {
-    double sigOut( 0. );
-    sigOut = (sigIn - sigInPrev) * 1000.;
-    // sigOut = b0 * sigIn + b1 * sigInPrev - a1 * sigOutPrev;
-    sigOutPrev = sigOut;
-    sigInPrev = sigIn;
-    return sigOut;
 }
