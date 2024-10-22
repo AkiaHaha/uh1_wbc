@@ -85,7 +85,9 @@ void WebotsRobot::deleteRobot()
     // delete robot;
 }
 
-
+//=================================================================================/
+// Data write and read
+//=================================================================================/
 bool WebotsRobot::readData(double simTime, webotsState & robotStateSim)
 {
     // Motor pos
@@ -257,7 +259,6 @@ Eigen::Vector3d WebotsRobot::getPelvisAcc() {
     return acceleration;
 }
 
-// The foot force feedback is adjusted from 6d 2 1d, only torque on y_axis @Danny240520
 Eigen::VectorXd WebotsRobot::getFootForce(const int& footFlag) {
     Eigen::VectorXd torqueY(1); 
     double toq;
@@ -271,14 +272,15 @@ Eigen::VectorXd WebotsRobot::getFootForce(const int& footFlag) {
             break;
         }
         default: {
-            std::cout << "footFlag is wrong, return the values of LEFTFOOT by default!" << std::endl;
+            std::cout << "footFlag is wrong" << std::endl;
             toq = legMotor[4]->getTorqueFeedback();
             break;
         }
     }
     torqueY(0) = toq; 
-    return torqueY;
+    return torqueY; ///< Only torque on y_axis @Danny240520
 }
+
 Eigen::VectorXd WebotsRobot::getFootForce2D() {
     Eigen::VectorXd LFootForce = getFootForce(LEFTFOOT);
     Eigen::VectorXd RFootForce = getFootForce(RIGHTFOOT);
@@ -287,6 +289,9 @@ Eigen::VectorXd WebotsRobot::getFootForce2D() {
     return FootForce;
 }
 
+//=================================================================================/
+// Math functions
+//=================================================================================/
 Eigen::Vector3d WebotsRobot::rotm2Rpy(const Eigen::Matrix3d & rotm) {
     Eigen::Vector3d rpy = Eigen::Vector3d::Zero();
     rpy(0) = atan2(rotm(2,1), rotm(2,2));
@@ -294,7 +299,6 @@ Eigen::Vector3d WebotsRobot::rotm2Rpy(const Eigen::Matrix3d & rotm) {
     rpy(2) = atan2(rotm(1,0), rotm(0,0));
     return rpy;
 }
-
 
 Derivative :: Derivative () {}
 

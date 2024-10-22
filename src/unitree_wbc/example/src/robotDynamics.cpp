@@ -2,56 +2,52 @@
 using namespace std;
 
 //===========================================================================
-// Public functions for invocation
+// Create a robot dynamics object for the Unitree H1 based on RBDL
 //===========================================================================
 RobotDynamics::RobotDynamics() {
     // Basic elements
-    NJG = NG;///< NJG = NJF + NJJ
-    NJF = 6;  //< Number of Joints Free-floating
-    NJJ = NJ;  ///< Number of non-floating-base Joints, including actuated & underactuated(paissive) joints. NJJ = NJA + NJP
-    NJA = NJ;   ///< Number of Joints Actuated (torque_actuated)
-    NJP = 0;  ///< Number of Passive joints that do not contain the DoFs of floating base
-    NFC = NFCC4;  ///< Number of Forces describing Contact
+    NJG = NG;
+    NJF = 6;  
+    NJJ = NJ;  
+    NJA = NJ;   
+    NJP = 0;  
+    NFC = NFCC4;  
  
     jntPositions = VectorNd :: Zero(NJG);
     jntVelocities = VectorNd :: Zero(NJG);
 
-    inertiaMat = MatrixNd :: Zero(NJG, NJG);//Mass matrix
-    invInertiaMat = MatrixNd :: Zero(NJG, NJG);//inverse of Mass matrix
-    nonlinearBias = VectorNd :: Zero(NJG);//Coriolis and Gravity
-    coriolisBias = VectorNd::Zero(NJG);//Coriolis
-    gravityBias = VectorNd::Zero(NJG);//Gravity
+    inertiaMat = MatrixNd :: Zero(NJG, NJG);
+    invInertiaMat = MatrixNd :: Zero(NJG, NJG);
+    nonlinearBias = VectorNd :: Zero(NJG);
+    coriolisBias = VectorNd::Zero(NJG);
+    gravityBias = VectorNd::Zero(NJG);
 
-    //nlBiasWithInternalCstr = VectorNd :: Zero(4);// ///< NJG*1, non-linear effects term when considering internal-constraints. for parallel robot
-    //nspInternalCstrJacobian = MatrixNd :: Zero(2, NJG + NFC);//Dynamically Consistent Null Space Projection matrix of Jacobian_InternalConstraint. for parallel robot
 
-    selMatFloatingBase = MatrixNd :: Zero(NJF, NJG);///< NJF*NJG, Selection matrix of floating-base joints
+    selMatFloatingBase = MatrixNd :: Zero(NJF, NJG);
     selMatFloatingBase.leftCols(NJF) = MatrixNd::Identity(NJF, NJF);
 
-    selMatActuated = MatrixNd :: Zero(NJA, NJG);///< NJA*NJG, Selection matrix of actuated joints or Actuation matrix
+    selMatActuated = MatrixNd :: Zero(NJA, NJG);
     selMatActuated.rightCols(NJA) = MatrixNd::Identity(NJA, NJA);
 
-    selMatNonFloatingBase = MatrixNd :: Zero(NJJ, NJG);///< NJJ*NJG, Selection matrix of non-floating-base joints
-    //selMatPassive = MatrixNd :: Zero(18, NJG + NFC);///< NJP+6+6*NJG+6+6, Selection matrix of passive joints that do not contain floating bases
+    selMatNonFloatingBase = MatrixNd :: Zero(NJJ, NJG);
 
+    centroidalMomentumMatrix = MatrixNd :: Zero(NJF, NJG);
+    centroidalMomentumBiased = VectorNd :: Zero(NJF);
 
-    centroidalMomentumMatrix = MatrixNd :: Zero(NJF, NJG);///< NJF*NJG, Centroidal Momentum Matrix (CMM)质心动量矩阵
-    centroidalMomentumBiased = VectorNd :: Zero(NJF);///< NJF*1, centroidal momentum bias force
-
-    floatBaseJacoTc.J = MatrixNd :: Zero(NJF, NJG);///< JacobianTc of floating-base.
+    floatBaseJacoTc.J = MatrixNd :: Zero(NJF, NJG);
     floatBaseJacoTc.JdotQdot = VectorNd :: Zero(NJF);
 
-    torsoJacoTc.J = MatrixNd :: Zero(NJF, NJG);///< JacobianTc of floating-base.
+    torsoJacoTc.J = MatrixNd :: Zero(NJF, NJG);
     torsoJacoTc.JdotQdot = VectorNd :: Zero(NJF);
 
-    biContactJacoTc.J = MatrixNd :: Zero(12, NJG);///< JacobianTc of contact point(s)
+    biContactJacoTc.J = MatrixNd :: Zero(12, NJG);
     biContactJacoTc.JdotQdot = VectorNd :: Zero(12); 
 
-    quadContactJacoTc.J = MatrixNd :: Zero(24, NJG);///< JacobianTc of contact point(s)
+    quadContactJacoTc.J = MatrixNd :: Zero(24, NJG);
     quadContactJacoTc.JdotQdot = VectorNd :: Zero(24); 
 
-    eqCstrMatTau = MatrixNd :: Zero(NJA, NJG+NFC);///< NJA*?, equality constraints : TauActuated = eqCstrMatTau * x^T + eqCstrMatTauBias, x is the generalized variables, e.g. NJA*(NJG+NFC), x = [Qddot, f_c]'
-    eqCstrMatTauBias = VectorNd :: Zero(NJA);///< NJA*1, equality constraints : TauActuated = eqCstrMatTau * x^T + eqCstrMatTauBias
+    eqCstrMatTau = MatrixNd :: Zero(NJA, NJG+NFC);
+    eqCstrMatTauBias = VectorNd :: Zero(NJA);
 
     model = new RigidBodyDynamics::Model();
     model->gravity = Vector3d (0., 0., -GRAVITY_CONST);
@@ -210,9 +206,31 @@ RobotDynamics::~RobotDynamics(){
     model = nullptr;
 }
 
+//==========================================================================
+// Set and get params 
+//==========================================================================
 bool RobotDynamics::setJntStates(const Eigen::VectorXd &q, const Eigen::VectorXd &qdot){
     AGIROBOT::RobotDynamics::setJntStates(q, qdot);
     isPosVelUpdated = false;
+    return true;
+}
+
+double RobotDynamics::getTotalMass(){
+    return massAll;
+}
+
+//==========================================================================
+// Update/Calc. kinodynamics based on current state
+//==========================================================================
+bool RobotDynamics::updateKinematicsPosVel() {
+    UpdateKinematicsCustom(*model, &jntPositions, &jntVelocities, NULL);
+    isPosVelUpdated = true;
+    return true;
+}
+
+bool RobotDynamics::updateKinematicsAcc() {
+    VectorNd qDDotZero = VectorNd::Zero(NJG);
+    UpdateKinematicsCustom(*model, NULL, NULL, &qDDotZero);
     return true;
 }
 
@@ -239,166 +257,6 @@ bool RobotDynamics::calcWbcDependence(){
                 -selMatActuated * leftArmSoleJacob.transpose(),
                 -selMatActuated * rightArmSoleJacob.transpose();//Force @@
     eqCstrMatTauBias = selMatActuated * nonlinearBias;//A*G * G*1 = A*1
-    return true;
-}
-
-double RobotDynamics::getTotalMass(){
-    return massAll;
-}
-
-//===========================================================================
-// Update and calculate dynamics params
-//===========================================================================
-VectorNd RobotDynamics::estPelvisPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
-    VectorNd qTemp = VectorNd::Zero(NJG);
-    VectorNd qDotTemp = VectorNd::Zero(NJG);
-    Vector3d sole2PelvisPos = Vector3d::Zero();
-    Vector3d sole2PelvisVel = Vector3d::Zero();
-    VectorNd posVelRes = VectorNd::Zero(6,1);
-    qTemp = jointPos;
-    qDotTemp = jointVel;
-    UpdateKinematicsCustom(*model, & qTemp, & qDotTemp, NULL);
-    switch (footType)
-    {
-        case TYPELEFTSOLE: // Left Sole
-            sole2PelvisPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
-            sole2PelvisVel = CalcPointVelocity(*model, qTemp, qDotTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
-            break;
-        case TYPERIGHTSOLE: // Right Sole
-            sole2PelvisPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
-            sole2PelvisVel = CalcPointVelocity(*model, qTemp, qDotTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
-            break;    
-        default:
-            break;
-    }
-    posVelRes.head(3) = qTemp.head(3)-sole2PelvisPos;
-    posVelRes.tail(3) = qDotTemp.head(3)-sole2PelvisVel;
-    return posVelRes;
-}
-
-VectorNd RobotDynamics::estBodyPosInWorldAkia(const VectorNd& jointPos, const VectorNd& jointVel, const unsigned int& bodyId) {//Daniel 5.27
-    VectorNd qTemp = VectorNd::Zero(NJG);                                                                                           //0: pelvis; 1:LS; 2:RS; 3:LF; 4:RF
-    VectorNd qDotTemp = VectorNd::Zero(NJG);
-    Vector3d bodyPos = Vector3d::Zero(3);
-
-    qTemp = jointPos;
-    qDotTemp = jointVel;
-    UpdateKinematicsCustom(*model, & qTemp, & qDotTemp, NULL);
-
-    switch (bodyId)
-    {
-        case 0:
-            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idPelvis, Math::Vector3d::Zero(), false);
-            break;
-        case 1:
-            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftArmEnd, Math::Vector3d::Zero(), false);
-            break;
-        case 2:
-            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightArmEnd, Math::Vector3d::Zero(), false);
-            break;
-        case 3:
-            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
-            break;
-        case 4:
-            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp,idRightSoleGround, Math::Vector3d::Zero(), false);
-            break;
-        default:
-            break;
-    }
-    return bodyPos;
-}
-
-VectorNd RobotDynamics::estFootArmPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
-    VectorNd qTemp = VectorNd::Zero(NJG);
-    VectorNd qDotTemp = VectorNd::Zero(NJG);
-    Vector3d sole2WorldPos = Vector3d::Zero();
-    Vector3d sole2WorldRPY = Vector3d::Zero();
-    VectorNd sole2WorldVel = VectorNd::Zero(6);
-    Matrix3d sole2WorldMatR = Matrix3d::Identity();
-    VectorNd posVelRes = VectorNd::Zero(12,1);
-    qTemp = jointPos;
-    qDotTemp = jointVel;
-    UpdateKinematicsCustom(*model, & qTemp, & qDotTemp, NULL);
-    switch (footType)
-    {
-        case 0: // Torso
-            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idTorso, Math::Vector3d::Zero(), false);
-            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idTorso, false);
-            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idTorso, Math::Vector3d::Zero(), false);
-            break; 
-
-        case 1: // Left Sole
-            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
-            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idLeftSoleGround, false);
-            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
-            break;   
-        case 2: // Right Sole 
-            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
-            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idRightSoleGround, false);
-            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
-            break;
-        case 3: // Left Arm
-            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftArmEnd, Math::Vector3d::Zero(), false);
-            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idLeftArmEnd, false);
-            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idLeftArmEnd, Math::Vector3d::Zero(), false);
-            break;
-        case 4: // Right Arm
-            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightArmEnd, Math::Vector3d::Zero(), false);
-            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idRightArmEnd, false);
-            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idRightArmEnd, Math::Vector3d::Zero(), false);
-            break;
-        default:
-            break;
-    }
-    sole2WorldRPY = -rotaitonMatrix2EulerRPY(sole2WorldMatR);
-    posVelRes.head(3) = sole2WorldRPY;
-    posVelRes.segment(3,3) = sole2WorldPos;
-    posVelRes.segment(6,3) = angleDot2EulerDot(sole2WorldVel.head(3), sole2WorldRPY);
-    posVelRes.tail(3) = sole2WorldVel.tail(3);
-    return posVelRes;
-}
-
-
-VectorNd RobotDynamics::getRootXyzRpy(const Eigen::VectorXd & q){//Daniel 5.26
-     Eigen::VectorXd rootPose(6);
-
-    // Obtain root node pos.
-    Vector3d position = CalcBodyToBaseCoordinates(*model, q, idPelvis, Vector3d(0.0, 0.0, 0.0), false);
-    rootPose.segment<3>(0) = position;
-
-    // Obtain root node rpy.
-    Matrix3d orientation = CalcBodyWorldOrientation(*model, q, idPelvis, false);
-    Eigen::Vector3d eulerAngles = orientation.eulerAngles(0, 1, 2); 
-    rootPose.segment<3>(3) = eulerAngles;
-
-    return rootPose;
-}
-
-VectorNd RobotDynamics::getRootXyzRpyDot(const Eigen::VectorXd &q, const Eigen::VectorXd &qDot) {//Daniel 5.27
-    Eigen::VectorXd rootPoseDot(6);
-
-    // Obtain root node Velocity screw  
-    VectorNd velocity = CalcPointVelocity6D(*model, q, qDot, idPelvis, Vector3d(0.0, 0.0, 0.0), false);
-
-    // Split it
-    Vector3d linearVelocity = velocity.segment<3>(3);  // 后三个分量是线速度
-    Vector3d angularVelocity = velocity.segment<3>(0); // 前三个分量是角速度
-
-    rootPoseDot.segment<3>(0) = linearVelocity;
-    rootPoseDot.segment<3>(3) = angularVelocity;
-
-    return rootPoseDot;
-}
-
-bool RobotDynamics::updateKinematicsPosVel() {
-    UpdateKinematicsCustom(*model, &jntPositions, &jntVelocities, NULL);
-    isPosVelUpdated = true;
-    return true;
-}
-
-bool RobotDynamics::updateKinematicsAcc() {
-    VectorNd qDDotZero = VectorNd::Zero(NJG);
-    UpdateKinematicsCustom(*model, NULL, NULL, &qDDotZero);
     return true;
 }
 
@@ -491,7 +349,6 @@ bool RobotDynamics::calcCentroidalDynamicsDescriptors() {
 
     //step: 1  Solve H Matrix
     //step: 2  Solve C Bias
-
     //step: 3  Solve pG Vector
     //0R1(3x3)  and pelvisJacob
     pelvisPosXYZ = CalcBodyToBaseCoordinates(*model, jntPositions, idPelvis, Vector3d::Zero(), false);
@@ -546,7 +403,6 @@ bool RobotDynamics::calcPelvisTask() {
     calcPelvisJDotQDot(); 
     return true;
 }
-
 bool RobotDynamics::calcCOMPosVel() {
     Utils::CalcCenterOfMass(*model, jntPositions, jntVelocities, NULL, massAll, comPos2World, &comVel2World, NULL, NULL, NULL, false);
     return true;
@@ -559,6 +415,138 @@ bool RobotDynamics::calcCentroidalMomentum() {
     centroidMomentum = centroidAG * jntVelocities;
     centroidMomentumICS = centroidAICS * jntVelocities;
     return true;
+}
+
+//==========================================================================
+// State Estimations
+//==========================================================================
+VectorNd RobotDynamics::estRootXyzRpy(const Eigen::VectorXd & q){///<Danny@240526
+    Eigen::VectorXd rootPose(6);
+    Vector3d position = CalcBodyToBaseCoordinates(*model, q, idPelvis, Vector3d(0.0, 0.0, 0.0), false);
+    rootPose.segment<3>(0) = position;
+    Matrix3d orientation = CalcBodyWorldOrientation(*model, q, idPelvis, false);
+    Eigen::Vector3d eulerAngles = orientation.eulerAngles(0, 1, 2); 
+    rootPose.segment<3>(3) = eulerAngles;
+    return rootPose;
+}
+
+VectorNd RobotDynamics::estRootXyzRpyDot(const Eigen::VectorXd &q, const Eigen::VectorXd &qDot) {///< Danny@240516
+    Eigen::VectorXd rootPoseDot(6);
+    VectorNd velocity = CalcPointVelocity6D(*model, q, qDot, idPelvis, Vector3d(0.0, 0.0, 0.0), false);
+    Vector3d linearVelocity = velocity.segment<3>(3);  
+    Vector3d angularVelocity = velocity.segment<3>(0); 
+    rootPoseDot.segment<3>(0) = linearVelocity;
+    rootPoseDot.segment<3>(3) = angularVelocity;
+    return rootPoseDot;
+}
+
+VectorNd RobotDynamics::estPelvisPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
+    VectorNd qTemp = VectorNd::Zero(NJG);
+    VectorNd qDotTemp = VectorNd::Zero(NJG);
+    Vector3d sole2PelvisPos = Vector3d::Zero();
+    Vector3d sole2PelvisVel = Vector3d::Zero();
+    VectorNd posVelRes = VectorNd::Zero(6,1);
+    qTemp = jointPos;
+    qDotTemp = jointVel;
+    UpdateKinematicsCustom(*model, & qTemp, & qDotTemp, NULL);
+    switch (footType)
+    {
+        case TYPELEFTSOLE: // Left Sole
+            sole2PelvisPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
+            sole2PelvisVel = CalcPointVelocity(*model, qTemp, qDotTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
+            break;
+        case TYPERIGHTSOLE: // Right Sole
+            sole2PelvisPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
+            sole2PelvisVel = CalcPointVelocity(*model, qTemp, qDotTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
+            break;    
+        default:
+            break;
+    }
+    posVelRes.head(3) = qTemp.head(3)-sole2PelvisPos;
+    posVelRes.tail(3) = qDotTemp.head(3)-sole2PelvisVel;
+    return posVelRes;
+}
+
+VectorNd RobotDynamics::estBodyPosInWorldAkia(const VectorNd& jointPos, const VectorNd& jointVel, const unsigned int& bodyId) {///<Danny240527
+    VectorNd qTemp = VectorNd::Zero(NJG);                                             ///<0: pelvis; 1:LS; 2:RS; 3:LF; 4:RF
+    VectorNd qDotTemp = VectorNd::Zero(NJG);
+    Vector3d bodyPos = Vector3d::Zero(3);
+
+    qTemp = jointPos;
+    qDotTemp = jointVel;
+    UpdateKinematicsCustom(*model, & qTemp, & qDotTemp, NULL);
+
+    switch (bodyId)
+    {
+        case 0:
+            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idPelvis, Math::Vector3d::Zero(), false);
+            break;
+        case 1:
+            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftArmEnd, Math::Vector3d::Zero(), false);
+            break;
+        case 2:
+            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightArmEnd, Math::Vector3d::Zero(), false);
+            break;
+        case 3:
+            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
+            break;
+        case 4:
+            bodyPos = CalcBodyToBaseCoordinates(*model, qTemp,idRightSoleGround, Math::Vector3d::Zero(), false);
+            break;
+        default:
+            break;
+    }
+    return bodyPos;
+}
+
+VectorNd RobotDynamics::estBodyTwistInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
+    VectorNd qTemp = VectorNd::Zero(NJG);
+    VectorNd qDotTemp = VectorNd::Zero(NJG);
+    Vector3d sole2WorldPos = Vector3d::Zero();
+    Vector3d sole2WorldRPY = Vector3d::Zero();
+    VectorNd sole2WorldVel = VectorNd::Zero(6);
+    Matrix3d sole2WorldMatR = Matrix3d::Identity();
+    VectorNd posVelRes = VectorNd::Zero(12,1);
+    qTemp = jointPos;
+    qDotTemp = jointVel;
+    UpdateKinematicsCustom(*model, & qTemp, & qDotTemp, NULL);
+    switch (footType)
+    {
+        case 0: // Torso
+            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idTorso, Math::Vector3d::Zero(), false);
+            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idTorso, false);
+            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idTorso, Math::Vector3d::Zero(), false);
+            break; 
+
+        case 1: // Left Sole
+            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
+            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idLeftSoleGround, false);
+            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idLeftSoleGround, Math::Vector3d::Zero(), false);
+            break;   
+        case 2: // Right Sole 
+            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
+            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idRightSoleGround, false);
+            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idRightSoleGround, Math::Vector3d::Zero(), false);
+            break;
+        case 3: // Left Arm
+            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idLeftArmEnd, Math::Vector3d::Zero(), false);
+            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idLeftArmEnd, false);
+            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idLeftArmEnd, Math::Vector3d::Zero(), false);
+            break;
+        case 4: // Right Arm
+            sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idRightArmEnd, Math::Vector3d::Zero(), false);
+            sole2WorldMatR = CalcBodyWorldOrientation(*model, qTemp, idRightArmEnd, false);
+            sole2WorldVel = CalcPointVelocity6D(*model, qTemp, qDotTemp, idRightArmEnd, Math::Vector3d::Zero(), false);
+            break;
+        default:
+            break;
+    }
+    sole2WorldRPY = -rotaitonMatrix2EulerRPY(sole2WorldMatR);
+    posVelRes.head(3) = sole2WorldRPY;
+    posVelRes.segment(3,3) = sole2WorldPos;
+    posVelRes.segment(6,3) = angleDot2EulerDot(sole2WorldVel.head(3), sole2WorldRPY);
+    posVelRes.tail(3) = sole2WorldVel.tail(3);
+    return posVelRes;
 }
 
 //===========================================================================

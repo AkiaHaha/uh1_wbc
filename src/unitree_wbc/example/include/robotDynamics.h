@@ -57,20 +57,20 @@ public:
     VectorNd estPelvisPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
 
     /**
-     * @brief estFootArmPosVelInWorld
+     * @brief estBodyTwistInWorld
      *          estimate the swing foot state in world frame (origin at the stance sole)
      * @param jointPos  generalized joint position
      * @param jointVel  generalized joint velocity
      * @param footType  stance sole label
-     * @return the [posRPY, posXYZ, velRPY, velXYZ] of swing foot in Vector(12,1)
+     * @return the motion twist as sequence: [posRPY, posXYZ, velRPY, velXYZ] 
      */
-    VectorNd estFootArmPosVelInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
+    VectorNd estBodyTwistInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
 
-    VectorNd getRootXyzRpy(const Eigen::VectorXd & q);//Daniel 5.26
+    VectorNd estRootXyzRpy(const Eigen::VectorXd & q);///<Danny@240526
 
-    VectorNd getRootXyzRpyDot(const Eigen::VectorXd &q, const Eigen::VectorXd &qDot);//Daniel 5.27
+    VectorNd estRootXyzRpyDot(const Eigen::VectorXd &q, const Eigen::VectorXd &qDot);///<Danny@240621
 
-    VectorNd estBodyPosInWorldAkia(const VectorNd& jointPos, const VectorNd& jointVel, const unsigned int& bodyId);//Daniel 5.27
+    VectorNd estBodyPosInWorldAkia(const VectorNd& jointPos, const VectorNd& jointVel, const unsigned int& bodyId);//<Danny@240526
 
 private:
 
@@ -85,7 +85,6 @@ private:
     unsigned int idRightLegLink[5],idRightArmLink[5];
     double massAll;
 
-    // -------- for Centroidal Dynamics -------
     MatrixNd centroidAG;                        // nJF*nJG, Centroidal Momentum Matrix (CMM) in G CS
     MatrixNd centroidAICS;                      // nJF*nJG, Centroidal Momentum Matrix (CMM) in I CS
     SpatialVector centroidAGDotQDot;            // nJF*1, Centroidal momentum bias force in G CS
@@ -94,7 +93,6 @@ private:
     SpatialVector centroidMomentumICS;          // nJF*1, Centroidal momentum  in I CS
     SpatialMatrix compositeInertia;             // nJF*nJF, Composite-rigid-body inertia in G CS
     SpatialMatrix spatialTransformG2ICS;        // nJF*nJF, Transform matrix from GCS to ICS
-    // -------- for Centroidal Dynamics -------
 
     Vector3d comPos2Pelvis;
     Vector3d comPos2World;
@@ -144,7 +142,6 @@ private:
     bool calcCOMState();
     bool calcCentroidalMomentum();
 
-    // Math function
     Vector3d rotaitonMatrix2EulerRPY(const Matrix3d& rotMat);
     Vector3d angleDot2EulerDot(const Vector3d& angleDot, const Vector3d& rpy);
     Matrix3d skew(const Vector3d& omg);

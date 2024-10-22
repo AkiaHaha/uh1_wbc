@@ -153,11 +153,11 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     qGen.head(3) = pelvisTwistEst.segment(3,3);
     qDotGen.head(3) = pelvisTwistEst.tail(3);
     // Others
-    torsoTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 0);
-    leftFootTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 1);
-    rightFootTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 2);
-    leftArmTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 3);
-    rightArmTwistEst = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 4);
+    torsoTwistEst = robotDynamics->estBodyTwistInWorld(qGen, qDotGen, 0);
+    leftFootTwistEst = robotDynamics->estBodyTwistInWorld(qGen, qDotGen, 1);
+    rightFootTwistEst = robotDynamics->estBodyTwistInWorld(qGen, qDotGen, 2);
+    leftArmTwistEst = robotDynamics->estBodyTwistInWorld(qGen, qDotGen, 3);
+    rightArmTwistEst = robotDynamics->estBodyTwistInWorld(qGen, qDotGen, 4);
 #else
     rpyPelvisEst = robotStateSim.pelvisRpyAct.head(3);
     rpyDotPelvisEst = robotStateSim.pelvisDRpyAct.tail(3);
@@ -167,7 +167,7 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     qDotGen.head(3) = xyzDotPelvisEst;
 
     Eigen::VectorXd poseTemp0 = Eigen::VectorXd::Zero(12,1);
-    poseTemp0 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 0);
+    poseTemp0 = robotDynamics->estBodyTwistInWorld(qGen, qDotGen, 0);
     rpyTorsoEst = poseTemp0.head(3);
     xyzTorsoEst = poseTemp0.segment(3,3);
     rpyDotTorsoEst = poseTemp0.segment(6,3);
@@ -175,13 +175,13 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
 
     Eigen::VectorXd footStateTemp0 = Eigen::VectorXd::Zero(12,1);
     Eigen::VectorXd footStateTemp1 = Eigen::VectorXd::Zero(12,1);
-    footStateTemp0 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 1);
+    footStateTemp0 = robotDynamics->estBodyTwistInWorld(qGen, qDotGen, 1);
     rpyFootEst[0] = footStateTemp0.head(3);
     xyzFootEst[0] = footStateTemp0.segment(3,3);
     rpyDotFootEst[0] = footStateTemp0.segment(6,3);
     xyzDotFootEst[0] = footStateTemp0.tail(3);
 
-    footStateTemp1 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 2);
+    footStateTemp1 = robotDynamics->estBodyTwistInWorld(qGen, qDotGen, 2);
     rpyFootEst[1] = footStateTemp1.head(3);
     xyzFootEst[1] = footStateTemp1.segment(3,3);
     rpyDotFootEst[1] = footStateTemp1.segment(6,3);
@@ -189,13 +189,13 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
 
     Eigen::VectorXd armStateTemp0 = Eigen::VectorXd::Zero(12,1);
     Eigen::VectorXd armStateTemp1 = Eigen::VectorXd::Zero(12,1);
-    armStateTemp0 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 3);
+    armStateTemp0 = robotDynamics->estBodyTwistInWorld(qGen, qDotGen, 3);
     xyzArmEst[0] = armStateTemp0.head(3);
     xyzArmEst[0] = armStateTemp0.segment(3,3);
     rpyDotArmEst[0] = armStateTemp0.segment(6,3);
     xyzDotArmEst[0] = armStateTemp0.tail(3);
 
-    armStateTemp1 = robotDynamics->estFootArmPosVelInWorld(qGen, qDotGen, 4);
+    armStateTemp1 = robotDynamics->estBodyTwistInWorld(qGen, qDotGen, 4);
     rpyArmEst[1] = armStateTemp1.head(3);
     xyzArmEst[1] = armStateTemp1.segment(3,3);
     rpyDotArmEst[1] = armStateTemp1.segment(6,3);
