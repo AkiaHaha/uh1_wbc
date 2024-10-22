@@ -50,6 +50,7 @@ public:
 
 private:
     ConfigParams configParams;
+    webotsState robotStateSim;
     bool stateEstimation(webotsState & robotStateSim);                         
     bool motionPlan();
     bool taskControl();
@@ -65,6 +66,7 @@ private:
     int nFc{NFCC4};
     double dsp{};
     
+    Eigen::VectorXd biFootForce6D = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd qActuated = Eigen::VectorXd::Zero(nJa); ;
     Eigen::VectorXd qDotActuated = Eigen::VectorXd::Zero(nJa);
     Eigen::VectorXd groundReactiveForce = Eigen::VectorXd::Zero(2);//Daniel nFc->2

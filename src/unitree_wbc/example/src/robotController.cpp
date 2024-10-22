@@ -233,12 +233,11 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     }
 
     //===============================================================
-    // Test wrench feedback for interaction @Danny241022
+    // @todo wrench feedback for interaction @Danny241022
     //===============================================================
-    Eigen::VectorXd wrenchFoot = Eigen::VectorXd::Zero(6);
-    wrenchFoot = robotStateSim.footGrfAct;
-    cout << "wrenchFoot: " << endl
-         << wrenchFoot.transpose() << endl;
+    biFootForce6D = robotStateSim.footGrfAct;
+    cout << "biFootForce6D: " << endl
+         << biFootForce6D.transpose() << endl;
 
 
 
@@ -420,7 +419,46 @@ bool RobotController::taskControl(){
     footArmPosRef.segment(21,3) = configParams.kpArmXyzDiag * (xyzArmTgt[1] - xyzArmEst[1])
                                 + configParams.kdArmXyzDiag * (xyzDotArmTgt[1] - xyzDotArmEst[1]);                                                                                                
 #endif
-    
+    //============================================================
+    // @todo wrench feedback for interaction @Danny241022
+    //============================================================
+    footArmForceRef = forceOpt;
+
+    footArmForceRef.segment(3,3) = biFootForce6D.segment(0,3);
+    footArmForceRef.segment(9,3) = biFootForce6D.segment(3,3);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //============================================================
+
+
     GVLimitationRef = -qDotActuated;
     footArmForceRef = forceOpt;
 
