@@ -124,7 +124,6 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     // Data from sensor
     qActuated = robotStateSim.jointPosAct;
     qDotActuated = robotStateSim.jointVelAct;
-    groundReactiveForce = robotStateSim.footGrfAct;
     qGen.tail(nJa) = robotStateSim.jointPosAct;
     qDotGen.tail(nJa) = robotStateSim.jointVelAct;
     qGen.segment(3,3) = robotStateSim.pelvisRpyAct.head(3);
@@ -236,8 +235,7 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     // @todo wrench feedback for interaction @Danny241022
     //===============================================================
     biFootForce6D = robotStateSim.footGrfAct;
-    cout << "biFootForce6D: " << endl
-         << biFootForce6D.transpose() << endl;
+    biWristForce6D = robotStateSim.wristItaAct;
 
 
 
@@ -422,11 +420,19 @@ bool RobotController::taskControl(){
     //============================================================
     // @todo wrench feedback for interaction @Danny241022
     //============================================================
-    footArmForceRef = forceOpt;
+    footArmForceRef = forceOpt; ///< LFtorque, LFforce, RFtorque, RFforce, LWtorque, LWforce, RWtorque, RWforce (8x3)
 
     footArmForceRef.segment(3,3) = biFootForce6D.segment(0,3);
     footArmForceRef.segment(9,3) = biFootForce6D.segment(3,3);
+    // footArmForceRef.segment(15,3) = biWristForce6D.segment(0,3);
+    // footArmForceRef.segment(21,3) = biWristForce6D.segment(3,3);
+    cout << "without force feedback" << endl;
 
+
+    // cout << "biFootForce6D" << endl;
+    // cout << biFootForce6D.transpose() << endl;
+    // cout << "biWristForce6D" << endl;
+    // cout << biWristForce6D.transpose() << endl;
 
 
 
@@ -457,8 +463,6 @@ bool RobotController::taskControl(){
 
 
     //============================================================
-
-
     GVLimitationRef = -qDotActuated;
     footArmForceRef = forceOpt;
 
@@ -480,14 +484,16 @@ bool RobotController::taskControl(){
     lowerbounds(NG+11) = 0.0;
     upperbounds(NG+11) = 1000.0*GRAVITY;
     myWbc->updateBound(lowerbounds, upperbounds);
-
     // WBC solve & progress observation
     myWbc->wbcSolve();
     myWbc->getAuxiliaryDataInt(intData);
     nWsrRes = intData.at(0);
-    double Nlevel = myWbc->getNlevel();
-    for (int i = Nlevel; i < Nlevel*2; i++){
-        simpleStatus += intData.at(i);}
+    simpleStatus = intData.at(1);
+    //``````````Only for Hqp``````````````````//
+    // double Nlevel = myWbc->getNlevel();
+    // for (int i = Nlevel; i < Nlevel*2; i++){
+    //     simpleStatus += intData.at(i);}
+    //________________________________________//
     myWbc->getAuxiliaryDataDouble(doubleData);
     costOpt = doubleData.at(0);
     cpuTimeRes = doubleData.at(1);

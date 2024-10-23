@@ -53,6 +53,10 @@ void WebotsRobot::initWebots()
     forceSensorFootSole.resize(2);
     forceSensorFootSole[0] = robot->getTouchSensor("left_foot_sole_touch_sensor_3d");
     forceSensorFootSole[1] = robot->getTouchSensor("right_foot_sole_touch_sensor_3d");
+
+    forceSensorArmWrist.resize(2);
+    forceSensorArmWrist[0] = robot->getTouchSensor("left_wrist_touch_sensor_3d");
+    forceSensorArmWrist[1] = robot->getTouchSensor("right_wrist_touch_sensor_3d");
     
     // Other sensors
     imu = robot->getInertialUnit("inertial_unit_upperBody");
@@ -74,6 +78,7 @@ void WebotsRobot::initWebots()
     accelerometer->enable(TIME_STEP);
     for (int i = 0; i < 2; i++) {
         forceSensorFootSole[i]->enable(TIME_STEP);
+        forceSensorArmWrist[i]->enable(TIME_STEP);
     }
 
     // Derivative
@@ -142,6 +147,7 @@ bool WebotsRobot::readData(double simTime, webotsState & robotStateSim)
 
     //External Force
     robotStateSim.footGrfAct = getBiFootForce6D();
+    robotStateSim.wristItaAct = getBiWristForce6D();
 
     //Foot xyz and rpy @Danny240516
     const double* a1 = SoleLeft->getPosition();
@@ -201,7 +207,16 @@ Eigen::VectorXd WebotsRobot::getBiFootForce6D() {
     forceL = forceSensorFootSole[0]->getValues();
     forceR = forceSensorFootSole[1]->getValues();
     vec << forceL[0], forceL[1], forceL[2], forceR[0], forceR[1], forceR[2];
+    return vec;
+}
 
+Eigen::VectorXd WebotsRobot::getBiWristForce6D() {
+    Eigen::VectorXd vec(6);
+    const double* forceL;
+    const double* forceR;
+    forceL = forceSensorArmWrist[0]->getValues();
+    forceR = forceSensorArmWrist[1]->getValues();
+    vec << forceL[0], forceL[1], forceL[2], forceR[0], forceR[1], forceR[2];
     return vec;
 }
 

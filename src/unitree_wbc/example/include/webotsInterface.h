@@ -74,6 +74,7 @@ struct webotsState
     Eigen::VectorXd jointTorAct = Eigen::VectorXd::Zero(NJ);
     Eigen::VectorXd imuAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd footGrfAct = Eigen::VectorXd::Zero(6);
+    Eigen::VectorXd wristItaAct = Eigen::VectorXd::Zero(6);
     Eigen::Vector3d pelvisRpyAct = Eigen::Vector3d::Zero();
     Eigen::Vector3d pelvisDRpyAct = Eigen::Vector3d::Zero();
     Eigen::Vector3d pelvisDDXyzAct = Eigen::Vector3d::Zero();
@@ -107,10 +108,12 @@ private:
     Eigen::VectorXd getMotorTau();
     Eigen::Vector3d getPelvisAcc();
     Eigen::VectorXd getBiFootForce6D();
+    Eigen::VectorXd getBiWristForce6D();
     Eigen::Vector3d rotm2Rpy(const Eigen::Matrix3d & rotm);
     std::vector<Motor*> legMotor;
     std::vector<PositionSensor*> legSensor;
     std::vector<TouchSensor*> forceSensorFootSole;
+    std::vector<TouchSensor*> forceSensorArmWrist;
 
     InertialUnit *imu;
     Gyro *gyro;
