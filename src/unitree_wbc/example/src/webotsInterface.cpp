@@ -66,8 +66,8 @@ void WebotsRobot::initWebots()
     Pelvis = robot->getFromDef("UnitreeH1");
     SoleLeft = robot->getFromDef("LeftFootSole");
     SoleRight = robot->getFromDef("RightFootSole");
-    ArmHandLeft = robot->getFromDef("LeftArmSole");
-    ArmHandRight = robot->getFromDef("RightArmSole");
+    // ArmHandLeft = robot->getFromDef("LeftArmSole");
+    // ArmHandRight = robot->getFromDef("RightArmSole");
 
     // Enable sensors
     for (int i = 0; i < NJ; i++) {
@@ -170,26 +170,33 @@ bool WebotsRobot::readData(double simTime, webotsState & robotStateSim)
     robotStateSim.RightSoleXyzRpyAct.head(3) << a3[0], a3[1], a3[2];
     robotStateSim.RightSoleXyzRpyAct.tail(3) = rotm2Rpy(a4);
 
-    //Arm xyz and rpy @Danny240516
-    const double* b1 = ArmHandLeft->getPosition();
-    const double* b2Array = ArmHandLeft->getOrientation();
-    Eigen::Matrix3d b2;
-    b2 << b2Array[0], b2Array[1], b2Array[2],
-        b2Array[3], b2Array[4], b2Array[5],
-        b2Array[6], b2Array[7], b2Array[8];
+    /**
+     * Arm xyz and rpy from webots @Danny240516
+     * \deprecated The virtual EE is used to get wrist's twist; 
+     *             Now substitude it with wrist touch sensor @Danny241023 
+     *  
+     *  const double* b1 = ArmHandLeft->getPosition();
+        const double* b2Array = ArmHandLeft->getOrientation();
+        Eigen::Matrix3d b2;
+        b2 << b2Array[0], b2Array[1], b2Array[2],
+            b2Array[3], b2Array[4], b2Array[5],
+            b2Array[6], b2Array[7], b2Array[8];
 
-    const double* b3 = ArmHandRight->getPosition();
-    const double* b4Array = ArmHandRight->getOrientation();
-    Eigen::Matrix3d b4;
-    b4 << b4Array[0], b4Array[1], b4Array[2],
-        b4Array[3], b4Array[4], b4Array[5],
-        b4Array[6], b4Array[7], b4Array[8];
+        const double* b3 = ArmHandRight->getPosition();
+        const double* b4Array = ArmHandRight->getOrientation();
+        Eigen::Matrix3d b4;
+        b4 << b4Array[0], b4Array[1], b4Array[2],
+            b4Array[3], b4Array[4], b4Array[5],
+            b4Array[6], b4Array[7], b4Array[8];
 
-    robotStateSim.LeftArmHandXyzRpyAct.head(3) << b1[0], b1[1], b1[2];
-    robotStateSim.LeftArmHandXyzRpyAct.tail(3) = rotm2Rpy(b2);
+        robotStateSim.LeftArmHandXyzRpyAct.head(3) << b1[0], b1[1], b1[2];
+        robotStateSim.LeftArmHandXyzRpyAct.tail(3) = rotm2Rpy(b2);
 
-    robotStateSim.RightArmHandXyzRpyAct.head(3) << b3[0], b3[1], b3[2];
-    robotStateSim.RightArmHandXyzRpyAct.tail(3) = rotm2Rpy(b4);
+        robotStateSim.RightArmHandXyzRpyAct.head(3) << b3[0], b3[1], b3[2];
+        robotStateSim.RightArmHandXyzRpyAct.tail(3) = rotm2Rpy(b4);
+     */
+
+
 
     return true;
 }

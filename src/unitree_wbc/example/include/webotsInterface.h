@@ -82,8 +82,8 @@ struct webotsState
     Eigen::VectorXd pelvisXyzDXyzAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd LeftSoleXyzRpyAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd RightSoleXyzRpyAct = Eigen::VectorXd::Zero(6);
-    Eigen::VectorXd LeftArmHandXyzRpyAct = Eigen::VectorXd::Zero(6);
-    Eigen::VectorXd RightArmHandXyzRpyAct = Eigen::VectorXd::Zero(6);
+    // Eigen::VectorXd LeftArmHandXyzRpyAct = Eigen::VectorXd::Zero(6);
+    // Eigen::VectorXd RightArmHandXyzRpyAct = Eigen::VectorXd::Zero(6);
 };
 
 /**
@@ -122,8 +122,8 @@ private:
     Node* Pelvis;
     Node* SoleLeft;
     Node* SoleRight;
-    Node* ArmHandLeft;
-    Node* ArmHandRight;
+    // Node* ArmHandLeft;
+    // Node* ArmHandRight;
 
     std::vector<Derivative> dRpy;
     std::vector<Derivative> dJnt;

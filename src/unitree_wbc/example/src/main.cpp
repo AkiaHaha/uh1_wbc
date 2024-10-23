@@ -14,7 +14,6 @@ using namespace std;
 
 bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub);
 
-// The arguments of the main() can be specified by the "controllerArgs" field of the Robot node.
 int main(int argc, char **argv) {
     ros::init(argc, argv, "webots_controller");
     ros::NodeHandle nh;
@@ -52,7 +51,6 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     
     // integrator
     Integrator integrator;
-    // double flagStartCtrl{}; 
 
     // ros init
     std_msgs::Float64MultiArray joint_pos_msg;
@@ -115,7 +113,6 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
 //universal set toq / pos
             // jointToqCmd(16) = 0;
             bipedWebots.setMotorTau(jointToqCmd);
-            
             // bipedWebots.setMotorPos(jointPosInteg);
 
 
