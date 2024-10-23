@@ -422,17 +422,20 @@ bool RobotController::taskControl(){
     //============================================================
     footArmForceRef = forceOpt; ///< LFtorque, LFforce, RFtorque, RFforce, LWtorque, LWforce, RWtorque, RWforce (8x3)
 
-    footArmForceRef.segment(3,3) = biFootForce6D.segment(0,3);
-    footArmForceRef.segment(9,3) = biFootForce6D.segment(3,3);
+    // footArmForceRef.segment(3,3) = biFootForce6D.segment(0,3);
+    // footArmForceRef.segment(9,3) = biFootForce6D.segment(3,3);
     // footArmForceRef.segment(15,3) = biWristForce6D.segment(0,3);
     // footArmForceRef.segment(21,3) = biWristForce6D.segment(3,3);
-    cout << "without force feedback" << endl;
+    cout << "!!! without force feedback !!!" << endl;
+
+    cout << endl;
+    cout << "Data of biWrist force=========================================" << endl;
+    cout << biWristForce6D.transpose() << endl;
+    cout << "Data of biFoot force=========================================" << endl;
+    cout << biFootForce6D.transpose() << endl;
+    cout << "==============================================================" << endl;
 
 
-    // cout << "biFootForce6D" << endl;
-    // cout << biFootForce6D.transpose() << endl;
-    // cout << "biWristForce6D" << endl;
-    // cout << biWristForce6D.transpose() << endl;
 
 
 
@@ -509,8 +512,9 @@ bool RobotController::taskControl(){
                     << "  simpleStatus: " << simpleStatus << std::endl; 
         exit(EXIT_FAILURE); 
     }
-        cout << endl << "tauOpt at timeCs of " << timeCs << endl;
+        cout << endl 
+        << "tauOpt at timeCs of " << timeCs << "======================================" << endl;
         akiaPrint1(tauOpt, NJ, 5, 5, 5, 1, 4, 4);
-
+        cout << "==============================================================" << endl;
     return true;
 }
