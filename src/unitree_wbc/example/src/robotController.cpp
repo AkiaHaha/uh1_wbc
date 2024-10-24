@@ -426,8 +426,8 @@ bool RobotController::taskControl(){
 
     footArmForceRef.segment(3,3) = biFootForce6D.segment(0,3);
     footArmForceRef.segment(9,3) = biFootForce6D.segment(3,3);
-    // footArmForceRef.segment(15,3) = biWristForce6D.segment(0,3);
-    // footArmForceRef.segment(21,3) = biWristForce6D.segment(3,3);
+    footArmForceRef.segment(15,3) = biWristForce6D.segment(0,3);
+    footArmForceRef.segment(21,3) = biWristForce6D.segment(3,3);
     // cout << "!!! without force feedback !!!" << endl;
 
     cout << endl;
