@@ -5,6 +5,11 @@
 #include <fstream>
 #include <iomanip>
 #include <stdexcept> 
+#include <csignal>
+#include <chrono>
+#include <thread>
+#include <unistd.h>
+
 
 #include "webotsInterface.h"
 #include "robotController.h"
@@ -14,7 +19,15 @@ using namespace std;
 
 bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub);
 
+void signalHandler(int signum) {
+    cout << "Interrupt signal (" << signum << ") received.\n";
+
+    exit(signum);
+}
+
 int main(int argc, char **argv) {
+    signal(SIGINT, signalHandler);
+
     ros::init(argc, argv, "webots_controller");
     ros::NodeHandle nh;
     ros::Publisher joint_pos_pub = nh.advertise<std_msgs::Float64MultiArray>("joint_positions", NJ);
@@ -28,7 +41,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     // timing
     int simCnt = 0;
     double simTime = 0;
-    const int goStandCnt = 1;
+    const int goStandCnt = 100;
     const double goStandTime = goStandCnt * SAMPLE_TIME;
     const int simStopCnt  = goStandCnt + 1000000;
     const double simStopTime = simStopCnt * SAMPLE_TIME;
