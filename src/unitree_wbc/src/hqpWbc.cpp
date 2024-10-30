@@ -177,19 +177,19 @@ bool HqpWbc::wbcSolve(){
     hqpUpdate();     // update QP solver
     nspSolve();
     for (int i = 0; i < nLevel; i++){
-        cout << "running in Level: " << i << endl;
+        // cout << "running in Level: " << i << endl;
         hqpUpdateLeveln(i);
 
         hqpSolveLeveln(i);
-        cout << "the qp solving code in level " << i << " is: " << statusCodeSolving.at(i) << endl;
+        // cout << "the qp solving code in level " << i << " is: " << statusCodeSolving.at(i) << endl;
 
         getResultOptLeveln(optVarStar.at(i), i);          
         if ( i > 0){
-            cout << "***--------***" << endl;
+            // cout << "***--------***" << endl;
             optVarStar.at(i) = optVarStar.at(i - 1) + nspMat.at(i - 1) *  optVarStar.at(i);
         }
-        cout << "the optVarStar at Level:" << i << endl;
-        cout << optVarStar.at(i).transpose() << endl;
+        // cout << "the optVarStar at Level:" << i << endl;
+        // cout << optVarStar.at(i).transpose() << endl;
     }
     return true;
 }
@@ -215,7 +215,7 @@ bool HqpWbc::createNewQP(){
 
     int iLevel = 0;
     for(auto level : priorityTaskNames){
-        cout << "level: " << iLevel << endl;
+        // cout << "level: " << iLevel << endl;
         for(auto item : level){
             auto iter = tasks.find(item);
             nVLevel.at(iLevel) = iter->second->varDof;
@@ -258,7 +258,7 @@ bool HqpWbc::createNewQP(){
     for (int i = 0; i != nLevel; i++){
         if (nVLevel.at(i) == 0){
             nVLevel.at(i) = *std::max_element(nVLevel.begin(),nVLevel.end());
-            std::cout << "Warning : QP empty in level " << i << "!" << std::endl;
+            // std::cout << "Warning : QP empty in level " << i << "!" << std::endl;
         } 
 
         sumNCLevel += nCLevel.at(i);
@@ -386,14 +386,14 @@ bool HqpWbc::calcHessianGradient(){
             weiVecLevel.at(iLevel).segment(startRow, iter->second->dim) = iter->second->wei;
             startRow += iter->second->dim;
         }
-        cout << "------taskMatLevel Matrix------ " << iLevel << endl;
-        cout << taskMatLevel.at(iLevel).transpose() << endl;
+        // cout << "------taskMatLevel Matrix------ " << iLevel << endl;
+        // cout << taskMatLevel.at(iLevel).transpose() << endl;
 
-        cout << "------taskVecLevel Vector------ " << iLevel << endl;
-        cout << taskVecLevel.at(iLevel).transpose() << endl;
+        // cout << "------taskVecLevel Vector------ " << iLevel << endl;
+        // cout << taskVecLevel.at(iLevel).transpose() << endl;
 
-        cout << "------weiVecLevel Vector------ " << iLevel << endl;
-        cout << weiVecLevel.at(iLevel).transpose() << endl;
+        // cout << "------weiVecLevel Vector------ " << iLevel << endl;
+        // cout << weiVecLevel.at(iLevel).transpose() << endl;
 
         startRow = 0;
         iLevel++;
@@ -412,14 +412,14 @@ bool HqpWbc::calcConstraintCoefficient(){
             ubCstrLevel.at(iLevel).segment(startRow, iter->second->dim) = iter->second->ubC;
             startRow += iter->second->dim;
         }
-        cout << "------cstrMatLevel Matrix------ " << iLevel << endl;
-        cout << cstrMatLevel.at(iLevel).transpose() << endl;
+        // cout << "------cstrMatLevel Matrix------ " << iLevel << endl;
+        // cout << cstrMatLevel.at(iLevel).transpose() << endl;
 
-        cout << "------lbCstrLevel Matrix------ " << iLevel << endl;
-        cout << lbCstrLevel.at(iLevel).transpose() << endl;
+        // cout << "------lbCstrLevel Matrix------ " << iLevel << endl;
+        // cout << lbCstrLevel.at(iLevel).transpose() << endl;
 
-        cout << "------ubCstrLevel Matrix------ " << iLevel << endl;
-        cout << ubCstrLevel.at(iLevel).transpose() << endl;
+        // cout << "------ubCstrLevel Matrix------ " << iLevel << endl;
+        // cout << ubCstrLevel.at(iLevel).transpose() << endl;
 
         startRow = 0;
         iLevel++;
@@ -445,8 +445,8 @@ bool HqpWbc::nspSolve(){//calculate nsp matrix;
                 nspMat.at(i) = nspMat.at(i -1) * (Eigen::MatrixXd::Identity(nVLevel.at(i), nVLevel.at(i)) - taskMatHatInvLevel.at(i) * taskMatHatLevel.at(i));
             }
         }
-        cout << "MSP Matrix at Level: " << i << endl;
-        cout << nspMat.at(i) << endl;
+        // cout << "MSP Matrix at Level: " << i << endl;
+        // cout << nspMat.at(i) << endl;
     }
     return true;
 }
@@ -457,37 +457,37 @@ bool HqpWbc::hqpUpdateLeveln(const int & iLevel){//update task and constraint in
         taskMatAll.at(iLevel) = taskMatLevel.at(iLevel);
         taskVecAll.at(iLevel) = taskVecLevel.at(iLevel);
 
-        cout << "------Projected Task Matrix A------ " << iLevel << endl;
-        cout << taskMatAll.at(iLevel).transpose() << endl;
+        // cout << "------Projected Task Matrix A------ " << iLevel << endl;
+        // cout << taskMatAll.at(iLevel).transpose() << endl;
 
-        cout << "------Projected Task Vector b------ " << iLevel << endl;
-        cout << taskVecAll.at(iLevel).transpose() << endl;
+        // cout << "------Projected Task Vector b------ " << iLevel << endl;
+        // cout << taskVecAll.at(iLevel).transpose() << endl;
 
     }else{
         taskMatAll.at(iLevel) = taskMatLevel.at(iLevel) * nspMat.at(iLevel -1);
         taskVecAll.at(iLevel) = taskVecLevel.at(iLevel) - taskMatLevel.at(iLevel) * optVarStar.at(iLevel -1);
         
-        cout << "------Projected Task Matrix A------ " << iLevel << endl;
-        cout << taskMatAll.at(iLevel).transpose() << endl;
+        // cout << "------Projected Task Matrix A------ " << iLevel << endl;
+        // cout << taskMatAll.at(iLevel).transpose() << endl;
 
-        cout << "------Projected Task Vector b------ " << iLevel << endl;
-        cout << taskVecAll.at(iLevel).transpose() << endl;
+        // cout << "------Projected Task Vector b------ " << iLevel << endl;
+        // cout << taskVecAll.at(iLevel).transpose() << endl;
     }
 
     weiVecAll.at(iLevel) = weiVecLevel.at(iLevel);
     taskMatAll.at(iLevel) = weiVecAll.at(iLevel).asDiagonal() * taskMatAll.at(iLevel);
     taskVecAll.at(iLevel) = weiVecAll.at(iLevel).asDiagonal() * taskVecAll.at(iLevel);
 
-    cout << "------Projected Task Matrix A------ " << iLevel << endl;
-    cout << taskMatAll.at(iLevel).transpose() << endl;
+    // cout << "------Projected Task Matrix A------ " << iLevel << endl;
+    // cout << taskMatAll.at(iLevel).transpose() << endl;
 
-    cout << "------Projected Task Vector b------ " << iLevel << endl;
-    cout << taskVecAll.at(iLevel).transpose() << endl;
+    // cout << "------Projected Task Vector b------ " << iLevel << endl;
+    // cout << taskVecAll.at(iLevel).transpose() << endl;
          
     /// Hessian matrix, H = A^T * A
     hessianMat.at(iLevel) = taskMatAll.at(iLevel).transpose() * taskMatAll.at(iLevel);
-    cout << "------Hessian Matrix------ " << iLevel << endl;
-    cout << hessianMat.at(iLevel).transpose() << endl;
+    // cout << "------Hessian Matrix------ " << iLevel << endl;
+    // cout << hessianMat.at(iLevel).transpose() << endl;
     
     std::ifstream inputFile("/home/ukia/gitRepo/uh1_wbc/src/unitree_wbc/config/controller.json");
     json jsonData;
@@ -498,8 +498,8 @@ bool HqpWbc::hqpUpdateLeveln(const int & iLevel){//update task and constraint in
     /// gradient vector, g = - A^T * b
     gradientVec.at(iLevel) = - taskMatAll.at(iLevel).transpose() * taskVecAll.at(iLevel);
     
-    cout << "------gradient Vector------ " << iLevel << endl;
-    cout << gradientVec.at(iLevel).transpose() << endl;
+    // cout << "------gradient Vector------ " << iLevel << endl;
+    // cout << gradientVec.at(iLevel).transpose() << endl;
 
     // ------------------------ Bounds & Constraints -----------------------------------------------
     int  startRow = 0;
@@ -511,14 +511,14 @@ bool HqpWbc::hqpUpdateLeveln(const int & iLevel){//update task and constraint in
     }
     cstrMatAllTrans.at(iLevel) = cstrMatAll.at(iLevel).transpose();
     
-    cout << "------cstrMatAllTrans------ " << iLevel << endl;
-    cout << cstrMatAll.at(iLevel).transpose() << endl;
+    // cout << "------cstrMatAllTrans------ " << iLevel << endl;
+    // cout << cstrMatAll.at(iLevel).transpose() << endl;
 
-    cout << "------lbCstr Vector------ " << iLevel << endl;
-    cout << lbCstrAll.at(iLevel).transpose() << endl;
+    // cout << "------lbCstr Vector------ " << iLevel << endl;
+    // cout << lbCstrAll.at(iLevel).transpose() << endl;
 
-    cout << "------ubCstrAll Vector------ " << iLevel << endl;
-    cout << ubCstrAll.at(iLevel).transpose() << endl;
+    // cout << "------ubCstrAll Vector------ " << iLevel << endl;
+    // cout << ubCstrAll.at(iLevel).transpose() << endl;
 
     return true;
 }
@@ -538,26 +538,26 @@ bool HqpWbc::hqpSolveLeveln(const int & iLevel){
         }else {
             initDone.at(iLevel) = true;
         }
-        cout << "------Hessian Matrix------" << endl;
-        cout << hessianMat.at(iLevel).transpose() << endl;
+        // cout << "------Hessian Matrix------" << endl;
+        // cout << hessianMat.at(iLevel).transpose() << endl;
 
-        cout << "------gradient Vector------" << endl;
-        cout << gradientVec.at(iLevel).transpose() << endl;
+        // cout << "------gradient Vector------" << endl;
+        // cout << gradientVec.at(iLevel).transpose() << endl;
 
-        cout << "------cstr Mat AllTrans------" << endl;
-        cout << cstrMatAllTrans.at(iLevel).transpose() << endl;
+        // cout << "------cstr Mat AllTrans------" << endl;
+        // cout << cstrMatAllTrans.at(iLevel).transpose() << endl;
 
-        cout << "------lower Bound Vec------" << endl;
-        cout << lowerBoundVec.at(iLevel).transpose() << endl;
+        // cout << "------lower Bound Vec------" << endl;
+        // cout << lowerBoundVec.at(iLevel).transpose() << endl;
 
-        cout << "------upper Bound Vec------" << endl;
-        cout << upperBoundVec.at(iLevel).transpose() << endl;
+        // cout << "------upper Bound Vec------" << endl;
+        // cout << upperBoundVec.at(iLevel).transpose() << endl;
 
-        cout << "------lb CstrAll------" << endl;
-        cout << lbCstrAll.at(iLevel).transpose() << endl;
+        // cout << "------lb CstrAll------" << endl;
+        // cout << lbCstrAll.at(iLevel).transpose() << endl;
 
-        cout << "------ub CstrAll------" << endl;
-        cout << ubCstrAll.at(iLevel).transpose() << endl;
+        // cout << "------ub CstrAll------" << endl;
+        // cout << ubCstrAll.at(iLevel).transpose() << endl;
 
     }else {
         nWSR.at(iLevel) = nWSRDes.at(iLevel);

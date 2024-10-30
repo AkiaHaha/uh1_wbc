@@ -2,7 +2,7 @@
 
 using namespace std;
 using json = nlohmann::json;
-// #define USING_HQP
+#define USING_HQP
 //=======================================================
 // Initialization of classes
 //=======================================================
@@ -34,18 +34,17 @@ RobotController::RobotController(){
     // Hqp
 #ifdef USING_HQP
     myWbc = new AGIROBOT::HqpWbc(nV, robotDynamics);
-    myWbc->addTask(ptrForce4, 2);
-    myWbc->addTask(ptrPosition, 1);
+    myWbc->addTask(ptrForce4, 0);
+    myWbc->addTask(ptrPosition, 0);
     myWbc->addTask(ptrPelvisPosRpy, 0);
     myWbc->addTask(ptrPelvisPosXyz, 0);
+    myWbc->addTask(ptrGblVelLimits, 0);
+    myWbc->addTask(ptrTorsoPosXyz, 0);
+    myWbc->addTask(ptrTorsoPosRpy, 0);
     myWbc->addConstraint(ptrDynamicConsistency, 0);
     myWbc->addConstraint(ptrFrictionCone, 0);
     myWbc->addConstraint(ptrCenterOfPressure, 0);
     myWbc->addConstraint(ptrJointTorqueSaturation, 0);
-    // myWbc->addTask(ptrGblVelLimits, 2);
-    // myWbc->addTask(ptrTorsoPosXyz, 1);
-    // myWbc->addTask(ptrTorsoPosRpy, 1);
-    // myWbc->addTask(ptrDynamic, 0);
 #else
     myWbc = new AGIROBOT::WqpWbc(nV, robotDynamics);
     myWbc->addTask(ptrPelvisPosRpy, 0);
@@ -431,9 +430,9 @@ bool RobotController::taskControl(){
     nWsrRes = intData.at(0);
     simpleStatus = intData.at(1);
     //``````````Only for Hqp``````````````````//
-    // double Nlevel = myWbc->getNlevel();
-    // for (int i = Nlevel; i < Nlevel*2; i++){
-    //     simpleStatus += intData.at(i);}
+    double Nlevel = myWbc->getNlevel();
+    for (int i = Nlevel; i < Nlevel*2; i++){
+        simpleStatus += intData.at(i);}
     //________________________________________//
     myWbc->getAuxiliaryDataDouble(doubleData);
     costOpt = doubleData.at(0);
