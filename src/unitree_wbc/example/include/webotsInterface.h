@@ -69,9 +69,9 @@ class Derivative {
 
 struct webotsState
 {
-    Eigen::VectorXd jointPosAct = Eigen::VectorXd::Zero(NJ);
-    Eigen::VectorXd jointVelAct = Eigen::VectorXd::Zero(NJ);
-    Eigen::VectorXd jointTorAct = Eigen::VectorXd::Zero(NJ);
+    Eigen::VectorXd jointPosAct = Eigen::VectorXd::Zero(NJ19);
+    Eigen::VectorXd jointVelAct = Eigen::VectorXd::Zero(NJ19);
+    Eigen::VectorXd jointTorAct = Eigen::VectorXd::Zero(NJ19);
     Eigen::VectorXd imuAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd footGrfAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd wristItaAct = Eigen::VectorXd::Zero(6);

@@ -6,12 +6,12 @@ using namespace std;
 //===========================================================================
 RobotDynamics::RobotDynamics() {
     // Basic elements
-    NJG = NG;
+    NJG = NG25;
     NJF = 6;  
-    NJJ = NJ;  
-    NJA = NJ;   
+    NJJ = NJ19;  
+    NJA = NJ19;   
     NJP = 0;  
-    NFC = NFCC4;  
+    NFC = NFCC24;  
  
     jntPositions = VectorNd :: Zero(NJG);
     jntVelocities = VectorNd :: Zero(NJG);
@@ -39,9 +39,6 @@ RobotDynamics::RobotDynamics() {
 
     torsoJacoTc.J = MatrixNd :: Zero(NJF, NJG);
     torsoJacoTc.JdotQdot = VectorNd :: Zero(NJF);
-
-    biContactJacoTc.J = MatrixNd :: Zero(12, NJG);
-    biContactJacoTc.JdotQdot = VectorNd :: Zero(12); 
 
     quadContactJacoTc.J = MatrixNd :: Zero(24, NJG);
     quadContactJacoTc.JdotQdot = VectorNd :: Zero(24); 
@@ -190,14 +187,12 @@ RobotDynamics::RobotDynamics() {
     rightArmSoleJacob = MatrixNd::Zero(NJF, NJG);
     leftLegSoleJacob = MatrixNd::Zero(NJF, NJG);
     rightLegSoleJacob = MatrixNd::Zero(NJF, NJG);
-    dualSoleJacob = MatrixNd::Zero(2*NJF, NJG);
     quadSoleJacob = MatrixNd::Zero(4*NJF, NJG);
 
     leftArmSoleJDotQDot = VectorNd::Zero(NJF);
     rightArmSoleJDotQDot = VectorNd::Zero(NJF);
     leftLegSoleJDotQDot = VectorNd::Zero(NJF);
     rightLegSoleJDotQDot = VectorNd::Zero(NJF);
-    dualSoleJDotQDot = VectorNd::Zero(2*NJF);
     quadSoleJDotQDot = VectorNd::Zero(4*NJF);
 }
 
@@ -245,8 +240,6 @@ bool RobotDynamics::calcWbcDependence(){
     calcPelvisTask();
     quadContactJacoTc.J = quadSoleJacob;
     quadContactJacoTc.JdotQdot = quadSoleJDotQDot;
-    biContactJacoTc.J = dualSoleJacob;
-    biContactJacoTc.JdotQdot = dualSoleJDotQDot;
     floatBaseJacoTc.J = pelvisJacob;
     floatBaseJacoTc.JdotQdot = pelvisJDotQDot;
     torsoJacoTc.J = torsoJacob;
@@ -285,8 +278,6 @@ bool RobotDynamics::calcSoleJacob() {
     CalcPointJacobian6D(*model, jntPositions, idRightSoleGround, Vector3d::Zero(), rightLegSoleJacob, false);
     CalcPointJacobian6D(*model, jntPositions, idLeftArmEnd, Vector3d::Zero(), leftArmSoleJacob, false);
     CalcPointJacobian6D(*model, jntPositions, idRightArmEnd, Vector3d::Zero(), rightArmSoleJacob, false);
-    dualSoleJacob.block(0, 0, 6, NJG) = leftLegSoleJacob;
-    dualSoleJacob.block(6, 0, 6, NJG) = rightLegSoleJacob;
 
     quadSoleJacob.block(0, 0, 6, NJG) = leftLegSoleJacob;
     quadSoleJacob.block(6, 0, 6, NJG) = rightLegSoleJacob;
@@ -300,8 +291,6 @@ bool RobotDynamics::calcSoleJDotQDot() {
     rightLegSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idRightSoleGround, Vector3d::Zero(), false);
     leftArmSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idLeftArmEnd, Vector3d::Zero(), false);
     rightArmSoleJDotQDot = CalcPointAcceleration6D(*model, jntPositions, jntVelocities, VectorNd::Zero(NJG), idRightArmEnd, Vector3d::Zero(), false);
-    dualSoleJDotQDot.head(6) = leftLegSoleJDotQDot;//D 24.5.22
-    dualSoleJDotQDot.tail(6) = rightLegSoleJDotQDot;
 
     quadSoleJDotQDot.head(6) = leftLegSoleJDotQDot;
     quadSoleJDotQDot.segment(6,6) = rightLegSoleJDotQDot;

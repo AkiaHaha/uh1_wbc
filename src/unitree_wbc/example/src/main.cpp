@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
 
     ros::init(argc, argv, "webots_controller");
     ros::NodeHandle nh;
-    ros::Publisher joint_pos_pub = nh.advertise<std_msgs::Float64MultiArray>("joint_positions", NJ);
+    ros::Publisher joint_pos_pub = nh.advertise<std_msgs::Float64MultiArray>("joint_positions", NJ19);
     ros::Publisher sim_info_pub = nh.advertise<std_msgs::Float64MultiArray>("sim_info", 1);
 
     runWebots(joint_pos_pub, sim_info_pub);
@@ -55,12 +55,12 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     RobotController RobotController;
 
     // vector //
-    Eigen::VectorXd standPosCmd = Eigen::VectorXd::Zero(NJ);
-    Eigen::VectorXd jointToqCmd = Eigen::VectorXd::Zero(NJ);
+    Eigen::VectorXd standPosCmd = Eigen::VectorXd::Zero(NJ19);
+    Eigen::VectorXd jointToqCmd = Eigen::VectorXd::Zero(NJ19);
 
-    Eigen::VectorXd jointPosInteg = Eigen::VectorXd::Zero(NJ);
-    Eigen::VectorXd jointPosAcc = Eigen::VectorXd::Zero(NJ);
-    Eigen::VectorXd jointPosAtStartCtrl = Eigen::VectorXd::Zero(NJ);
+    Eigen::VectorXd jointPosInteg = Eigen::VectorXd::Zero(NJ19);
+    Eigen::VectorXd jointPosAcc = Eigen::VectorXd::Zero(NJ19);
+    Eigen::VectorXd jointPosAtStartCtrl = Eigen::VectorXd::Zero(NJ19);
     
     // integrator
     Integrator integrator;
@@ -68,7 +68,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     // ros init
     std_msgs::Float64MultiArray joint_pos_msg;
     std_msgs::Float64MultiArray sim_info_msg;
-    joint_pos_msg.data.resize(NJ);
+    joint_pos_msg.data.resize(NJ19);
     sim_info_msg.data.resize(10);
 
     // simulation loopsim_information_msg
@@ -106,13 +106,13 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             //     flagStartCtrl = 1;
             // }
             // RobotController.getValueQdd(jointPosAcc);
-            // for (size_t i = 0; i < NJ; i++){
+            // for (size_t i = 0; i < NJ19; i++){
             //      jointPosInteg[i] = integrator.Integrate(jointPosAcc[i]);
             // }
             // jointPosInteg += jointPosAtStartCtrl;
 
             // //set data for ROS topic
-            // for (size_t i = 0; i < NJ; i++){
+            // for (size_t i = 0; i < NJ19; i++){
             //     // joint_pos_msg.data[i] = 10;
             //     // joint_pos_msg.data[i] = jointPosAcc[i];
             //     // joint_pos_msg.data[i] = jointToqCmd[i];

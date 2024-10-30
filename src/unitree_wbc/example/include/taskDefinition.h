@@ -5,7 +5,30 @@
 #include "task.h"
 #include "operation.h"
 
-class FloatingBaseDynamics: public AGIROBOT::Task{
+class Task{
+
+public:
+    Task(const std::string & taskName, int taskDim, int varDim);
+    virtual ~Task() = default;
+
+    std::string name;      
+    int priority{0};    
+    int dim{0};           
+    int varDof{0};         
+    Eigen::MatrixXd taskMatA;    
+    Eigen::VectorXd taskVecB;   
+    Eigen::VectorXd wei;     
+    Eigen::VectorXd ref;   
+
+    virtual bool setParameter(const std::vector<double> & params);
+    virtual bool update(const RobotDynamics & robot) = 0;
+    bool updateRefence(const Eigen::VectorXd & newRef);
+    bool updateWeight(const Eigen::VectorXd & newWei);
+
+};
+
+
+class FloatingBaseDynamics: public Task{
 public:
     /**
      * @brief Constructor
@@ -18,7 +41,7 @@ public:
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class CentroidalMomentum : public AGIROBOT::Task{
+class CentroidalMomentum : public Task{
 public:
     /**
      * @brief Constructor
@@ -31,7 +54,7 @@ public:
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class LinearMomentum : public AGIROBOT::Task{
+class LinearMomentum : public Task{
 public:
     /**
      * @brief Constructor
@@ -44,7 +67,7 @@ public:
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class AngularMomentum : public AGIROBOT::Task{
+class AngularMomentum : public Task{
 public:
     /**
      * @brief Constructor
@@ -57,7 +80,7 @@ public:
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class PelvisPosition: public AGIROBOT::Task{
+class PelvisPosition: public Task{
 public:
     /**
      * @brief Constructor
@@ -70,7 +93,7 @@ public:
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class PelvisPosRpy: public AGIROBOT::Task{
+class PelvisRpy: public Task{
 public:
     /**
      * @brief Constructor
@@ -78,12 +101,12 @@ public:
      * @param taskDim The dimension of Task
      * @param varDim The DoF of variables in the WBC problem
      */
-    PelvisPosRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~PelvisPosRpy() = default;
+    PelvisRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~PelvisRpy() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class PelvisPosXyz: public AGIROBOT::Task{
+class PelvisXyz: public Task{
 public:
     /**
      * @brief Constructor
@@ -91,12 +114,12 @@ public:
      * @param taskDim The dimension of Task
      * @param varDim The DoF of variables in the WBC problem
      */
-    PelvisPosXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~PelvisPosXyz() = default;
+    PelvisXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~PelvisXyz() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class TorsoPosRpy: public AGIROBOT::Task{
+class TorsoRpy: public Task{
 public:
     /**
      * @brief Constructor
@@ -104,12 +127,12 @@ public:
      * @param taskDim The dimension of Task
      * @param varDim The DoF of variables in the WBC problem
      */
-    TorsoPosRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~TorsoPosRpy() = default;
+    TorsoRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~TorsoRpy() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class TorsoPosXyz: public AGIROBOT::Task{
+class TorsoXyz: public Task{
 public:
     /**
      * @brief Constructor
@@ -117,12 +140,103 @@ public:
      * @param taskDim The dimension of Task
      * @param varDim The DoF of variables in the WBC problem
      */
-    TorsoPosXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~TorsoPosXyz() = default;
+    TorsoXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~TorsoXyz() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class QuadSolePosition : public AGIROBOT::Task{
+class FootXyz: public Task{
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     */
+    FootXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~FootXyz() = default;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
+}
+
+class FootRpy: public Task{
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     */
+    FootRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~FootRpy() = default;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
+}
+
+class ArmXyz: public Task{
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     */
+    ArmXyz(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}   
+    ~ArmXyz() = default;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
+}
+
+class ArmRpy: public Task{
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     */
+    ArmRpy(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}   
+    ~ArmRpy() = default;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
+}
+
+class FootForce : public Task{
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     */
+    FootForce(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~FootForce() = default;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
+};
+
+class ArmForce : public Task{
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     *  */
+    ArmForce(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~ArmForce() = default;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
+}
+
+class GVLimitation : public Task{
+public:
+    /**
+     * @brief Constructor
+     * @param taskName The unique identification of the Task: name
+     * @param taskDim The dimension of Task
+     * @param varDim The DoF of variables in the WBC problem
+     */
+    GVLimitation(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
+    ~GVLimitation() = default;
+    bool update(const AGIROBOT::RobotDynamics &robot) override;
+};
+
+class QuadSolePosition : public Task{
 public:
     /**
      * @brief Constructor
@@ -136,7 +250,7 @@ public:
 };
 
 
-class QuadSoleForce : public AGIROBOT::Task{
+class QuadSoleForce : public Task{
 public:
     /**
      * @brief Constructor
@@ -146,60 +260,6 @@ public:
      */
     QuadSoleForce(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
     ~QuadSoleForce() = default;
-    bool update(const AGIROBOT::RobotDynamics &robot) override;
-};
-
-
-class FootPosition : public AGIROBOT::Task{
-public:
-    /**
-     * @brief Constructor
-     * @param taskName The unique identification of the Task: name
-     * @param taskDim The dimension of Task
-     * @param varDim The DoF of variables in the WBC problem
-     */
-    FootPosition(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~FootPosition() = default;
-    bool update(const AGIROBOT::RobotDynamics &robot) override;
-};
-
-
-class FootForce : public AGIROBOT::Task{
-public:
-    /**
-     * @brief Constructor
-     * @param taskName The unique identification of the Task: name
-     * @param taskDim The dimension of Task
-     * @param varDim The DoF of variables in the WBC problem
-     */
-    FootForce(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~FootForce() = default;
-    bool update(const AGIROBOT::RobotDynamics &robot) override;
-};
-
-class FootForceChange : public AGIROBOT::Task{
-public:
-    /**
-     * @brief Constructor
-     * @param taskName The unique identification of the Task: name
-     * @param taskDim The dimension of Task
-     * @param varDim The DoF of variables in the WBC problem
-     */
-    FootForceChange(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~FootForceChange() = default;
-    bool update(const AGIROBOT::RobotDynamics &robot) override;
-};
-
-class GVLimitation : public AGIROBOT::Task{
-public:
-    /**
-     * @brief Constructor
-     * @param taskName The unique identification of the Task: name
-     * @param taskDim The dimension of Task
-     * @param varDim The DoF of variables in the WBC problem
-     */
-    GVLimitation(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~GVLimitation() = default;
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 

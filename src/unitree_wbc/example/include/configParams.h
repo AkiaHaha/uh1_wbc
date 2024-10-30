@@ -74,11 +74,11 @@ struct ConfigParams {
     Eigen::Vector3d weightPelvisRpy = Eigen::Vector3d::Zero();
     Eigen::Vector3d weightTorsoXyz = Eigen::Vector3d::Zero();
     Eigen::Vector3d weightTorsoRpy = Eigen::Vector3d::Zero();
-    Eigen::VectorXd weightFootArmPosition = Eigen::VectorXd::Zero(NFCC4);// @Daniel240521
+    Eigen::VectorXd weightFootArmPosition = Eigen::VectorXd::Zero(NFCC24);// @Daniel240521
     Eigen::VectorXd weightFootForce = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd weightFootForceChange = Eigen::VectorXd::Zero(NFCC2);
-    Eigen::VectorXd weightFootArmForce = Eigen::VectorXd::Zero(NFCC4);
-    Eigen::VectorXd weightFootArmForceChange = Eigen::VectorXd::Zero(NFCC4);
+    Eigen::VectorXd weightFootArmForce = Eigen::VectorXd::Zero(NFCC24);
+    Eigen::VectorXd weightFootArmForceChange = Eigen::VectorXd::Zero(NFCC24);
     Eigen::VectorXd weightFloatBaseDynamic = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd weightGVLimitation = Eigen::VectorXd::Constant(19,weightGVL);
 

@@ -104,7 +104,6 @@ public:
     RigidBodyDynamics::Math::MatrixNd eqCstrMatTau;                     ///< NJA*?, equality constraints : TauActuated = eqCstrMatTau * x^T + eqCstrMatTauBias, x is the generalized variables, e.g. NJA*(NJG+NFC), x = [Qddot, f_c]'
     RigidBodyDynamics::Math::VectorNd eqCstrMatTauBias;                 ///< NJA*1, equality constraints : TauActuated = eqCstrMatTau * x^T + eqCstrMatTauBias
 
-    JacobianTc biContactJacoTc;                                          ///< JacobianTc of contact point(s)
     JacobianTc quadContactJacoTc;                                          ///< JacobianTc of contact point(s)
 
     JacobianTc floatBaseJacoTc;                                        ///< JacobianTc of floating-base.

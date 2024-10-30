@@ -2,9 +2,9 @@ This is the wbc controller for Unitree H1 robot;
 Worked in ROS, GNU C+++, Eigen, QPOASES, RBDL;
 
 # Install  External Library
-    - QPOASES
-    - Eigen
-    - RBDL
+- QPOASES
+- Eigen
+- RBDL
 
 # Install gdb for debug
 - sudo apt install gdb
@@ -41,3 +41,6 @@ xOpt [6(Floating Base Degree), 19(Joints), 6(Left Foot Intact Wrench{Torque, For
 - twist
 - torque
 - force
+
+# Basic information of RBDL
+- Jacobians [Rpy, Xyz]

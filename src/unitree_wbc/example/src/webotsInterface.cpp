@@ -6,7 +6,7 @@ using namespace std;
 void WebotsRobot::initWebots()
 {
     // motors
-    legMotor.resize(NJ);
+    legMotor.resize(NJ19);
     legMotor[0] = robot->getMotor("left_hip_yaw_joint");
     legMotor[1] = robot->getMotor("left_hip_roll_joint");
     legMotor[2] = robot->getMotor("left_hip_pitch_joint");
@@ -28,7 +28,7 @@ void WebotsRobot::initWebots()
     legMotor[18] = robot->getMotor("right_elbow_joint");
     
     // motor sensors
-    legSensor.resize(NJ);
+    legSensor.resize(NJ19);
     legSensor[0] = robot->getPositionSensor("left_hip_yaw_joint_sensor");
     legSensor[1] = robot->getPositionSensor("left_hip_roll_joint_sensor");
     legSensor[2] = robot->getPositionSensor("left_hip_pitch_joint_sensor");
@@ -70,7 +70,7 @@ void WebotsRobot::initWebots()
     // ArmHandRight = robot->getFromDef("RightArmSole");
 
     // Enable sensors
-    for (int i = 0; i < NJ; i++) {
+    for (int i = 0; i < NJ19; i++) {
         legMotor[i]->enableTorqueFeedback(TIME_STEP);
         legSensor[i]->enable(TIME_STEP);
     }
@@ -86,8 +86,8 @@ void WebotsRobot::initWebots()
     for (int i = 0; i < 3; i++) {
         dRpy.at(i).init(SAMPLE_TIME, 1e-3, 0.);
     }
-    dJnt.resize(NJ);
-    for (int i = 0; i < NJ; i++) {
+    dJnt.resize(NJ19);
+    for (int i = 0; i < NJ19; i++) {
         dJnt.at(i).init(SAMPLE_TIME, 1e-3, 0.);
     }
 
@@ -108,11 +108,11 @@ bool WebotsRobot::readData(double simTime, webotsState & robotStateSim)
     
     // Motor vel
     if (simTime > SAMPLE_TIME - 1e-6 && simTime < SAMPLE_TIME + 1e-6){
-        for (int i = 0; i < NJ; i++) {
+        for (int i = 0; i < NJ19; i++) {
             dJnt.at(i).init(SAMPLE_TIME, 1e-3, robotStateSim.jointPosAct(i));
         }
     }
-    for (int i = 0; i < NJ; i++) {
+    for (int i = 0; i < NJ19; i++) {
         robotStateSim.jointVelAct(i) = dJnt.at(i).mSig(robotStateSim.jointPosAct(i));
     }
 
@@ -272,7 +272,7 @@ double Derivative :: mSig( double sigIn ) {
 }
 
 bool WebotsRobot::setMotorPos(const Eigen::VectorXd& jointPosTar) {
-    for (int i = 0; i < NJ; i++) {
+    for (int i = 0; i < NJ19; i++) {
         legMotor[i]->setPosition(jointPosTar(i, 0));
     }
     return true;
@@ -321,23 +321,23 @@ bool WebotsRobot::setMotorPosTau4(const Eigen::VectorXd& jointTauPosMixed) {
 }
 
 bool WebotsRobot::setMotorTau(const Eigen::VectorXd& jointTauTar) {
-    for (int i = 0; i < NJ; i++) {
+    for (int i = 0; i < NJ19; i++) {
         legMotor[i]->setTorque(jointTauTar(i, 0));
     }
     return true;
 }
 
 Eigen::VectorXd WebotsRobot::getMotorPos() {
-    Eigen::VectorXd Q = Eigen::VectorXd::Zero(NJ);
-    for (int i = 0; i < NJ; i++) {
+    Eigen::VectorXd Q = Eigen::VectorXd::Zero(NJ19);
+    for (int i = 0; i < NJ19; i++) {
         Q(i, 0) = legSensor[i]->getValue();
     }
     return Q;
 }
 
 Eigen::VectorXd WebotsRobot::getMotorTau() {
-    Eigen::VectorXd Tau = Eigen::VectorXd::Zero(NJ);
-    for (int i = 0; i < NJ; i++) {
+    Eigen::VectorXd Tau = Eigen::VectorXd::Zero(NJ19);
+    for (int i = 0; i < NJ19; i++) {
         Tau(i, 0) = legMotor[i]->getTorqueFeedback();
     }
     return Tau;

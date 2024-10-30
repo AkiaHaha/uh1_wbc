@@ -189,13 +189,13 @@ double Integrator::Integrate(double Qdd) {
 }
 
 Eigen::VectorXd fillVector(double firstValue, double secondValue) {
-    Eigen::VectorXd vector = Eigen::VectorXd::Zero(NFCC4);
+    Eigen::VectorXd vector = Eigen::VectorXd::Zero(NFCC24);
     
     for (int i = 0; i < 12; ++i) {
         vector(i) = firstValue;
     }
     
-    for (int i = 12; i < NFCC4; ++i) {
+    for (int i = 12; i < NFCC24; ++i) {
         vector(i) = secondValue;
     }
 

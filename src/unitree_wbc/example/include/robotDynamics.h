@@ -5,7 +5,6 @@
 #define TYPERIGHTSOLE 1
 #define GRAVITY_CONST 9.81
 
-//#include "AGIROBOT/robotDynamics.h"
 #include "dynamics.h"
 #include "operation.h"
 

@@ -32,8 +32,8 @@ bool FrictionCone::update(const AGIROBOT::RobotDynamics &robot){
                 0.0, 0.0, 0.0, -1.0, 0.0, -muStaticFriction,
                 0.0, 0.0, 0.0, 0.0, 1.0, -muStaticFriction,
                 0.0, 0.0, 0.0, 0.0, -1.0, -muStaticFriction;
-    cstrMatC.block(0, NG, 4, 6) = fricMat;
-    cstrMatC.block(4, NG+6, 4, 6) = fricMat;//@Danny240521
+    cstrMatC.block(0, NG25, 4, 6) = fricMat;
+    cstrMatC.block(4, NG25+6, 4, 6) = fricMat;//@Danny240521
     lbC  = -myInfinity * Eigen::VectorXd::Ones(8);
     ubC  = Eigen::VectorXd::Zero(8);
     return true;
@@ -64,8 +64,8 @@ bool CenterOfPressure::update(const AGIROBOT::RobotDynamics &robot){
                 0.0, 1.0, 0.0, 0.0, 0.0, -sole2Back * copFactor,
                 1.0, 0.0, 0.0, 0.0, 0.0, -sole2Left * copFactor,
                -1.0, 0.0, 0.0, 0.0, 0.0, -sole2Right * copFactor;
-    cstrMatC.block(0, NG, 4, 6) = copMat;
-    cstrMatC.block(4, NG+6, 4, 6) = copMat;//Daniel 5.22
+    cstrMatC.block(0, NG25, 4, 6) = copMat;
+    cstrMatC.block(4, NG25+6, 4, 6) = copMat;//Daniel 5.22
     lbC  = -myInfinity * Eigen::VectorXd::Ones(8);
     ubC  = Eigen::VectorXd::Zero(8);
     return true;

@@ -9,26 +9,30 @@
 
 #include "dynamics.h"
 
-#ifndef NG
-    #define NG 25
+#ifndef NG25
+    #define NG25 25
 #endif // DELTA-T
 
-#ifndef NJ
-    #define NJ 19
+#ifndef NJ19
+    #define NJ19 19
 #endif // DELTA-T
 
-#ifndef NFCC4
-    #define NFCC4 24
+#ifndef NFCC24
+    #define NFCC24 24
 #endif // DELTA-T
 
 #ifndef NFCC2
     #define NFCC2 12
 #endif // DELTA-T
 
-#ifndef NV
-    #define NV 49 //Force@@
-    // #define NV 37 //Force@@
+#ifndef NV49
+    #define NV49 49 //Force@@
 #endif // DELTA-T
+
+#ifndef NV25
+    #define NV25 25 //Force@@
+#endif // DELTA-T
+
 
 void akiaPrint1(const Eigen::VectorXd &vector, int length, int numRows, ...);
 std::string akiaPrint2(const Eigen::VectorXd &vector, int length, int numRows, ...);

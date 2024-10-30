@@ -122,7 +122,10 @@
     "any": "cpp",
     "codecvt": "cpp",
     "filesystem": "cpp",
-    "core": "cpp"
+    "core": "cpp",
+    "regex": "cpp",
+    "csignal": "cpp",
+    "shared_mutex": "cpp"
   },
   "python.autoComplete.extraPaths": [
     "/home/ukia/ustc_ws/devel/lib/python3/dist-packages",

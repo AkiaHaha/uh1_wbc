@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <memory>
 
 #include <Eigen/Dense>
 
@@ -49,21 +50,23 @@ public:
     bool getValueQdd(Eigen::VectorXd & Qdd);
 
 private:
+    std::unique_ptr<RobotDynamics> robotDynamics; 
+    std::unique_ptr<AGIROBOT::HqpWbc> myWbc;
     ConfigParams configParams;
     webotsState robotStateSim;
     bool stateEstimation(webotsState & robotStateSim);                         
     bool motionPlan();
+    bool calcRef();
     bool taskControl();
     RobotDynamics * robotDynamics;
     AGIROBOT::Wbc * myWbc;
 
     int stanceLeg{1};                       // 1: right; 0:left
-    double timeCs{0.0};                     // time of CS (Control System)
-    int tick{0};                            // the tick-tack for time accumulation
     double time{0.0};                       // run time (sec) for current behavior
-    int nJg{NG};
-    int nJa{NJ};
-    int nFc{NFCC4};
+    int nJg{NG25};
+    int nJa{NJ19};
+    int nFc{NFCC24};
+    int nV{NV25};
     double dsp{};
     
     Eigen::VectorXd biFootForce6D = Eigen::VectorXd::Zero(6);
@@ -150,19 +153,18 @@ private:
     Eigen::Vector3d pelvisRpyRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d torsoXyzRef = Eigen::Vector3d::Zero();
     Eigen::Vector3d torsoRpyRef = Eigen::Vector3d::Zero();
-    Eigen::VectorXd footArmPosRef = Eigen::VectorXd::Zero(NFCC4);//@Danny
+    Eigen::VectorXd footArmPosRef = Eigen::VectorXd::Zero(NFCC24);//@Danny
     Eigen::VectorXd footForceRef = Eigen::VectorXd::Zero(NFCC2);
     Eigen::VectorXd footForceChangeRef = Eigen::VectorXd::Zero(NFCC2);
-    Eigen::VectorXd footArmForceRef = Eigen::VectorXd::Zero(NFCC4);
-    Eigen::VectorXd footArmForceChangeRef = Eigen::VectorXd::Zero(NFCC4);
+    Eigen::VectorXd footArmForceRef = Eigen::VectorXd::Zero(NFCC24);
+    Eigen::VectorXd footArmForceChangeRef = Eigen::VectorXd::Zero(NFCC24);
     Eigen::VectorXd floatBaseDynamicRef = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd GVLimitationRef = Eigen::VectorXd::Zero(19);
 
     // Result of QP
-    int nV{NV};
     Eigen::VectorXd varOpt = Eigen::VectorXd::Zero(nV);
     Eigen::VectorXd qDDotOpt = Eigen::VectorXd::Zero(nJg);
-    Eigen::VectorXd forceOpt = Eigen::VectorXd::Zero(NFCC4);//Force
+    Eigen::VectorXd forceOpt = Eigen::VectorXd::Zero(NFCC24);//Force
     Eigen::VectorXd tauOpt = Eigen::VectorXd::Zero(nJa);
     int simpleStatus{0};       // 0: solve; 1: fail
     int nWsrRes{0};            // the number of working set recalculations actually performed
