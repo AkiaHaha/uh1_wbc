@@ -149,18 +149,6 @@ public:
     bool update(const AGIROBOT::RobotDynamics &robot) override;
 };
 
-class QuadSoleForceChange : public AGIROBOT::Task{
-public:
-    /**
-     * @brief Constructor
-     * @param taskName The unique identification of the Task: name
-     * @param taskDim The dimension of Task
-     * @param varDim The DoF of variables in the WBC problem
-     */
-    QuadSoleForceChange(const std::string & taskName, int taskDim, int varDim) : Task(taskName, taskDim, varDim){}
-    ~QuadSoleForceChange() = default;
-    bool update(const AGIROBOT::RobotDynamics &robot) override;
-};
 
 class FootPosition : public AGIROBOT::Task{
 public:

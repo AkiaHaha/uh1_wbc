@@ -16,7 +16,6 @@ RobotController::RobotController(){
     AGIROBOT::Task * ptrTorsoPosRpy = new TorsoPosRpy("TorsoPosRpy", 3, nV);
     AGIROBOT::Task * ptrTorsoPosXyz = new TorsoPosXyz("TorsoPosXyz", 3, nV);
     AGIROBOT::Task * ptrForce4 = new QuadSoleForce("Force4", NFCC4, nV);
-    AGIROBOT::Task * ptrForceChange4 = new QuadSoleForceChange("ForceChange4", NFCC4, nV);
     AGIROBOT::Task * ptrPosition = new QuadSolePosition("Position", NFCC4, nV);
     AGIROBOT::Task * ptrDynamic = new FloatingBaseDynamics("Dynamics", 6, nV);
     AGIROBOT::Task * ptrGblVelLimits = new GVLimitation("GVLimitation", 19, nV); 
@@ -55,7 +54,6 @@ RobotController::RobotController(){
     myWbc->addTask(ptrTorsoPosRpy, 0);
     myWbc->addTask(ptrTorsoPosXyz, 0);
     myWbc->addTask(ptrForce4, 0);
-    myWbc->addTask(ptrForceChange4, 0);
     myWbc->addTask(ptrPosition, 0);
     myWbc->addTask(ptrDynamic, 0);
     myWbc->addTask(ptrGblVelLimits, 0);
@@ -237,36 +235,6 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     biFootForce6D = robotStateSim.footGrfAct;
     biWristForce6D = robotStateSim.wristItaAct;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //_____________________________________________________________//
     return true;
 }
@@ -436,35 +404,6 @@ bool RobotController::taskControl(){
     // cout << "Data of biFoot force=========================================" << endl;
     // cout << biFootForce6D.transpose() << endl;
     // cout << "==============================================================" << endl;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     //============================================================

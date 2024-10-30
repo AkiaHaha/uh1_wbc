@@ -25,12 +25,6 @@ bool AngularMomentum::update(const AGIROBOT::RobotDynamics &robot){
     return true;
 } 
 
-bool PelvisPosition::update(const AGIROBOT::RobotDynamics &robot){
-    taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J;
-    taskVecB = ref - robot.floatBaseJacoTc.JdotQdot;
-    return true;
-}
-
 bool PelvisPosRpy::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.floatBaseJacoTc.J.topRows(3);
     taskVecB = ref - robot.floatBaseJacoTc.JdotQdot.head(3);
@@ -73,16 +67,12 @@ bool FootForceChange::update(const AGIROBOT::RobotDynamics &robot){
     return true;
 }
 
-bool QuadSoleForceChange::update(const AGIROBOT::RobotDynamics &robot){
-    taskMatA.rightCols(robot.NFC) = Eigen::MatrixXd::Identity(robot.NFC, robot.NFC);
-    taskVecB = ref;
-    return true;
-}
 bool QuadSoleForce::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.rightCols(robot.NFC) = Eigen::MatrixXd::Identity(robot.NFC, robot.NFC);
     taskVecB = ref;
     return true;
 }
+
 bool QuadSolePosition::update(const AGIROBOT::RobotDynamics &robot){
     taskMatA.leftCols(robot.NJG) = robot.quadContactJacoTc.J;
     taskVecB = ref - robot.quadContactJacoTc.JdotQdot;
