@@ -17,7 +17,6 @@ RobotController::RobotController(){
     AGIROBOT::Task * ptrTorsoPosXyz = new TorsoPosXyz("TorsoPosXyz", 3, nV);
     AGIROBOT::Task * ptrForce4 = new QuadSoleForce("Force4", NFCC4, nV);
     AGIROBOT::Task * ptrPosition = new QuadSolePosition("Position", NFCC4, nV);
-    AGIROBOT::Task * ptrDynamic = new FloatingBaseDynamics("Dynamics", 6, nV);
     AGIROBOT::Task * ptrGblVelLimits = new GVLimitation("GVLimitation", 19, nV); 
     AGIROBOT::Constraint * ptrDynamicConsistency = new DynamicConsistency("DynamicConsistency", 6, nV);
     AGIROBOT::Constraint * ptrFrictionCone = new FrictionCone("FrictionCone", 8, nV);
@@ -55,7 +54,6 @@ RobotController::RobotController(){
     myWbc->addTask(ptrTorsoPosXyz, 0);
     myWbc->addTask(ptrForce4, 0);
     myWbc->addTask(ptrPosition, 0);
-    myWbc->addTask(ptrDynamic, 0);
     myWbc->addTask(ptrGblVelLimits, 0);
     myWbc->addConstraint(ptrDynamicConsistency, 0);
     myWbc->addConstraint(ptrFrictionCone, 0);
@@ -418,7 +416,6 @@ bool RobotController::taskControl(){
     myWbc->updateTask("Position", footArmPosRef, configParams.weightFootArmPosition);
     myWbc->updateTask("Force4", footArmForceRef, configParams.weightFootArmForce);
     myWbc->updateTask("GVLimitation", GVLimitationRef, configParams.weightGVLimitation);
-    myWbc->updateTask("Dynamics", floatBaseDynamicRef, configParams.weightFloatBaseDynamic);
     myWbc->updateConstraint("DynamicConsistency");
     myWbc->updateConstraint("FrictionCone");
     myWbc->updateConstraint("CenterOfPressure");
