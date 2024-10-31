@@ -84,8 +84,8 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             standPosCmd << 0, 0, -0.3, 0.8, -0.46, //left leg--RYP
                            0, 0, -0.3, 0.8, -0.46,//right leg
                            0,                     //pelvis
-                           0, 0, 0, 0,  //left arm--PRY
-                           0, 0, 0, 0; //right arm
+                           0, 0.172, -0.05, 0,  //left arm--PRY
+                           0, -0.172, 0.05, 0; //right arm
 
             // standPosCmd << 0, 0, 0, 0, 0, //left leg--RYP
             //                0, 0, 0, 0, 0,//right leg

@@ -41,3 +41,12 @@ xOpt [6(Floating Base Degree), 19(Joints), 6(Left Foot Intact Wrench{Torque, For
 - twist
 - torque
 - force
+
+# Branch Declaration
+Test for the init pos of arm;
+
+- Issue: When exe the task of squating while carrying the box, the hand will touch the knee so the motion will be broken; And then it couldn't put the box on the ground;
+
+- Solution: The init pos of the arm is not good enough, try to open the arms so that when carrying heavy objects and dropping them, the wrist position is outside the knee range.
+
+- Result: The stability is broken once starting the simulation, and didn't know the accurate reason.
