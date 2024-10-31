@@ -41,7 +41,7 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     // timing
     int simCnt = 0;
     double simTime = 0;
-    const int goStandCnt = 5;
+    const int goStandCnt = 50;
     const double goStandTime = goStandCnt * SAMPLE_TIME;
     const int simStopCnt  = goStandCnt + 1000000;
     const double simStopTime = simStopCnt * SAMPLE_TIME;
@@ -86,6 +86,8 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
                            0,                     //pelvis
                            0, 0.172, -0.05, 0,  //left arm--PRY
                            0, -0.172, 0.05, 0; //right arm
+                        //    0,  0.0,  0.0, 0,  //left arm--PRY
+                        //    0, -0.0, 0.0, 0; //right arm
 
             // standPosCmd << 0, 0, 0, 0, 0, //left leg--RYP
             //                0, 0, 0, 0, 0,//right leg

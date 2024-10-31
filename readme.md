@@ -50,3 +50,11 @@ Test for the init pos of arm;
 - Solution: The init pos of the arm is not good enough, try to open the arms so that when carrying heavy objects and dropping them, the wrist position is outside the knee range.
 
 - Result: The stability is broken once starting the simulation, and didn't know the accurate reason.
+
+
+pelvisUpDown":-0.5
+"pelvisForward":-0.04,
+"pitchApt":1.02,
+"motionFrq":1,
+"armForward":0.3,
+"armUpDown"-0.8,
