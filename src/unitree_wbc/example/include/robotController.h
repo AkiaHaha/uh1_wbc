@@ -67,8 +67,6 @@ private:
     double mPlanPitch{};
     double mPlanSinUpDown{};
     double mPlanSinUpDownDot{};
-    double mPlanSinDownUp{};
-    double mPlanSinDownUpDot{};
     
     Eigen::VectorXd biFootForce6D = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd biWristForce6D = Eigen::VectorXd::Zero(6);

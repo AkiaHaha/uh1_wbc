@@ -11,10 +11,10 @@ RobotController::RobotController(){
     robotDynamics = new RobotDynamics();
     
     // Instantiate task & constraint 
-    AGIROBOT::Task * ptrPelvisPosRpy = new PelvisPosRpy("PelvisPosRpy", 3, nV);
+    // AGIROBOT::Task * ptrPelvisPosRpy = new PelvisPosRpy("PelvisPosRpy", 3, nV);
     AGIROBOT::Task * ptrPelvisPosXyz = new PelvisPosXyz("PelvisPosXyz", 3, nV);
     AGIROBOT::Task * ptrTorsoPosRpy = new TorsoPosRpy("TorsoPosRpy", 3, nV);
-    AGIROBOT::Task * ptrTorsoPosXyz = new TorsoPosXyz("TorsoPosXyz", 3, nV);
+    // AGIROBOT::Task * ptrTorsoPosXyz = new TorsoPosXyz("TorsoPosXyz", 3, nV);
     AGIROBOT::Task * ptrForce4 = new QuadSoleForce("Force4", NFCC4, nV);
     AGIROBOT::Task * ptrPosition = new QuadSolePosition("Position", NFCC4, nV);
     AGIROBOT::Task * ptrGblVelLimits = new GVLimitation("GVLimitation", 19, nV); 
@@ -47,10 +47,10 @@ RobotController::RobotController(){
     myWbc->addConstraint(ptrJointTorqueSaturation, 0);
 #else
     myWbc = new AGIROBOT::WqpWbc(nV, robotDynamics);
-    myWbc->addTask(ptrPelvisPosRpy, 0);
+    // myWbc->addTask(ptrPelvisPosRpy, 0);
     myWbc->addTask(ptrPelvisPosXyz, 0);
     myWbc->addTask(ptrTorsoPosRpy, 0);
-    myWbc->addTask(ptrTorsoPosXyz, 0);
+    // myWbc->addTask(ptrTorsoPosXyz, 0);
     myWbc->addTask(ptrForce4, 0);
     myWbc->addTask(ptrPosition, 0);
     myWbc->addTask(ptrGblVelLimits, 0);
@@ -246,12 +246,12 @@ bool RobotController::motionPlan(){// @Daniel240523
         mPlanPitch = pelvisTwistInit(1)-configParams.pitchApt*(sin((configParams.motionFrq*time+0.5)*PI)-1);
 
     pelvisTwistTgt   << 0.0, mPlanPitch, 0.0,
-                        pelvisTwistInit(3), pelvisTwistInit(4), pelvisTwistInit(5)+configParams.pelvisUpDown*mPlanSinDownUp,
+                        pelvisTwistInit(3), pelvisTwistInit(4), pelvisTwistInit(5)+configParams.pelvisUpDown*mPlanSinUpDown,
                         0.0, 0.0, 0.0,
                         0.0, 0.0, configParams.pelvisUpDown*PI*cos((time+0.5)*PI);
 
     torsoTwistTgt    << 0.0, mPlanPitch, 0.0,                
-                        torsoTwistInit(3), torsoTwistInit(4), torsoTwistInit(5)+configParams.pelvisUpDown*mPlanSinDownUp,
+                        torsoTwistInit(3), torsoTwistInit(4), torsoTwistInit(5)+configParams.pelvisUpDown*mPlanSinUpDown,
                         0.0, 0.0, 0.0,
                         0.0, 0.0, configParams.pelvisUpDown*PI*cos((time+0.5)*PI);
 
@@ -262,52 +262,50 @@ bool RobotController::motionPlan(){// @Daniel240523
                         Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero();
 
     leftArmTwistTgt <<  leftArmTwistInit.head(3),                        
-                        leftArmTwistInit(3), leftArmTwistInit(4), leftArmTwistInit(5)+configParams.pelvisUpDown*mPlanSinDownUp,
+                        leftArmTwistInit(3), leftArmTwistInit(4), leftArmTwistInit(5)+configParams.pelvisUpDown*mPlanSinUpDown,
                         Eigen::Vector3d::Zero(),
                         leftArmTwistInit(9), leftArmTwistInit(10), leftArmTwistInit(11)+configParams.pelvisUpDown*PI*cos((time+0.5)*PI);
 
     rightArmTwistTgt << rightArmTwistInit.head(3),
-                        rightArmTwistInit(3), rightArmTwistInit(4), rightArmTwistInit(5)+configParams.pelvisUpDown*mPlanSinDownUp,
+                        rightArmTwistInit(3), rightArmTwistInit(4), rightArmTwistInit(5)+configParams.pelvisUpDown*mPlanSinUpDown,
                         Eigen::Vector3d::Zero(),
                         rightArmTwistInit(9), rightArmTwistInit(10), rightArmTwistInit(11)+configParams.pelvisUpDown*PI*cos((time+0.5)*PI);
 #else
-    mPlanSinDownUp = 0.5*sin((configParams.motionFrq*time+0.5)*PI)-0.5;
     mPlanSinUpDown = 0.5*sin((configParams.motionFrq*time-0.5)*PI)+0.5;
-    mPlanSinDownUpDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*time+0.5)*PI);
     mPlanSinUpDownDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*time-0.5)*PI);
     
     // Pelvis
-    xyzPelvisTgt << xyzPelvisInit(0)+configParams.pelvisForward*mPlanSinDownUp, 
+    xyzPelvisTgt << xyzPelvisInit(0)+configParams.pelvisForward*mPlanSinUpDown, 
                     xyzPelvisInit(1),
-                    xyzPelvisInit(2)+configParams.pelvisUpDown*mPlanSinDownUp;
+                    xyzPelvisInit(2)+configParams.pelvisUpDown*mPlanSinUpDown;
 
-    xyzDotPelvisTgt << configParams.pelvisForward*mPlanSinDownUpDot,
+    xyzDotPelvisTgt << configParams.pelvisForward*mPlanSinUpDownDot,
                        0.0,
-                       configParams.pelvisUpDown*mPlanSinDownUpDot;
+                       configParams.pelvisUpDown*mPlanSinUpDownDot;
 
     rpyPelvisTgt << 0.0, 
-                    rpyPelvisInit(1)+configParams.pitchApt*mPlanSinDownUp, 
+                    rpyPelvisInit(1)+configParams.pitchApt*mPlanSinUpDown, 
                     0.0;
-                    
+
     rpyDotPelvisTgt <<  0.0,
-                        configParams.pitchApt*mPlanSinDownUpDot,
+                        configParams.pitchApt*mPlanSinUpDownDot,
                         0.0;
 
     // Torso
-    xyzTorsoTgt << xyzTorsoInit(0)+configParams.torsoForward*mPlanSinDownUp, 
+    xyzTorsoTgt << xyzTorsoInit(0)+configParams.torsoForward*mPlanSinUpDown, 
                     xyzTorsoInit(1), 
-                    xyzTorsoInit(2)+configParams.torsoUpDown*mPlanSinDownUp;
+                    xyzTorsoInit(2)+configParams.torsoUpDown*mPlanSinUpDown;
 
-    xyzDotTorsoTgt <<   configParams.torsoForward*mPlanSinDownUpDot,
+    xyzDotTorsoTgt <<   configParams.torsoForward*mPlanSinUpDownDot,
                         0.0, 
-                        configParams.torsoUpDown*mPlanSinDownUpDot;
+                        configParams.torsoUpDown*mPlanSinUpDownDot;
 
     rpyTorsoTgt <<  0.0, 
-                    rpyTorsoInit(1)+configParams.pitchApt*mPlanSinDownUp, 
+                    rpyTorsoInit(1)+configParams.pitchApt*mPlanSinUpDown, 
                     0.0;
 
     rpyDotTorsoTgt <<   0.0, 
-                        configParams.pitchApt*mPlanSinDownUpDot, 
+                        configParams.pitchApt*mPlanSinUpDownDot, 
                         0.0;
 
     // LeftFoot
@@ -326,21 +324,21 @@ bool RobotController::motionPlan(){// @Daniel240523
     rpyArmTgt[0] = rpyArmInit[0];
     xyzArmTgt[0] << xyzArmInit[0].x()+configParams.armForward*mPlanSinUpDown,
                     xyzArmInit[0].y(), 
-                    xyzArmInit[0].z()+configParams.armUpDown*mPlanSinDownUp;
+                    xyzArmInit[0].z()+configParams.armUpDown*mPlanSinUpDown;
     rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
     xyzDotArmTgt[0] << xyzDotArmInit[0].x()+configParams.armForward*mPlanSinUpDownDot, 
                        xyzDotArmInit[0].y(),
-                       xyzDotArmInit[0].z()+configParams.armUpDown*mPlanSinDownUpDot;
+                       xyzDotArmInit[0].z()+configParams.armUpDown*mPlanSinUpDownDot;
 
     // RightArm
     rpyArmTgt[1] = rpyArmInit[1];
     xyzArmTgt[1] << xyzArmInit[1].x()+configParams.armForward*mPlanSinUpDown,
                     xyzArmInit[1].y(), 
-                    xyzArmInit[1].z()+configParams.armUpDown*mPlanSinDownUp;
+                    xyzArmInit[1].z()+configParams.armUpDown*mPlanSinUpDown;
     rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
     xyzDotArmTgt[1] << xyzDotArmInit[1].x()+configParams.armForward*mPlanSinUpDownDot, 
                        xyzDotArmInit[1].y(),
-                       xyzDotArmInit[1].z()+configParams.armUpDown*mPlanSinDownUpDot;
+                       xyzDotArmInit[1].z()+configParams.armUpDown*mPlanSinUpDownDot;
 #endif
     return true;
 }
@@ -446,10 +444,10 @@ bool RobotController::taskControl(){
     footArmForceRef = forceOpt;
 
     // Update task & constraint & bounds        
-    myWbc->updateTask("PelvisPosRpy", pelvisRpyRef, configParams.weightPelvisRpy);
+    // myWbc->updateTask("PelvisPosRpy", pelvisRpyRef, configParams.weightPelvisRpy);
     myWbc->updateTask("PelvisPosXyz", pelvisXyzRef, configParams.weightPelvisXyz);
     myWbc->updateTask("TorsoPosRpy", torsoRpyRef, configParams.weightTorsoRpy);
-    myWbc->updateTask("TorsoPosXyz", torsoXyzRef, configParams.weightTorsoXyz);
+    // myWbc->updateTask("TorsoPosXyz", torsoXyzRef, configParams.weightTorsoXyz);
     myWbc->updateTask("Position", footArmPosRef, configParams.weightFootArmPosition);
     myWbc->updateTask("Force4", footArmForceRef, configParams.weightFootArmForce);
     myWbc->updateTask("GVLimitation", GVLimitationRef, configParams.weightGVLimitation);
