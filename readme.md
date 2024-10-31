@@ -43,7 +43,6 @@ xOpt [6(Floating Base Degree), 19(Joints), 6(Left Foot Intact Wrench{Torque, For
 - force
 
 # Drafts
-
     "pelvisUpDown": -0.65,
     "pelvisForward": -0.05,
     "-----------------------":0,
