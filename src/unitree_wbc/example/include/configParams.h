@@ -28,7 +28,7 @@ struct ConfigParams {
     double weightTorsoX, weightTorsoYY, weightTorsoZ, weightTorsoR, weightTorsoP, weightTorsoY;
 
     // Params for motion plan
-    double pelvisUpDown, pelvisForward, torsoUpDown, torsoForward, pitchApt, motionFrq, armForward, armUpDown; 
+    double pelvisUpDown, pelvisForward, torsoUpDown, torsoForward, pitchApt, motionFrq, armForward, armUpDown, armAside; 
 
     // PD gains
     Eigen::Vector3d kpPelvisXyz = Eigen::Vector3d::Zero();
@@ -273,5 +273,6 @@ struct ConfigParams {
         motionFrq = jsonData["motionFrq"];
         armForward = jsonData["armForward"];
         armUpDown = jsonData["armUpDown"];
+        armAside = jsonData["armAside"];
     }
 };

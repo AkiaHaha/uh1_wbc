@@ -323,21 +323,21 @@ bool RobotController::motionPlan(){// @Daniel240523
     // LeftArm
     rpyArmTgt[0] = rpyArmInit[0];
     xyzArmTgt[0] << xyzArmInit[0].x()+configParams.armForward*mPlanSinUpDown,
-                    xyzArmInit[0].y(), 
+                    xyzArmInit[0].y()+configParams.armAside*mPlanSinUpDown, 
                     xyzArmInit[0].z()+configParams.armUpDown*mPlanSinUpDown;
     rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
     xyzDotArmTgt[0] << xyzDotArmInit[0].x()+configParams.armForward*mPlanSinUpDownDot, 
-                       xyzDotArmInit[0].y(),
+                       xyzDotArmInit[0].y()+configParams.armAside*mPlanSinUpDownDot,
                        xyzDotArmInit[0].z()+configParams.armUpDown*mPlanSinUpDownDot;
 
     // RightArm
     rpyArmTgt[1] = rpyArmInit[1];
     xyzArmTgt[1] << xyzArmInit[1].x()+configParams.armForward*mPlanSinUpDown,
-                    xyzArmInit[1].y(), 
+                    xyzArmInit[1].y()+configParams.armAside*mPlanSinUpDown, 
                     xyzArmInit[1].z()+configParams.armUpDown*mPlanSinUpDown;
     rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
     xyzDotArmTgt[1] << xyzDotArmInit[1].x()+configParams.armForward*mPlanSinUpDownDot, 
-                       xyzDotArmInit[1].y(),
+                       xyzDotArmInit[1].y()+configParams.armAside*mPlanSinUpDownDot,
                        xyzDotArmInit[1].z()+configParams.armUpDown*mPlanSinUpDownDot;
 #endif
     return true;

@@ -6,6 +6,7 @@
     "motionFrq": 1,
     "armForward": 0.25,
     "armUpDown": -0.82,
+    "armAside": 0.0,
     "kpRPY------------":0,
     "kpPelvisR": 10.0,
     "kpPelvisP": 600.0,
