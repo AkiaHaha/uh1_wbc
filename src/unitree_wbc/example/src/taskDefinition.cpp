@@ -80,7 +80,7 @@ bool QuadSolePosition::update(const AGIROBOT::RobotDynamics &robot){
 }
 
 bool GVLimitation::update(const AGIROBOT::RobotDynamics &robot){
-    taskMatA.block(0,6,19,19) = 0.001*Eigen::MatrixXd::Identity(19,19);
+    taskMatA.block(0,6,19,19) = 0.004*Eigen::MatrixXd::Identity(19,19);
     // taskMatA.block(0,6,19,19) = 6*Eigen::MatrixXd::Identity(19,19);
     taskVecB = ref;
     return true;
