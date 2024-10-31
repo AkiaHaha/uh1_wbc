@@ -2,7 +2,7 @@
 
 using namespace std;
 using json = nlohmann::json;
-#define USING_HQP
+// #define USING_HQP
 //=======================================================
 // Initialization of classes
 //=======================================================
@@ -243,17 +243,17 @@ bool RobotController::motionPlan(){// @Daniel240523
     
 #ifdef USING_TWIST
     if(time <= 1000)
-        dsp = pelvisTwistInit(1)-configParams.pitchApt*(sin((configParams.pitchFrq*time+0.5)*PI)-1);
+        mPlanPitch = pelvisTwistInit(1)-configParams.pitchApt*(sin((configParams.motionFrq*time+0.5)*PI)-1);
 
-    pelvisTwistTgt   << 0.0, dsp, 0.0,
-                        pelvisTwistInit(3), pelvisTwistInit(4), pelvisTwistInit(5)+configParams.height*(sin((time+0.5)*PI)-1),
+    pelvisTwistTgt   << 0.0, mPlanPitch, 0.0,
+                        pelvisTwistInit(3), pelvisTwistInit(4), pelvisTwistInit(5)+configParams.pelvisUpDown*mPlanSinDownUp,
                         0.0, 0.0, 0.0,
-                        0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
+                        0.0, 0.0, configParams.pelvisUpDown*PI*cos((time+0.5)*PI);
 
-    torsoTwistTgt    << 0.0, dsp, 0.0,                
-                        torsoTwistInit(3), torsoTwistInit(4), torsoTwistInit(5)+configParams.height*(sin((time+0.5)*PI)-1),
+    torsoTwistTgt    << 0.0, mPlanPitch, 0.0,                
+                        torsoTwistInit(3), torsoTwistInit(4), torsoTwistInit(5)+configParams.pelvisUpDown*mPlanSinDownUp,
                         0.0, 0.0, 0.0,
-                        0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
+                        0.0, 0.0, configParams.pelvisUpDown*PI*cos((time+0.5)*PI);
 
     leftFootTwistTgt << leftFootTwistInit.head(3), leftFootTwistInit.segment(3,3),
                         Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero();
@@ -262,47 +262,85 @@ bool RobotController::motionPlan(){// @Daniel240523
                         Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero();
 
     leftArmTwistTgt <<  leftArmTwistInit.head(3),                        
-                        leftArmTwistInit(3), leftArmTwistInit(4), leftArmTwistInit(5)+configParams.height*(sin((time+0.5)*PI)-1),
+                        leftArmTwistInit(3), leftArmTwistInit(4), leftArmTwistInit(5)+configParams.pelvisUpDown*mPlanSinDownUp,
                         Eigen::Vector3d::Zero(),
-                        leftArmTwistInit(9), leftArmTwistInit(10), leftArmTwistInit(11)+configParams.height*PI*cos((time+0.5)*PI);
+                        leftArmTwistInit(9), leftArmTwistInit(10), leftArmTwistInit(11)+configParams.pelvisUpDown*PI*cos((time+0.5)*PI);
 
     rightArmTwistTgt << rightArmTwistInit.head(3),
-                        rightArmTwistInit(3), rightArmTwistInit(4), rightArmTwistInit(5)+configParams.height*(sin((time+0.5)*PI)-1),
+                        rightArmTwistInit(3), rightArmTwistInit(4), rightArmTwistInit(5)+configParams.pelvisUpDown*mPlanSinDownUp,
                         Eigen::Vector3d::Zero(),
-                        rightArmTwistInit(9), rightArmTwistInit(10), rightArmTwistInit(11)+configParams.height*PI*cos((time+0.5)*PI);
+                        rightArmTwistInit(9), rightArmTwistInit(10), rightArmTwistInit(11)+configParams.pelvisUpDown*PI*cos((time+0.5)*PI);
 #else
-    if(time <= 1000)
-        dsp = rpyPelvisInit(1)-configParams.pitchApt*(sin((configParams.pitchFrq*time+0.5)*PI)-1);
+    mPlanSinDownUp = 0.5*sin((configParams.motionFrq*time+0.5)*PI)-0.5;
+    mPlanSinUpDown = 0.5*sin((configParams.motionFrq*time-0.5)*PI)+0.5;
+    mPlanSinDownUpDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*time+0.5)*PI);
+    mPlanSinUpDownDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*time-0.5)*PI);
+    
+    // Pelvis
+    xyzPelvisTgt << xyzPelvisInit(0)+configParams.pelvisForward*mPlanSinDownUp, 
+                    xyzPelvisInit(1),
+                    xyzPelvisInit(2)+configParams.pelvisUpDown*mPlanSinDownUp;
 
-    xyzPelvisTgt << xyzPelvisInit(0), xyzPelvisInit(1), xyzPelvisInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
-    xyzDotPelvisTgt <<  0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
-    rpyPelvisTgt << 0.0, dsp, 0.0;
-    rpyDotPelvisTgt << 0.0, 0.0, 0.0;
+    xyzDotPelvisTgt << configParams.pelvisForward*mPlanSinDownUpDot,
+                       0.0,
+                       configParams.pelvisUpDown*mPlanSinDownUpDot;
 
-    xyzTorsoTgt << xyzTorsoInit(0), xyzTorsoInit(1), xyzTorsoInit(2)+configParams.height*(sin((time+0.5)*PI)-1);
-    xyzDotTorsoTgt << 0.0, 0.0, configParams.height*PI*cos((time+0.5)*PI);
-    rpyTorsoTgt << 0.0, dsp, 0.0;
-    rpyDotTorsoTgt << 0.0, 0.0, 0.0;
+    rpyPelvisTgt << 0.0, 
+                    rpyPelvisInit(1)+configParams.pitchApt*mPlanSinDownUp, 
+                    0.0;
+                    
+    rpyDotPelvisTgt <<  0.0,
+                        configParams.pitchApt*mPlanSinDownUpDot,
+                        0.0;
 
+    // Torso
+    xyzTorsoTgt << xyzTorsoInit(0)+configParams.torsoForward*mPlanSinDownUp, 
+                    xyzTorsoInit(1), 
+                    xyzTorsoInit(2)+configParams.torsoUpDown*mPlanSinDownUp;
+
+    xyzDotTorsoTgt <<   configParams.torsoForward*mPlanSinDownUpDot,
+                        0.0, 
+                        configParams.torsoUpDown*mPlanSinDownUpDot;
+
+    rpyTorsoTgt <<  0.0, 
+                    rpyTorsoInit(1)+configParams.pitchApt*mPlanSinDownUp, 
+                    0.0;
+
+    rpyDotTorsoTgt <<   0.0, 
+                        configParams.pitchApt*mPlanSinDownUpDot, 
+                        0.0;
+
+    // LeftFoot
     rpyFootTgt[0] = rpyFootInit[0];
     xyzFootTgt[0] = xyzFootInit[0];
     xyzDotFootTgt[0] = Eigen::Vector3d::Zero();
     rpyDotFootTgt[0] = Eigen::Vector3d::Zero();
 
+    // RightFoot
     rpyFootTgt[1] = rpyFootInit[1];
     xyzFootTgt[1] = xyzFootInit[1];
     xyzDotFootTgt[1] = Eigen::Vector3d::Zero();
     rpyDotFootTgt[1] = Eigen::Vector3d::Zero();
 
+    // LeftArm
     rpyArmTgt[0] = rpyArmInit[0];
-    xyzArmTgt[0] << xyzArmInit[0].x(), xyzArmInit[0].y(), xyzArmInit[0].z()+configParams.height*(sin((time+0.5)*PI)-1);
+    xyzArmTgt[0] << xyzArmInit[0].x()+configParams.armForward*mPlanSinUpDown,
+                    xyzArmInit[0].y(), 
+                    xyzArmInit[0].z()+configParams.armUpDown*mPlanSinDownUp;
     rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
-    xyzDotArmTgt[0] << xyzDotArmInit[0].x(), xyzDotArmInit[0].y(), xyzDotArmInit[0].z()+configParams.height*PI*cos((time+0.5)*PI);
+    xyzDotArmTgt[0] << xyzDotArmInit[0].x()+configParams.armForward*mPlanSinUpDownDot, 
+                       xyzDotArmInit[0].y(),
+                       xyzDotArmInit[0].z()+configParams.armUpDown*mPlanSinDownUpDot;
 
-    xyzArmTgt[1] << xyzArmInit[1].x(), xyzArmInit[1].y(), xyzArmInit[1].z()+configParams.height*(sin((time+0.5)*PI)-1);
-    xyzDotArmTgt[1] << xyzDotArmInit[1].x(), xyzDotArmInit[1].y(), xyzDotArmInit[1].z()+configParams.height*PI*cos((time+0.5)*PI);
+    // RightArm
     rpyArmTgt[1] = rpyArmInit[1];
+    xyzArmTgt[1] << xyzArmInit[1].x()+configParams.armForward*mPlanSinUpDown,
+                    xyzArmInit[1].y(), 
+                    xyzArmInit[1].z()+configParams.armUpDown*mPlanSinDownUp;
     rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
+    xyzDotArmTgt[1] << xyzDotArmInit[1].x()+configParams.armForward*mPlanSinUpDownDot, 
+                       xyzDotArmInit[1].y(),
+                       xyzDotArmInit[1].z()+configParams.armUpDown*mPlanSinDownUpDot;
 #endif
     return true;
 }
@@ -430,9 +468,9 @@ bool RobotController::taskControl(){
     nWsrRes = intData.at(0);
     simpleStatus = intData.at(1);
     //``````````Only for Hqp``````````````````//
-    double Nlevel = myWbc->getNlevel();
-    for (int i = Nlevel; i < Nlevel*2; i++){
-        simpleStatus += intData.at(i);}
+    // double Nlevel = myWbc->getNlevel();
+    // for (int i = Nlevel; i < Nlevel*2; i++){
+    //     simpleStatus += intData.at(i);}
     //________________________________________//
     myWbc->getAuxiliaryDataDouble(doubleData);
     costOpt = doubleData.at(0);
