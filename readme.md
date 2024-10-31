@@ -43,6 +43,8 @@ xOpt [6(Floating Base Degree), 19(Joints), 6(Left Foot Intact Wrench{Torque, For
 - force
 
 # Drafts
+- The Bkp
+
     "pelvisUpDown": -0.65,
     "pelvisForward": -0.05,
     "-----------------------":0,
@@ -50,3 +52,25 @@ xOpt [6(Floating Base Degree), 19(Joints), 6(Left Foot Intact Wrench{Torque, For
     "motionFrq": 1,
     "armForward": 0.35,
     "armUpDown": -0.65,
+
+- The best for now
+
+    "pelvisUpDown": -0.65,
+    "pelvisForward": -0.05,
+    "-----------------------":0,
+    "pitchApt": 0.8,
+    "motionFrq": 1,
+    "armForward": 0.25,
+    "armUpDown": -0.82,
+    "armAside": 0.0,
+
+- Set to zero
+
+    "pelvisUpDown": -0.0,
+    "pelvisForward": -0.0,
+    "-----------------------":0,
+    "pitchApt": 0.0,
+    "motionFrq": 1,
+    "armForward": 0.0,
+    "armUpDown": -0.0,
+    "armAside": 0.0,
