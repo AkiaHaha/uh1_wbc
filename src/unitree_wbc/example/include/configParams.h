@@ -22,7 +22,8 @@ struct ConfigParams {
     double weightFootForceX, weightFootForceY, weightFootForceZ;
     double weightArmForceR, weightArmForceP, weightArmForceYaw;
     double weightArmForceX, weightArmForceY, weightArmForceZ;
-    double weightFBD, weightFootPos, weightFootYaw, weightArmPos, weightArmRPY, weightArmZ;
+    double weightFBD, weightFootX, weightFootYY, weightFootZ, weightFootR, weightFootP, weightFootY;
+    double weightArmR, weightArmP, weightArmY, weightArmX, weightArmYY, weightArmZ;
 
     double weightPelvisX, weightPelvisYY, weightPelvisZ, weightPelvisR, weightPelvisP, weightPelvisY;
     double weightTorsoX, weightTorsoYY, weightTorsoZ, weightTorsoR, weightTorsoP, weightTorsoY;
@@ -165,11 +166,18 @@ struct ConfigParams {
         weightArmForceZ = jsonData["weightArmForceZ"];
 
         weightFBD = jsonData["weightFBD"];
-        weightFootPos = jsonData["weightFootPos"];
-        weightFootYaw = jsonData["weightFootYaw"];
-        weightArmPos = jsonData["weightArmPos"];
-        weightArmRPY = jsonData["weightArmRPY"];
+        weightFootR = jsonData["weightFootR"];
+        weightFootP = jsonData["weightFootP"];
+        weightFootY = jsonData["weightFootY"];
+        weightFootX = jsonData["weightFootX"];
+        weightFootYY = jsonData["weightFootYY"];
+        weightFootZ = jsonData["weightFootZ"];
         weightArmZ = jsonData["weightArmZ"];
+        weightArmX = jsonData["weightArmX"];
+        weightArmYY = jsonData["weightArmYY"];
+        weightArmR = jsonData["weightArmR"];
+        weightArmP = jsonData["weightArmP"];
+        weightArmY = jsonData["weightArmY"];
 
         weightPelvisR = jsonData["weightPelvisR"];
         weightPelvisP = jsonData["weightPelvisP"];
@@ -231,13 +239,14 @@ struct ConfigParams {
         weightTorsoXyz = {weightTorsoX, weightTorsoY, weightTorsoZ};                                       
         weightTorsoRpy = {weightTorsoR, weightTorsoP, weightTorsoY};
 
-        weightFootArmPosition = fillVector(weightFootPos, weightArmPos);   
-        weightFootArmPosition(2) = weightFootYaw;
-        weightFootArmPosition(8) = weightFootYaw;
-        weightFootArmPosition(17) = weightArmZ;
-        weightFootArmPosition(23) = weightArmZ;
-        weightFootArmPosition.segment(12,3) = Eigen::VectorXd::Constant(3,weightArmRPY);
-        weightFootArmPosition.segment(18,3) = Eigen::VectorXd::Constant(3,weightArmRPY);
+        weightFootArmPosition << weightFootR, weightFootP, weightFootY,
+                                weightFootX, weightFootY, weightFootZ,
+                                weightFootR, weightFootP, weightFootY,
+                                weightFootX, weightFootY, weightFootZ,
+                                weightArmR, weightArmP, weightArmY,
+                                weightArmX, weightArmY, weightArmZ,
+                                weightArmR, weightArmP, weightArmY,
+                                weightArmX, weightArmY, weightArmZ;
         
         weightFootArmForce <<   weightFootForceR, weightFootForceP, weightFootForceYaw, 
                                 weightFootForceX, weightFootForceY, weightFootForceZ, 

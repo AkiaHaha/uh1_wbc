@@ -333,11 +333,11 @@ bool RobotController::motionPlan(){// @Daniel240523
     // RightArm
     rpyArmTgt[1] = rpyArmInit[1];
     xyzArmTgt[1] << xyzArmInit[1].x()+configParams.armForward*mPlanSinUpDown,
-                    xyzArmInit[1].y()+configParams.armAside*mPlanSinUpDown, 
+                    xyzArmInit[1].y()-configParams.armAside*mPlanSinUpDown, 
                     xyzArmInit[1].z()+configParams.armUpDown*mPlanSinUpDown;
     rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
     xyzDotArmTgt[1] << xyzDotArmInit[1].x()+configParams.armForward*mPlanSinUpDownDot, 
-                       xyzDotArmInit[1].y()+configParams.armAside*mPlanSinUpDownDot,
+                       xyzDotArmInit[1].y()-configParams.armAside*mPlanSinUpDownDot,
                        xyzDotArmInit[1].z()+configParams.armUpDown*mPlanSinUpDownDot;
 #endif
     return true;
