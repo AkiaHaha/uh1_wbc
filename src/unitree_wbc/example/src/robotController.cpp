@@ -271,74 +271,102 @@ bool RobotController::motionPlan(){// @Daniel240523
                         Eigen::Vector3d::Zero(),
                         rightArmTwistInit(9), rightArmTwistInit(10), rightArmTwistInit(11)+configParams.pelvisUpDown*PI*cos((time+0.5)*PI);
 #else
-    mPlanSinUpDown = 0.5*sin((configParams.motionFrq*time-0.5)*PI)+0.5;
-    mPlanSinUpDownDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*time-0.5)*PI);
     
-    // Pelvis
-    xyzPelvisTgt << xyzPelvisInit(0)+configParams.pelvisForward*mPlanSinUpDown, 
-                    xyzPelvisInit(1),
-                    xyzPelvisInit(2)+configParams.pelvisUpDown*mPlanSinUpDown;
+    if(time < 1.0 || time >= 2.0){
+        double yyy{};
+        if(time < 1.0){
+            mPlanSinUpDown = 0.5*sin((configParams.motionFrq*time-0.5)*PI)+0.5;
+            mPlanSinUpDownDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*time-0.5)*PI);}
 
-    xyzDotPelvisTgt << configParams.pelvisForward*mPlanSinUpDownDot,
-                       0.0,
-                       configParams.pelvisUpDown*mPlanSinUpDownDot;
+        if(time >= 2.0){
+            timeS2 = time - 1;
+            yyy = configParams.armAside;
+            mPlanSinUpDown = 0.5*sin((configParams.motionFrq*timeS2-0.5)*PI)+0.5;
+            mPlanSinUpDownDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*timeS2-0.5)*PI);}
 
-    rpyPelvisTgt << 0.0, 
-                    rpyPelvisInit(1)+configParams.pitchApt*mPlanSinUpDown, 
-                    0.0;
+        // Pelvis
+        xyzPelvisTgt << xyzPelvisInit(0)+configParams.pelvisForward*mPlanSinUpDown, 
+                        xyzPelvisInit(1),
+                        xyzPelvisInit(2)+configParams.pelvisUpDown*mPlanSinUpDown;
 
-    rpyDotPelvisTgt <<  0.0,
-                        configParams.pitchApt*mPlanSinUpDownDot,
+        xyzDotPelvisTgt << configParams.pelvisForward*mPlanSinUpDownDot,
+                        0.0,
+                        configParams.pelvisUpDown*mPlanSinUpDownDot;
+
+        rpyPelvisTgt << 0.0, 
+                        rpyPelvisInit(1)+configParams.pitchApt*mPlanSinUpDown, 
                         0.0;
 
-    // Torso
-    xyzTorsoTgt << xyzTorsoInit(0)+configParams.torsoForward*mPlanSinUpDown, 
-                    xyzTorsoInit(1), 
-                    xyzTorsoInit(2)+configParams.torsoUpDown*mPlanSinUpDown;
+        rpyDotPelvisTgt <<  0.0,
+                            configParams.pitchApt*mPlanSinUpDownDot,
+                            0.0;
 
-    xyzDotTorsoTgt <<   configParams.torsoForward*mPlanSinUpDownDot,
-                        0.0, 
-                        configParams.torsoUpDown*mPlanSinUpDownDot;
+        // Torso
+        xyzTorsoTgt << xyzTorsoInit(0)+configParams.torsoForward*mPlanSinUpDown, 
+                        xyzTorsoInit(1), 
+                        xyzTorsoInit(2)+configParams.torsoUpDown*mPlanSinUpDown;
 
-    rpyTorsoTgt <<  0.0, 
-                    rpyTorsoInit(1)+configParams.pitchApt*mPlanSinUpDown, 
-                    0.0;
+        xyzDotTorsoTgt <<   configParams.torsoForward*mPlanSinUpDownDot,
+                            0.0, 
+                            configParams.torsoUpDown*mPlanSinUpDownDot;
 
-    rpyDotTorsoTgt <<   0.0, 
-                        configParams.pitchApt*mPlanSinUpDownDot, 
+        rpyTorsoTgt <<  0.0, 
+                        rpyTorsoInit(1)+configParams.pitchApt*mPlanSinUpDown, 
                         0.0;
 
-    // LeftFoot
-    rpyFootTgt[0] = rpyFootInit[0];
-    xyzFootTgt[0] = xyzFootInit[0];
-    xyzDotFootTgt[0] = Eigen::Vector3d::Zero();
-    rpyDotFootTgt[0] = Eigen::Vector3d::Zero();
+        rpyDotTorsoTgt <<   0.0, 
+                            configParams.pitchApt*mPlanSinUpDownDot, 
+                            0.0;
 
-    // RightFoot
-    rpyFootTgt[1] = rpyFootInit[1];
-    xyzFootTgt[1] = xyzFootInit[1];
-    xyzDotFootTgt[1] = Eigen::Vector3d::Zero();
-    rpyDotFootTgt[1] = Eigen::Vector3d::Zero();            
+        // LeftFoot
+        rpyFootTgt[0] = rpyFootInit[0];
+        xyzFootTgt[0] = xyzFootInit[0];
+        xyzDotFootTgt[0] = Eigen::Vector3d::Zero();
+        rpyDotFootTgt[0] = Eigen::Vector3d::Zero();
 
-    // LeftArm
-    rpyArmTgt[0] = rpyArmInit[0];
-    xyzArmTgt[0] << xyzArmInit[0].x()+configParams.armForward*mPlanSinUpDown,
-                    xyzArmInit[0].y()+configParams.armAside*mPlanSinUpDown, 
-                    xyzArmInit[0].z()+configParams.armUpDown*mPlanSinUpDown;
-    rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
-    xyzDotArmTgt[0] << xyzDotArmInit[0].x()+configParams.armForward*mPlanSinUpDownDot, 
-                       xyzDotArmInit[0].y()+configParams.armAside*mPlanSinUpDownDot,
-                       xyzDotArmInit[0].z()+configParams.armUpDown*mPlanSinUpDownDot;
+        // RightFoot
+        rpyFootTgt[1] = rpyFootInit[1];
+        xyzFootTgt[1] = xyzFootInit[1];
+        xyzDotFootTgt[1] = Eigen::Vector3d::Zero();
+        rpyDotFootTgt[1] = Eigen::Vector3d::Zero();            
 
-    // RightArm
-    rpyArmTgt[1] = rpyArmInit[1];
-    xyzArmTgt[1] << xyzArmInit[1].x()+configParams.armForward*mPlanSinUpDown,
-                    xyzArmInit[1].y()-configParams.armAside*mPlanSinUpDown, 
-                    xyzArmInit[1].z()+configParams.armUpDown*mPlanSinUpDown;
-    rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
-    xyzDotArmTgt[1] << xyzDotArmInit[1].x()+configParams.armForward*mPlanSinUpDownDot, 
-                       xyzDotArmInit[1].y()-configParams.armAside*mPlanSinUpDownDot,
-                       xyzDotArmInit[1].z()+configParams.armUpDown*mPlanSinUpDownDot;
+        // LeftArm
+        rpyArmTgt[0] = rpyArmInit[0];
+        xyzArmTgt[0] << xyzArmInit[0].x()+configParams.armForward*mPlanSinUpDown,
+                        xyzArmInit[0].y()+yyy*mPlanSinUpDown,
+                        xyzArmInit[0].z()+configParams.armUpDown*mPlanSinUpDown;
+        rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
+        xyzDotArmTgt[0] << xyzDotArmInit[0].x()+configParams.armForward*mPlanSinUpDownDot, 
+                        xyzDotArmInit[0].y()+yyy*mPlanSinUpDownDot,
+                        xyzDotArmInit[0].z()+configParams.armUpDown*mPlanSinUpDownDot;
+
+        // RightArm
+        rpyArmTgt[1] = rpyArmInit[1];
+        xyzArmTgt[1] << xyzArmInit[1].x()+configParams.armForward*mPlanSinUpDown,
+                        xyzArmInit[1].y()-yyy*mPlanSinUpDown,
+                        xyzArmInit[1].z()+configParams.armUpDown*mPlanSinUpDown;
+        rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
+        xyzDotArmTgt[1] << xyzDotArmInit[1].x()+configParams.armForward*mPlanSinUpDownDot, 
+                        xyzDotArmInit[1].y()-yyy*mPlanSinUpDownDot,
+                        xyzDotArmInit[1].z()+configParams.armUpDown*mPlanSinUpDownDot;
+
+    }
+
+
+    if(time >= 1.0 && time < 2.0){
+        timeS1 = time - 1.0;
+        mPlanSinUpDown = 0.5*sin((configParams.motionFrq*timeS1-0.5)*PI)+0.5;
+        mPlanSinUpDownDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*timeS1-0.5)*PI);
+
+        // LeftArm
+        xyzArmTgt[0].y() = xyzArmInit[0].y()+configParams.armAside*mPlanSinUpDown;
+        xyzDotArmTgt[0].y() = xyzDotArmInit[0].y()+configParams.armAside*mPlanSinUpDownDot;
+
+        // RightArm
+        xyzArmTgt[1].y() = xyzArmInit[1].y()-configParams.armAside*mPlanSinUpDown;
+        xyzDotArmTgt[1].y() = xyzDotArmInit[1].y()-configParams.armAside*mPlanSinUpDownDot;
+    }
+
 #endif
     return true;
 }

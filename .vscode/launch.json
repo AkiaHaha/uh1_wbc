@@ -4,14 +4,14 @@
     {
       "name": "ROS: Launch",
       "request": "launch",
-      "target": "/home/ukia/gitRepo/uh1_wbc/src/unitree_wbc/launch/debug1.launch",
+      "target": "/home/ukia/test/uh1_wbc/src/unitree_wbc/launch/debug1.launch",
       "type": "ros"
     },
     {
       "name": "C++ Launch",
       "type": "cppdbg",
       "request": "launch",
-      "program": "/home/ukia/gitRepo/uh1_wbc/wwbicController",
+      "program": "/home/ukia/test/uh1_wbc/wwbicController",
       "args": [],
       "stopAtEntry": false,
       "cwd": "/home/ukia/gitRepo/uh1_wbc",

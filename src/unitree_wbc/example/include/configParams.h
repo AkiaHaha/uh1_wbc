@@ -86,7 +86,7 @@ struct ConfigParams {
 
     ConfigParams() {
         // Constructor to initialize from JSON file
-        std::ifstream inputFile("src/unitree_wbc/config/controller.json");
+        std::ifstream inputFile("/home/ukia/test/uh1_wbc/src/unitree_wbc/config/controller.json");
         json jsonData;
         inputFile >> jsonData;
 

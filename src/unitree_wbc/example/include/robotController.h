@@ -61,6 +61,8 @@ private:
     double timeCs{0.0};                     // time of CS (Control System)
     int tick{0};                            // the tick-tack for time accumulation
     double time{0.0};                       // run time (sec) for current behavior
+    double timeS1{0.0};                     // run time (sec) for current behavior
+    double timeS2{0.0};                     // run time (sec) for current behavior
     int nJg{NG};
     int nJa{NJ};
     int nFc{NFCC4};
