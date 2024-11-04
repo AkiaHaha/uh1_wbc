@@ -96,19 +96,10 @@ bool RobotController::getValuePosCurrent(Eigen::VectorXd &jntPosCur){
 // The main update controller of this frame
 //================================================================
 bool RobotController::update(double timeCtrlSys, webotsState& robotStateSim){
-    // update Time
-    timeCs = timeCtrlSys;
-    if ( tick > 0){time += DT;}
-    else {tick = 0; time = 0.0;}// tick<=0
-
+    time += DT;
     stateEstimation(robotStateSim);
     motionPlan();
     taskControl();
-
-    // update tick-tack
-    tick++;
-    if (tick >= std::numeric_limits<int>::max()-1000){tick = 1000;}    // avoid tick out-of range
-
     return true;
 }
 
@@ -356,7 +347,7 @@ bool RobotController::motionPlan(){// @Daniel240523
     if(time >= 1.0 && time < 2.0){
         timeS1 = time - 1.0;
         mPlanSinUpDown = 0.5*sin((configParams.motionFrq*timeS1-0.5)*PI)+0.5;
-        mPlanSinUpDownDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*timeS1-0.5)*PI);
+        mPlanSinUpDownDot = 0.5*configParams.motionFrq*cos((2*configParams.motionFrq*timeS1-0.5)*PI);
 
         // LeftArm
         xyzArmTgt[0].y() = xyzArmInit[0].y()+configParams.armAside*mPlanSinUpDown;
