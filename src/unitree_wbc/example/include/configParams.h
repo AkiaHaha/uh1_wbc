@@ -240,13 +240,13 @@ struct ConfigParams {
         weightTorsoRpy = {weightTorsoR, weightTorsoP, weightTorsoY};
 
         weightFootArmPosition << weightFootR, weightFootP, weightFootY,
-                                weightFootX, weightFootY, weightFootZ,
+                                weightFootX, weightFootYY, weightFootZ,
                                 weightFootR, weightFootP, weightFootY,
-                                weightFootX, weightFootY, weightFootZ,
+                                weightFootX, weightFootYY, weightFootZ,
                                 weightArmR, weightArmP, weightArmY,
-                                weightArmX, weightArmY, weightArmZ,
+                                weightArmX, weightArmYY, weightArmZ,
                                 weightArmR, weightArmP, weightArmY,
-                                weightArmX, weightArmY, weightArmZ;
+                                weightArmX, weightArmYY, weightArmZ;
         
         weightFootArmForce <<   weightFootForceR, weightFootForceP, weightFootForceYaw, 
                                 weightFootForceX, weightFootForceY, weightFootForceZ, 
