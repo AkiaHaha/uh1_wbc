@@ -74,3 +74,13 @@ xOpt [6(Floating Base Degree), 19(Joints), 6(Left Foot Intact Wrench{Torque, For
     "armForward": 0.0,
     "armUpDown": -0.0,
     "armAside": 0.0,
+
+- The best for squating and ee moving
+    "pelvisUpDown": -0.55,
+    "pelvisForward": -0.08,
+    "-----------------------":0,
+    "pitchApt": 0.8,
+    "motionFrq": 1,
+    "armForward": 0.33,
+    "armUpDown": -0.82,
+    "armAside": 0.1,
