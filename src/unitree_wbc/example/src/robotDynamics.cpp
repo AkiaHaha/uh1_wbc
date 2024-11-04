@@ -22,7 +22,6 @@ RobotDynamics::RobotDynamics() {
     coriolisBias = VectorNd::Zero(NJG);
     gravityBias = VectorNd::Zero(NJG);
 
-
     selMatFloatingBase = MatrixNd :: Zero(NJF, NJG);
     selMatFloatingBase.leftCols(NJF) = MatrixNd::Identity(NJF, NJF);
 
@@ -499,7 +498,7 @@ VectorNd RobotDynamics::estBodyPosInWorldAkia(const VectorNd& jointPos, const Ve
     return bodyPos;
 }
 
-VectorNd RobotDynamics::estBodyTwistInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType) {
+VectorNd RobotDynamics::estBodyTwistInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& pointType) {
     VectorNd qTemp = VectorNd::Zero(NJG);
     VectorNd qDotTemp = VectorNd::Zero(NJG);
     Vector3d sole2WorldPos = Vector3d::Zero();
@@ -510,7 +509,7 @@ VectorNd RobotDynamics::estBodyTwistInWorld(const VectorNd& jointPos, const Vect
     qTemp = jointPos;
     qDotTemp = jointVel;
     UpdateKinematicsCustom(*model, & qTemp, & qDotTemp, NULL);
-    switch (footType)
+    switch (pointType)
     {
         case 0: // Torso
             sole2WorldPos = CalcBodyToBaseCoordinates(*model, qTemp, idTorso, Math::Vector3d::Zero(), false);
@@ -547,6 +546,13 @@ VectorNd RobotDynamics::estBodyTwistInWorld(const VectorNd& jointPos, const Vect
     posVelRes.segment(6,3) = angleDot2EulerDot(sole2WorldVel.head(3), sole2WorldRPY);
     posVelRes.tail(3) = sole2WorldVel.tail(3);
     return posVelRes;
+}
+
+bool RobotDynamics::estComPosVel(Eigen::Vector3d &comPos, Eigen::Vector3d &comVel) {
+    calcCOMPosVel();
+    comPos = comPos2World;
+    comVel = comVel2World;
+    return true;
 }
 
 //===========================================================================

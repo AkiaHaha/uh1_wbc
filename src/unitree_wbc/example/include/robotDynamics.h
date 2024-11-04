@@ -64,7 +64,10 @@ public:
      * @param footType  stance sole label
      * @return the motion twist as sequence: [posRPY, posXYZ, velRPY, velXYZ] 
      */
-    VectorNd estBodyTwistInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& footType);
+    VectorNd estBodyTwistInWorld(const VectorNd& jointPos, const VectorNd& jointVel, const int& pointType);
+
+    bool estComPosVel(Eigen::Vector3d &comPos, Eigen::Vector3d &comVel);
+
 
     VectorNd estRootXyzRpy(const Eigen::VectorXd & q);///<Danny@240526
 

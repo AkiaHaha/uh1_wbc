@@ -175,6 +175,12 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     xyzArmEst[1] = armStateTemp1.segment(3,3);
     rpyDotArmEst[1] = armStateTemp1.segment(6,3);
     xyzDotArmEst[1] = armStateTemp1.tail(3);
+
+    robotDynamics->estComPosVel(comPosEst, comVelEst);
+    cout << "comPosEst:     " << comPosEst.transpose() << endl;
+    cout << "xyzFootEst[0]  " << xyzFootEst[0].transpose() << endl;
+    cout << "xyzFootEst[1]  " << xyzFootEst[1].transpose() << endl;
+    cout << "xyzPelvisEst   " << xyzPelvisEst.transpose() << endl;
 #endif
 
 
@@ -214,6 +220,9 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
         xyzArmInit[1] = xyzArmEst[1];
         rpyDotArmInit[1] = rpyDotArmEst[1];
         xyzDotArmInit[1] = xyzDotArmEst[1];
+
+        comPosInit = comPosEst;
+        comVelInit = comVelEst;
 #endif
     }
 
@@ -275,7 +284,7 @@ bool RobotController::motionPlan(){// @Daniel240523
             mPlanSinUpDown = 0.5*sin((configParams.motionFrq*timeS2-0.5)*PI)+0.5;
             mPlanSinUpDownDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*timeS2-0.5)*PI);}
 
-        // Pelvis
+        // // Pelvis
         xyzPelvisTgt << xyzPelvisInit(0)+configParams.pelvisForward*mPlanSinUpDown, 
                         xyzPelvisInit(1),
                         xyzPelvisInit(2)+configParams.pelvisUpDown*mPlanSinUpDown;
@@ -283,6 +292,16 @@ bool RobotController::motionPlan(){// @Daniel240523
         xyzDotPelvisTgt << configParams.pelvisForward*mPlanSinUpDownDot,
                         0.0,
                         configParams.pelvisUpDown*mPlanSinUpDownDot;
+
+        // Eigen::Vector3d comPosErr = comPosEst - comPosInit;
+        // Eigen::Vector3d comVelErr = comVelEst - comVelInit;
+
+        // xyzPelvisTgt = configParams.pelvisForward*comPosErr + xyzPelvisInit;
+        // xyzPelvisTgt(2) = xyzPelvisInit(2)+configParams.pelvisUpDown*mPlanSinUpDown;
+
+        // xyzDotPelvisTgt = configParams.pelvisForward*comVelErr;
+        // xyzDotPelvisTgt(2) = configParams.pelvisUpDown*mPlanSinUpDownDot;
+
 
         rpyPelvisTgt << 0.0, 
                         rpyPelvisInit(1)+configParams.pitchApt*mPlanSinUpDown, 
