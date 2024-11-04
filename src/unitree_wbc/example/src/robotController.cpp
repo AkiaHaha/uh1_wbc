@@ -318,23 +318,7 @@ bool RobotController::motionPlan(){// @Daniel240523
     rpyFootTgt[1] = rpyFootInit[1];
     xyzFootTgt[1] = xyzFootInit[1];
     xyzDotFootTgt[1] = Eigen::Vector3d::Zero();
-    rpyDotFootTgt[1] = Eigen::Vector3d::Zero();
-
-    // // LeftArm
-    // rpyArmTgt[0] = rpyArmInit[0];
-    // xyzArmTgt[0] = xyzArmInit[0];
-                   
-    // rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
-    // xyzDotArmTgt[0] = xyzDotArmInit[0];
-                    
-
-    // // RightArm
-    // rpyArmTgt[1] = rpyArmInit[1];
-    // xyzArmTgt[1] = xyzArmInit[1];
-
-    // rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
-    // xyzDotArmTgt[1] = xyzDotArmInit[1];
-            
+    rpyDotFootTgt[1] = Eigen::Vector3d::Zero();            
 
     // LeftArm
     rpyArmTgt[0] = rpyArmInit[0];
