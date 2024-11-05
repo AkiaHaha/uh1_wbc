@@ -284,7 +284,7 @@ bool RobotController::motionPlan(){// @Daniel240523
             mPlanSinUpDown = 0.5*sin((configParams.motionFrq*timeS2-0.5)*PI)+0.5;
             mPlanSinUpDownDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*timeS2-0.5)*PI);}
 
-        // // Pelvis
+        // Pelvis
         xyzPelvisTgt << xyzPelvisInit(0)+configParams.pelvisForward*mPlanSinUpDown, 
                         xyzPelvisInit(1),
                         xyzPelvisInit(2)+configParams.pelvisUpDown*mPlanSinUpDown;
@@ -293,6 +293,9 @@ bool RobotController::motionPlan(){// @Daniel240523
                         0.0,
                         configParams.pelvisUpDown*mPlanSinUpDownDot;
 
+        //=============================================================================
+        // CoM Adaptator policy @todo
+        //=============================================================================
         // Eigen::Vector3d comPosErr = comPosEst - comPosInit;
         // Eigen::Vector3d comVelErr = comVelEst - comVelInit;
 
@@ -301,25 +304,9 @@ bool RobotController::motionPlan(){// @Daniel240523
 
         // xyzDotPelvisTgt = configParams.pelvisForward*comVelErr;
         // xyzDotPelvisTgt(2) = configParams.pelvisUpDown*mPlanSinUpDownDot;
-
-
-        rpyPelvisTgt << 0.0, 
-                        rpyPelvisInit(1)+configParams.pitchApt*mPlanSinUpDown, 
-                        0.0;
-
-        rpyDotPelvisTgt <<  0.0,
-                            configParams.pitchApt*mPlanSinUpDownDot,
-                            0.0;
+        //=============================================================================
 
         // Torso
-        xyzTorsoTgt << xyzTorsoInit(0)+configParams.torsoForward*mPlanSinUpDown, 
-                        xyzTorsoInit(1), 
-                        xyzTorsoInit(2)+configParams.torsoUpDown*mPlanSinUpDown;
-
-        xyzDotTorsoTgt <<   configParams.torsoForward*mPlanSinUpDownDot,
-                            0.0, 
-                            configParams.torsoUpDown*mPlanSinUpDownDot;
-
         rpyTorsoTgt <<  0.0, 
                         rpyTorsoInit(1)+configParams.pitchApt*mPlanSinUpDown, 
                         0.0;
