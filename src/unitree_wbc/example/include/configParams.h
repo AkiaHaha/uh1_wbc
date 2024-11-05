@@ -6,6 +6,10 @@ using json = nlohmann::json;
 
 
 struct ConfigParams {
+    // For main function
+    double testGripperAngle1, testGripperAngle2;
+    int standingTime;
+
     // PArams for task control
     double kpPelvisR, kpPelvisP, kpPelvisY, kdPelvisR, kdPelvisP, kdPelvisY;
     double kpPelvisX, kpPelvisYY, kpPelvisZ, kdPelvisX, kdPelvisYY, kdPelvisZ;
@@ -283,5 +287,9 @@ struct ConfigParams {
         armForward = jsonData["armForward"];
         armUpDown = jsonData["armUpDown"];
         armAside = jsonData["armAside"];
+
+        standingTime = jsonData["standingTime"];
+        testGripperAngle1 = jsonData["testGripperAngle1"];
+        testGripperAngle2 = jsonData["testGripperAngle2"];        
     }
 };

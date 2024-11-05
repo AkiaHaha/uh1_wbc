@@ -91,6 +91,14 @@ void WebotsRobot::initWebots()
         dJnt.at(i).init(SAMPLE_TIME, 1e-3, 0.);
     }
 
+    // Gripper pos control;
+    lGripper = robot->getFromDef("LEFT_GRIPPER");
+    rGripper = robot->getFromDef("RIGHT_GRIPPER");
+    rgUpMotor = rGripper->getField("positionUp");
+    rgDownMotor = rGripper->getField("positionLow");
+    lgUpMotor = lGripper->getField("positionUp");
+    lgDownMotor = lGripper->getField("positionLow");    
+
 }
 
 void WebotsRobot::deleteRobot()

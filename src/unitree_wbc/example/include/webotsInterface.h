@@ -91,6 +91,10 @@ struct webotsState
  */
 class WebotsRobot{
 public:
+    Field* lgUpMotor;
+    Field* lgDownMotor;
+    Field* rgUpMotor;
+    Field* rgDownMotor;
     webots::Supervisor *robot = new Supervisor();
 
     void initWebots();
@@ -122,8 +126,11 @@ private:
     Node* Pelvis;
     Node* SoleLeft;
     Node* SoleRight;
-    // Node* ArmHandLeft;
-    // Node* ArmHandRight;
+
+    Node* ArmHandLeft;
+    Node* ArmHandRight;
+    Node* lGripper;
+    Node* rGripper;
 
     std::vector<Derivative> dRpy;
     std::vector<Derivative> dJnt;

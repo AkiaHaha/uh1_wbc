@@ -112,5 +112,9 @@
     "damp":0.001,
     "Abandon------------------":0,
     "torsoUpDown": 0.5,
-    "torsoForward": 0.15
+    "torsoForward": 0.15,
+    "-----------------------------":0,
+    "standingTime": 15,
+    "testGripperAngle1": 0.0,
+    "testGripperAngle2": 0.0
 }

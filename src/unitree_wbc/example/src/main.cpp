@@ -38,18 +38,20 @@ int main(int argc, char **argv) {
 }
 
 bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
-    // timing
-    int simCnt = 0;
-    double simTime = 0;
-    const int goStandCnt = 15;
-    const double goStandTime = goStandCnt * SAMPLE_TIME;
-    const int simStopCnt  = goStandCnt + 1000000;
-    const double simStopTime = simStopCnt * SAMPLE_TIME;
-    
     // webots
     WebotsRobot bipedWebots;
     bipedWebots.initWebots();
     webotsState robotStateSim;
+    ConfigParams prm;
+
+    // timing
+    int simCnt = 0;
+    double time = 0;
+    double simTime = 0;
+    const int goStandCnt = prm.standingTime;
+    const double goStandTime = goStandCnt * SAMPLE_TIME;
+    const int simStopCnt  = goStandCnt + 1000000;
+    const double simStopTime = simStopCnt * SAMPLE_TIME;
  
     // controller
     RobotController RobotController;
@@ -95,10 +97,31 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
             bipedWebots.setMotorPos(standPosCmd);//设置初始位置曲腿
 
         }else if (simCnt < simStopCnt){
-            //dynamic control get torque
+
             RobotController.update(simTime-goStandTime, robotStateSim);
             RobotController.getValueTauOpt(jointToqCmd);
+            bipedWebots.setMotorTau(jointToqCmd);
 
+            //===============================================================
+            // @todo: add gripper control ,
+            //        but the supervisor has conflict with the main control loop;
+            //        when adding this segment, the robot controller will crush;
+            //24\11\05: Bring forward
+            //
+            time+=DT;
+            if (time < 0.05 || time >= 0.1){
+                bipedWebots.lgDownMotor->setSFFloat(prm.testGripperAngle1);
+                bipedWebots.lgUpMotor->setSFFloat(prm.testGripperAngle1);
+                bipedWebots.rgDownMotor->setSFFloat(prm.testGripperAngle1);
+                bipedWebots.rgUpMotor->setSFFloat(prm.testGripperAngle1);
+            }
+            if(time >= 0.05&& time < 0.1){
+                bipedWebots.lgDownMotor->setSFFloat(prm.testGripperAngle2);
+                bipedWebots.lgUpMotor->setSFFloat(prm.testGripperAngle2);
+                bipedWebots.rgDownMotor->setSFFloat(prm.testGripperAngle2);
+                bipedWebots.rgUpMotor->setSFFloat(prm.testGripperAngle2);            
+            }
+            //===============================================================
          
             //Integrate acc for pos
             // if (flagStartCtrl == 0){
@@ -125,7 +148,6 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
 //-----------------------------------------------------------------
 //universal set toq / pos
             // jointToqCmd(16) = 0;
-            bipedWebots.setMotorTau(jointToqCmd);
             // bipedWebots.setMotorPos(jointPosInteg);
 
 
@@ -148,12 +170,9 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
 //-----------------------------------------------------------------
 
         }else{
-            // keep current position
             RobotController.getValuePosCurrent(standPosCmd);
             bipedWebots.setMotorPos(standPosCmd);
         }
-
-        // stop simulation
         if (simTime > simStopTime){
             break;
         }
