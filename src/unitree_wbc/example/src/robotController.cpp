@@ -165,7 +165,7 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     Eigen::VectorXd armStateTemp0 = Eigen::VectorXd::Zero(12,1);
     Eigen::VectorXd armStateTemp1 = Eigen::VectorXd::Zero(12,1);
     armStateTemp0 = robotDynamics->estBodyTwistInWorld(qGen, qDotGen, 3);
-    xyzArmEst[0] = armStateTemp0.head(3);
+    rpyArmEst[0] = armStateTemp0.head(3);
     xyzArmEst[0] = armStateTemp0.segment(3,3);
     rpyDotArmEst[0] = armStateTemp0.segment(6,3);
     xyzDotArmEst[0] = armStateTemp0.tail(3);
@@ -271,7 +271,6 @@ bool RobotController::motionPlan(){// @Daniel240523
                         Eigen::Vector3d::Zero(),
                         rightArmTwistInit(9), rightArmTwistInit(10), rightArmTwistInit(11)+configParams.pelvisUpDown*PI*cos((time+0.5)*PI);
 #else
-    double yFactor = 0.5;
     if(time < 1.0 || time >= 2.0){
         double yyy{};
         if(time < 1.0){
@@ -330,11 +329,11 @@ bool RobotController::motionPlan(){// @Daniel240523
         // LeftArm
         rpyArmTgt[0] = rpyArmInit[0];
         xyzArmTgt[0] << xyzArmInit[0].x()+configParams.armForward*mPlanSinUpDown,
-                        xyzArmInit[0].y()+yFactor*yyy*mPlanSinUpDown,
+                        xyzArmInit[0].y()+yyy*mPlanSinUpDown,
                         xyzArmInit[0].z()+configParams.armUpDown*mPlanSinUpDown;
         rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
         xyzDotArmTgt[0] << xyzDotArmInit[0].x()+configParams.armForward*mPlanSinUpDownDot, 
-                        xyzDotArmInit[0].y()+yFactor*yyy*mPlanSinUpDownDot,
+                        xyzDotArmInit[0].y()+yyy*mPlanSinUpDownDot,
                         xyzDotArmInit[0].z()+configParams.armUpDown*mPlanSinUpDownDot;
 
         // RightArm
@@ -356,8 +355,8 @@ bool RobotController::motionPlan(){// @Daniel240523
         mPlanSinUpDownDot = 0.5*configParams.motionFrq*cos((2*configParams.motionFrq*timeS1-0.5)*PI);
 
         // LeftArm
-        xyzArmTgt[0].y() = xyzArmInit[0].y()+yFactor*configParams.armAside*mPlanSinUpDown;
-        xyzDotArmTgt[0].y() = xyzDotArmInit[0].y()+yFactor*configParams.armAside*mPlanSinUpDownDot;
+        xyzArmTgt[0].y() = xyzArmInit[0].y()+configParams.armAside*mPlanSinUpDown;
+        xyzDotArmTgt[0].y() = xyzDotArmInit[0].y()+configParams.armAside*mPlanSinUpDownDot;
 
         // RightArm
         xyzArmTgt[1].y() = xyzArmInit[1].y()-configParams.armAside*mPlanSinUpDown;
