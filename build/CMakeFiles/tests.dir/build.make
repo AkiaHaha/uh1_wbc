@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ukia/wws_uh1/src
+CMAKE_SOURCE_DIR = /home/ukia/test/uh1_wbc/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ukia/wws_uh1/build
+CMAKE_BINARY_DIR = /home/ukia/test/uh1_wbc/build
 
 # Utility rule file for tests.
 
@@ -67,6 +67,6 @@ CMakeFiles/tests.dir/clean:
 .PHONY : CMakeFiles/tests.dir/clean
 
 CMakeFiles/tests.dir/depend:
-	cd /home/ukia/wws_uh1/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ukia/wws_uh1/src /home/ukia/wws_uh1/src /home/ukia/wws_uh1/build /home/ukia/wws_uh1/build /home/ukia/wws_uh1/build/CMakeFiles/tests.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/ukia/test/uh1_wbc/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ukia/test/uh1_wbc/src /home/ukia/test/uh1_wbc/src /home/ukia/test/uh1_wbc/build /home/ukia/test/uh1_wbc/build /home/ukia/test/uh1_wbc/build/CMakeFiles/tests.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/tests.dir/depend
 

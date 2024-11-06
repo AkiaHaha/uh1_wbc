@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ukia/wws_uh1/src
+CMAKE_SOURCE_DIR = /home/ukia/test/uh1_wbc/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ukia/wws_uh1/build
+CMAKE_BINARY_DIR = /home/ukia/test/uh1_wbc/build
 
 # Utility rule file for roscpp_generate_messages_nodejs.
 
@@ -63,10 +63,10 @@ unitree_wbc/CMakeFiles/roscpp_generate_messages_nodejs.dir/build: roscpp_generat
 .PHONY : unitree_wbc/CMakeFiles/roscpp_generate_messages_nodejs.dir/build
 
 unitree_wbc/CMakeFiles/roscpp_generate_messages_nodejs.dir/clean:
-	cd /home/ukia/wws_uh1/build/unitree_wbc && $(CMAKE_COMMAND) -P CMakeFiles/roscpp_generate_messages_nodejs.dir/cmake_clean.cmake
+	cd /home/ukia/test/uh1_wbc/build/unitree_wbc && $(CMAKE_COMMAND) -P CMakeFiles/roscpp_generate_messages_nodejs.dir/cmake_clean.cmake
 .PHONY : unitree_wbc/CMakeFiles/roscpp_generate_messages_nodejs.dir/clean
 
 unitree_wbc/CMakeFiles/roscpp_generate_messages_nodejs.dir/depend:
-	cd /home/ukia/wws_uh1/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ukia/wws_uh1/src /home/ukia/wws_uh1/src/unitree_wbc /home/ukia/wws_uh1/build /home/ukia/wws_uh1/build/unitree_wbc /home/ukia/wws_uh1/build/unitree_wbc/CMakeFiles/roscpp_generate_messages_nodejs.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/ukia/test/uh1_wbc/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ukia/test/uh1_wbc/src /home/ukia/test/uh1_wbc/src/unitree_wbc /home/ukia/test/uh1_wbc/build /home/ukia/test/uh1_wbc/build/unitree_wbc /home/ukia/test/uh1_wbc/build/unitree_wbc/CMakeFiles/roscpp_generate_messages_nodejs.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : unitree_wbc/CMakeFiles/roscpp_generate_messages_nodejs.dir/depend
 

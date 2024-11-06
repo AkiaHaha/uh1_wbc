@@ -43,6 +43,9 @@ link_directories(/usr/local/lib)
 
 # Add the RBDL include directory
 include_directories(/usr/local/include/)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/include/unitree_wbc)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/example/include)
+
 
 # Source files
 aux_source_directory(src SRC_FILES)

@@ -1,2 +1,2 @@
 unitree_wbc
--DCMAKE_BUILD_TYPE=RelWithDebInfo -DCATKIN_DEVEL_PREFIX=/home/ukia/wws_uh1/devel -DCMAKE_INSTALL_PREFIX=/home/ukia/wws_uh1/install -G Unix Makefiles
+-DCATKIN_DEVEL_PREFIX=/home/ukia/test/uh1_wbc/devel -DCMAKE_INSTALL_PREFIX=/home/ukia/test/uh1_wbc/install -G Unix Makefiles

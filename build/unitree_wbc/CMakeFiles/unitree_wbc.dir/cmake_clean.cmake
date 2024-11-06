@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/ukia/wws_uh1/devel/lib/libunitree_wbc.pdb"
-  "/home/ukia/wws_uh1/devel/lib/libunitree_wbc.so"
+  "/home/ukia/test/uh1_wbc/devel/lib/libunitree_wbc.pdb"
+  "/home/ukia/test/uh1_wbc/devel/lib/libunitree_wbc.so"
   "CMakeFiles/unitree_wbc.dir/src/constraint.cpp.o"
   "CMakeFiles/unitree_wbc.dir/src/hqpWbc.cpp.o"
   "CMakeFiles/unitree_wbc.dir/src/robotDynamics.cpp.o"
