@@ -6,6 +6,9 @@ using json = nlohmann::json;
 
 
 struct ConfigParams {
+    // For main function
+    int standingCnt;
+
     // PArams for task control
     double kpPelvisR, kpPelvisP, kpPelvisY, kdPelvisR, kdPelvisP, kdPelvisY;
     double kpPelvisX, kpPelvisYY, kpPelvisZ, kdPelvisX, kdPelvisYY, kdPelvisZ;
@@ -29,7 +32,11 @@ struct ConfigParams {
     double weightTorsoX, weightTorsoYY, weightTorsoZ, weightTorsoR, weightTorsoP, weightTorsoY;
 
     // Params for motion plan
-    double pelvisUpDown, pelvisForward, torsoUpDown, torsoForward, pitchApt, motionFrq, armForward, armUpDown, armAside; 
+    double pelvisUpDown, pelvisForward, pelvisAside, pitchApt, rollApt, yawApt;
+    double motionFrq, sFreq;
+    double armForward_L, armUpDown_L, armAside_L, armRoll_L, armPitch_L, armYaw_L;
+    double armForward_R, armUpDown_R, armAside_R, armRoll_R, armPitch_R, armYaw_R;
+    double footForward, footAside, footUpDown, footRoll, footPitch, footYaw;
 
     // PD gains
     Eigen::Vector3d kpPelvisXyz = Eigen::Vector3d::Zero();
@@ -276,12 +283,31 @@ struct ConfigParams {
 
         pelvisUpDown = jsonData["pelvisUpDown"];
         pelvisForward = jsonData["pelvisForward"];
-        torsoUpDown = jsonData["torsoUpDown"];
-        torsoForward = jsonData["torsoForward"];
+        pelvisAside = jsonData["pelvisAside"];
         pitchApt = jsonData["pitchApt"];
+        rollApt = jsonData["rollApt"];
+        yawApt = jsonData["yawApt"];
         motionFrq = jsonData["motionFrq"];
-        armForward = jsonData["armForward"];
-        armUpDown = jsonData["armUpDown"];
-        armAside = jsonData["armAside"];
+        sFreq = jsonData["sFreq"];
+        armForward_L = jsonData["armForward_L"];
+        armUpDown_L = jsonData["armUpDown_L"];
+        armAside_L = jsonData["armAside_L"];
+        armPitch_L = jsonData["armPitch_L"];
+        armRoll_L = jsonData["armRoll_L"];
+        armYaw_L = jsonData["armYaw_L"];
+        armForward_R = jsonData["armForward_R"];
+        armUpDown_R = jsonData["armUpDown_R"];
+        armAside_R = jsonData["armAside_R"];
+        armPitch_R = jsonData["armPitch_R"];
+        armRoll_R = jsonData["armRoll_R"];
+        armYaw_R = jsonData["armYaw_R"];        
+        footForward = jsonData["footForward"];
+        footUpDown = jsonData["footUpDown"];
+        footAside = jsonData["footAside"];
+        footPitch = jsonData["footPitch"];
+        footRoll = jsonData["footRoll"];
+        footYaw = jsonData["footYaw"];
+
+        standingCnt = jsonData["standingCnt"];
     }
 };

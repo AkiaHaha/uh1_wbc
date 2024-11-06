@@ -52,7 +52,9 @@ private:
     ConfigParams configParams;
     webotsState robotStateSim;
     bool stateEstimation(webotsState & robotStateSim);                         
-    bool motionPlan();
+    bool motionPlan1();
+    bool motionPlan2();
+    bool motionPlan3();
     bool taskControl();
     RobotDynamics * robotDynamics;
     AGIROBOT::Wbc * myWbc;
@@ -67,8 +69,10 @@ private:
     int nJa{NJ};
     int nFc{NFCC4};
     double mPlanPitch{};
-    double mPlanSinUpDown{};
-    double mPlanSinUpDownDot{};
+    double mPlan{};
+    double mPlanDot{};
+    double sPlan{};
+    double sPlanDot{};
     
     Eigen::VectorXd biFootForce6D = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd biWristForce6D = Eigen::VectorXd::Zero(6);
