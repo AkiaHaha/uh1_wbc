@@ -98,8 +98,8 @@ bool RobotController::getValuePosCurrent(Eigen::VectorXd &jntPosCur){
 bool RobotController::update(double timeCtrlSys, webotsState& robotStateSim){
     time += DT;
     stateEstimation(robotStateSim);
-    // motionPlan1();
-    motionPlan2();
+    motionPlan1();
+    // motionPlan2();
     // motionPlan3();
     taskControl();
     return true;
@@ -359,10 +359,14 @@ bool RobotController::motionPlan1(){// @Daniel240523
         mPlanDot = 0.5*configParams.motionFrq*cos((2*configParams.motionFrq*timeS1-0.5)*PI);
 
         // LeftArm
+        rpyArmTgt[0].x() = rpyArmInit[0].x()+configParams.armRoll_L*mPlan;
+        rpyDotArmTgt[0].x() = rpyDotArmInit[0].x()+configParams.armRoll_L*mPlanDot, 
         xyzArmTgt[0].y() = xyzArmInit[0].y()+configParams.armAside_L*mPlan;
         xyzDotArmTgt[0].y() = xyzDotArmInit[0].y()+configParams.armAside_L*mPlanDot;
 
         // RightArm
+        rpyArmTgt[1].x() = rpyArmInit[1].x()+configParams.armRoll_R*mPlan;
+        rpyDotArmTgt[1].x() = rpyDotArmInit[1].x()+configParams.armRoll_R*mPlanDot;
         xyzArmTgt[1].y() = xyzArmInit[1].y()+configParams.armAside_R*mPlan;
         xyzDotArmTgt[1].y() = xyzDotArmInit[1].y()+configParams.armAside_R*mPlanDot;
     }
