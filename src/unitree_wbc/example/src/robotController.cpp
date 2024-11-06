@@ -717,21 +717,29 @@ bool RobotController::motionPlan3(){
 
 bool RobotController::motionPlan4(){
 
-    if(time < 1.0 || time >= 2.0){
+    if(time < 1.0 || (time >= 2.0 && time < 4.0) || time >= 5.0){
         double yyyL{};
         double yyyR{};
         if(time < 1.0){
             yyyL = configParams.armAside_L;
             yyyR = configParams.armAside_R;
             mPlan = 0.5*sin((configParams.motionFrq*time-0.5)*PI)+0.5;
-            mPlanDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*time-0.5)*PI);}
+            mPlanDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*time-0.5)*PI);
+        }
 
-        if(time >= 2.0){
+        if(time >= 2.0 && time < 4.0){
             timeS2 = time - 1;
             yyyL = 0;
             yyyR = 0;            
             mPlan = 0.5*sin((configParams.motionFrq*timeS2-0.5)*PI)+0.5;
-            mPlanDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*timeS2-0.5)*PI);}
+            mPlanDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*timeS2-0.5)*PI);
+        }
+
+        if(time >= 5.0){
+            timeS2 = time-2;         
+            mPlan = 0.5*sin((configParams.motionFrq*timeS2-0.5)*PI)+0.5;
+            mPlanDot = 0.5*configParams.motionFrq*cos((configParams.motionFrq*timeS2-0.5)*PI);
+        }
 
         // Pelvis
         xyzPelvisTgt << xyzPelvisInit(0)+configParams.pelvisForward*mPlan, 
@@ -763,26 +771,55 @@ bool RobotController::motionPlan4(){
         xyzDotFootTgt[1] = Eigen::Vector3d::Zero();
         rpyDotFootTgt[1] = Eigen::Vector3d::Zero();            
 
-        // LeftArm
-        rpyArmTgt[0] = rpyArmInit[0];
-        xyzArmTgt[0] << xyzArmInit[0].x()+configParams.armForward_L*mPlan,
-                        xyzArmInit[0].y()+yyyL*mPlan,
-                        xyzArmInit[0].z()+configParams.armUpDown_L*mPlan;
-        rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
-        xyzDotArmTgt[0] << xyzDotArmInit[0].x()+configParams.armForward_L*mPlanDot, 
-                        xyzDotArmInit[0].y()+yyyL*mPlanDot,
-                        xyzDotArmInit[0].z()+configParams.armUpDown_L*mPlanDot;
+        if (time >= 5){
+            // LeftArm
+            rpyArmTgt[0] = rpyArmInit[0];
+            xyzArmTgt[0].x() = xyzArmInit[0].x()+configParams.armForward_L*mPlan;
+            xyzArmTgt[0].z() = xyzArmInit[0].z()+configParams.armUpDown_L*mPlan;
 
-        // RightArm
-        rpyArmTgt[1] = rpyArmInit[1];
-        xyzArmTgt[1] << xyzArmInit[1].x()+configParams.armForward_R*mPlan,
-                        xyzArmInit[1].y()+yyyR*mPlan,
-                        xyzArmInit[1].z()+configParams.armUpDown_R*mPlan;
-        rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
-        xyzDotArmTgt[1] << xyzDotArmInit[1].x()+configParams.armForward_R*mPlanDot, 
-                        xyzDotArmInit[1].y()+yyyR*mPlanDot,
-                        xyzDotArmInit[1].z()+configParams.armUpDown_R*mPlanDot;
+            rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
 
+            xyzDotArmTgt[0].x() = xyzDotArmInit[0].x()+configParams.armForward_L*mPlanDot;
+            xyzDotArmTgt[0].z() = xyzDotArmInit[0].z()+configParams.armUpDown_L*mPlanDot;
+
+            // RightArm
+            rpyArmTgt[1] = rpyArmInit[1];
+
+            xyzArmTgt[1].x() = xyzArmInit[1].x()+configParams.armForward_R*mPlan;
+            xyzArmTgt[1].z() = xyzArmInit[1].z()+configParams.armUpDown_R*mPlan;
+
+            rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
+
+            xyzDotArmTgt[1].x() = xyzDotArmInit[1].x()+configParams.armForward_R*mPlanDot;
+            xyzDotArmTgt[1].z() = xyzDotArmInit[1].z()+configParams.armUpDown_R*mPlanDot;
+
+        }else{
+            // LeftArm
+            rpyArmTgt[0] = rpyArmInit[0];
+            xyzArmTgt[0].x() = xyzArmInit[0].x()+configParams.armForward_L*mPlan;
+            xyzArmTgt[0].y() = xyzArmInit[0].y()+yyyL*mPlan;
+            xyzArmTgt[0].z() = xyzArmInit[0].z()+configParams.armUpDown_L*mPlan;
+
+            rpyDotArmTgt[0] = Eigen::Vector3d::Zero();
+
+            xyzDotArmTgt[0].x() = xyzDotArmInit[0].x()+configParams.armForward_L*mPlanDot;
+            xyzDotArmTgt[0].y() = xyzDotArmInit[0].y()+yyyL*mPlanDot;
+            xyzDotArmTgt[0].z() = xyzDotArmInit[0].z()+configParams.armUpDown_L*mPlanDot;
+
+            // RightArm
+            rpyArmTgt[1] = rpyArmInit[1];
+
+            xyzArmTgt[1].x() = xyzArmInit[1].x()+configParams.armForward_R*mPlan;
+            xyzArmTgt[1].y() = xyzArmInit[1].y()+yyyR*mPlan;
+            xyzArmTgt[1].z() = xyzArmInit[1].z()+configParams.armUpDown_R*mPlan;
+
+            rpyDotArmTgt[1] = Eigen::Vector3d::Zero();
+
+            xyzDotArmTgt[1].x() = xyzDotArmInit[1].x()+configParams.armForward_R*mPlanDot;
+            xyzDotArmTgt[1].y() = xyzDotArmInit[1].y()+yyyR*mPlanDot;
+            xyzDotArmTgt[1].z() = xyzDotArmInit[1].z()+configParams.armUpDown_R*mPlanDot;
+        }
+        
     }
 
 
@@ -803,5 +840,25 @@ bool RobotController::motionPlan4(){
         xyzArmTgt[1].y() = xyzArmInit[1].y()+configParams.armAside_R*mPlan;
         xyzDotArmTgt[1].y() = xyzDotArmInit[1].y()+configParams.armAside_R*mPlanDot;
     }
+
+    if(time >= 4.0 && time < 5.0){
+        timeS1 = time;
+        double yFactor = 1.0;
+        mPlan = 0.5*sin((configParams.motionFrq*timeS1-0.5)*PI)+0.5;
+        mPlanDot = 0.5*configParams.motionFrq*cos((2*configParams.motionFrq*timeS1-0.5)*PI);
+
+        // LeftArm
+        rpyArmTgt[0].x() = rpyArmInit[0].x()+configParams.armRoll_L*mPlan;
+        rpyDotArmTgt[0].x() = rpyDotArmInit[0].x()+configParams.armRoll_L*mPlanDot, 
+        xyzArmTgt[0].y() = xyzArmInit[0].y()+yFactor*configParams.armAside_L*mPlan;
+        xyzDotArmTgt[0].y() = xyzDotArmInit[0].y()+yFactor*configParams.armAside_L*mPlanDot;
+
+        // RightArm
+        rpyArmTgt[1].x() = rpyArmInit[1].x()+configParams.armRoll_R*mPlan;
+        rpyDotArmTgt[1].x() = rpyDotArmInit[1].x()+configParams.armRoll_R*mPlanDot;
+        xyzArmTgt[1].y() = xyzArmInit[1].y()+yFactor*configParams.armAside_R*mPlan;
+        xyzDotArmTgt[1].y() = xyzDotArmInit[1].y()+yFactor*configParams.armAside_R*mPlanDot;
+    }
+
     return true;
 }
