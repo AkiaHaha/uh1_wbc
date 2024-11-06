@@ -55,6 +55,7 @@ private:
     bool motionPlan1();
     bool motionPlan2();
     bool motionPlan3();
+    bool motionPlan4();
     bool taskControl();
     RobotDynamics * robotDynamics;
     AGIROBOT::Wbc * myWbc;
