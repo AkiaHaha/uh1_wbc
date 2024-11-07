@@ -98,10 +98,10 @@ bool RobotController::getValuePosCurrent(Eigen::VectorXd &jntPosCur){
 bool RobotController::update(double timeCtrlSys, webotsState& robotStateSim){
     time += DT;
     stateEstimation(robotStateSim);
-    // motionPlan1();
-    // motionPlan2();
+    motionPlan1();
+    motionPlan2();
     // motionPlan3();
-    motionPlan4();
+    // motionPlan4();
     taskControl();
     return true;
 }
