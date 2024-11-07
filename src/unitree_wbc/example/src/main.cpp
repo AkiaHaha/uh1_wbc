@@ -1,5 +1,7 @@
 #include <ros/ros.h>
 #include <std_msgs/Float64MultiArray.h>
+#include "std_msgs/Float64.h"
+#include "std_msgs/Time.h"
 
 #include <iostream>
 #include <fstream>
@@ -10,14 +12,20 @@
 #include <thread>
 #include <unistd.h>
 
-
 #include "webotsInterface.h"
 #include "robotController.h"
 #include "operation.h"
 
 using namespace std;
 
-bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub);
+struct Publishers {
+    ros::Publisher jnt_pos_pub;
+    ros::Publisher sim_info_pub;
+    ros::Publisher sim_time_pub;
+    ros::Publisher jnt_toq_pub;
+};
+
+bool runWebots(Publishers& pubs);
 
 void signalHandler(int signum) {
     cout << "Interrupt signal (" << signum << ") received.\n";
@@ -28,13 +36,16 @@ int main(int argc, char **argv) {
     signal(SIGINT, signalHandler);
     ros::init(argc, argv, "webots_controller");
     ros::NodeHandle nh;
-    ros::Publisher joint_pos_pub = nh.advertise<std_msgs::Float64MultiArray>("joint_positions", NJ);
-    ros::Publisher sim_info_pub = nh.advertise<std_msgs::Float64MultiArray>("sim_info", 1);
-    runWebots(joint_pos_pub, sim_info_pub);
+    Publishers pubs;
+    pubs.jnt_pos_pub = nh.advertise<std_msgs::Float64MultiArray>("jnt_pos", 20);
+    pubs.jnt_toq_pub = nh.advertise<std_msgs::Float64MultiArray>("jnt_toq", 20);
+    pubs.sim_info_pub = nh.advertise<std_msgs::Float64MultiArray>("sim_info", 20);
+    pubs.sim_time_pub = nh.advertise<std_msgs::Time>("sim_time", 20);
+    runWebots(pubs);
     return 0;
 }
 
-bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
+bool runWebots(Publishers& pubs){
     WebotsRobot bipedWebots;
     webotsState robotStateSim;
     bipedWebots.initWebots();
@@ -56,15 +67,20 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
     Eigen::VectorXd jointPosAtStartCtrl = Eigen::VectorXd::Zero(NJ);
     
 
-    std_msgs::Float64MultiArray joint_pos_msg;
+    std_msgs::Time sim_time_msg;
+    std_msgs::Float64MultiArray jnt_pos_msg;
     std_msgs::Float64MultiArray sim_info_msg;
-    joint_pos_msg.data.resize(NJ);
-    sim_info_msg.data.resize(10);
+    std_msgs::Float64MultiArray jnt_toq_msg;
+    jnt_pos_msg.data.resize(NJ);
+    jnt_toq_msg.data.resize(NJ);
+    sim_info_msg.data.resize(1);
 
     while (bipedWebots.robot->step(TIME_STEP) != -1)
     {
         simTime = bipedWebots.robot->getTime();
         bipedWebots.readData(simTime, robotStateSim);
+        ros::Rate loop_rate(1000);
+        sim_time_msg.data = ros::Time::now();
 
         if (simCnt < goStandCnt){
             standPosCmd << 0, 0, -0.3, 0.8, -0.46, 
@@ -90,16 +106,19 @@ bool runWebots(ros::Publisher& joint_pos_pub, ros::Publisher& sim_info_pub){
         //=========================================================//
         // Set data for ROS topic
             for (size_t i = 0; i < NJ; i++){
-                // joint_pos_msg.data[i] = 10;
-                // joint_pos_msg.data[i] = jointPosAcc[i];
-                // joint_pos_msg.data[i] = jointToqCmd[i];
-                joint_pos_msg.data[i] = robotStateSim.jointPosAct[i];
-                joint_pos_msg.data[i] = standPosCmd[i];
-                
+                // jnt_pos_msg.data[i] = 10;
+                // jnt_pos_msg.data[i] = jointPosAcc[i];
+                // jnt_pos_msg.data[i] = jointToqCmd[i];
+                jnt_pos_msg.data[i] = robotStateSim.jointPosAct[i];
+                jnt_toq_msg.data[i] = jointToqCmd[i];
             }
             sim_info_msg.data[0] = simTime;
-            sim_info_pub.publish(sim_info_msg);
-            joint_pos_pub.publish(joint_pos_msg);                
+            pubs.sim_time_pub.publish(sim_time_msg);
+            pubs.sim_info_pub.publish(sim_info_msg);
+            pubs.jnt_pos_pub.publish(jnt_pos_msg);
+            pubs.jnt_toq_pub.publish(jnt_toq_msg);
+            ros::spinOnce();
+            loop_rate.sleep();            
         //=========================================================//
     };        
 
