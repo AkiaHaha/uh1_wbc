@@ -3,7 +3,6 @@
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/advertising_board/protos/AdvertisingBoard.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Cardboard.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/bounding_objects/protos/TorusBoundingObject.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/appearances/protos/Parquetry.proto"
@@ -28,8 +27,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.1794082214976458 0.012652057864324382 0.9836933544000638 3.003088137548489
-  position 1.8920465596387863 -5.259025329094893 1.931248363395664
+  orientation -0.10520426574084837 0.002147529242122058 0.9944483146891462 3.1010258622912485
+  position 3.6528715691330937 -5.135050024505439 1.8624819411360234
 }
 TexturedBackground {
 }
@@ -48,33 +47,9 @@ RectangleArena {
 TexturedBackgroundLight {
   luminosity 0.2
 }
-AdvertisingBoard {
-  translation -1.29955 -7.27696 -4.9738e-14
-  rotation 0 0 -1 1.5708
-  recognitionColors [
-    1 0.847059 0.933333
-    0.74902 0.737255 0.741176
-  ]
-  displayWidth 7
-  frameColor 0.666667 0.666667 0.498039
-  poleColor 0.862745 0.886275 0.717647
-  baseRatio 3
-}
-AdvertisingBoard {
-  translation -3.99351 -4.03949 -4.9738e-14
-  rotation 0 0 -1 -2.8797953071795863
-  recognitionColors [
-    1 0.847059 0.933333
-    0.74902 0.737255 0.741176
-  ]
-  displayWidth 7
-  frameColor 0.666667 0.666667 0.498039
-  poleColor 0.862745 0.886275 0.717647
-  baseRatio 3
-}
 DEF UnitreeH1 Robot {
-  translation -0.9502074962593446 -5.057005187485277 0.9699266492056375
-  rotation 0.008551645382376655 -0.9975098568710715 0.07000681971285584 0.03904904201223449
+  translation -0.950176491722015 -5.0570055177977755 0.9699256101426093
+  rotation 0.008568573932440763 -0.9975057547766626 0.0700631766922186 0.03901725571343671
   children [
     GPS {
       name "gps_upperBody"
@@ -95,7 +70,7 @@ DEF UnitreeH1 Robot {
     }
     HingeJoint {
       jointParameters HingeJointParameters {
-        position -1.0705547851582887e-07
+        position -1.180593048104266e-07
         axis 0 0 1
         anchor 0 0.0875 -0.1742
       }
@@ -112,8 +87,8 @@ DEF UnitreeH1 Robot {
         }
       ]
       endPoint Solid {
-        translation 1.110223387485493e-16 0.08750000000000036 -0.17419999999999947
-        rotation 0 0 -1 1.0745380149674385e-07
+        translation 1.1102234271890165e-16 0.08750000000000036 -0.17419999999999947
+        rotation 0 0 -1 1.1920928955078128e-07
         children [
           DEF left_hip_yaw_link_visual CadShape {
             url [
@@ -122,7 +97,7 @@ DEF UnitreeH1 Robot {
           }
           HingeJoint {
             jointParameters HingeJointParameters {
-              position 1.9267930948125046e-06
+              position 2.2087986765965304e-06
               anchor 0.039468 0 0
             }
             device [
@@ -138,8 +113,8 @@ DEF UnitreeH1 Robot {
               }
             ]
             endPoint Solid {
-              translation 0.039467999999999975 5.551243473318926e-17 -6.661337078153502e-16
-              rotation 1 0 0 1.9268071502739476e-06
+              translation 0.039467999999999975 5.551262258661087e-17 -6.661336921605073e-16
+              rotation 1 0 0 2.208792443715182e-06
               children [
                 DEF left_hip_roll_link_visual CadShape {
                   url [
@@ -148,7 +123,7 @@ DEF UnitreeH1 Robot {
                 }
                 HingeJoint {
                   jointParameters HingeJointParameters {
-                    position -0.2999998215919711
+                    position -0.2999998550894594
                     axis 0 1 0
                     anchor 0 0.11536 0
                   }
@@ -165,8 +140,8 @@ DEF UnitreeH1 Robot {
                     }
                   ]
                   endPoint Solid {
-                    translation 5.551115382295722e-16 0.1153600000000008 2.2204454013242426e-16
-                    rotation 0 -1 0 0.2999998215919718
+                    translation 5.551115307916317e-16 0.1153600000000008 2.2204455872726466e-16
+                    rotation 0 -1 0 0.2999998550894595
                     children [
                       DEF left_hip_pitch_link_visual CadShape {
                         url [
@@ -175,7 +150,7 @@ DEF UnitreeH1 Robot {
                       }
                       HingeJoint {
                         jointParameters HingeJointParameters {
-                          position 0.8000299056377572
+                          position 0.8000302370918787
                           axis 0 1 0
                           anchor 0 0 -0.4
                         }
@@ -192,8 +167,8 @@ DEF UnitreeH1 Robot {
                           }
                         ]
                         endPoint Solid {
-                          translation -2.1820503180992327e-16 0 -0.40000000000000036
-                          rotation 0 1 0 0.8000299056377574
+                          translation -2.1820507196748793e-16 0 -0.40000000000000036
+                          rotation 0 0.9999999999999999 0 0.8000302370918787
                           children [
                             DEF left_knee_link_visual CadShape {
                               url [
@@ -202,7 +177,7 @@ DEF UnitreeH1 Robot {
                             }
                             HingeJoint {
                               jointParameters HingeJointParameters {
-                                position -0.4611006443923085
+                                position -0.4611008394674473
                                 axis 0 1 0
                                 anchor 0 0 -0.4
                               }
@@ -219,12 +194,12 @@ DEF UnitreeH1 Robot {
                                 }
                               ]
                               endPoint DEF LeftFootSole Solid {
-                                translation 0.0720400245700611 -1.7763568394001935e-15 -0.4200398318342421
-                                rotation 0 -1 0 0.4611006443923086
+                                translation 0.07204002847933261 -1.7763568394001558e-15 -0.42003981778102395
+                                rotation 0 -1 0 0.4611008394674475
                                 children [
                                   TouchSensor {
-                                    translation 1.8169048487948203e-09 -8.625215208724057e-09 3.196591248297298e-07
-                                    rotation -0.21349482003767378 0.9745497521673888 0.06835746021878147 6.8083991877636135e-09
+                                    translation 1.8179526772854615e-09 -8.626399150557518e-09 3.3863938248696046e-07
+                                    rotation -0.2284123965236478 0.9710413654759286 0.07004601094257998 6.645519858821147e-09
                                     name "left_foot_sole_touch_sensor_3d"
                                     boundingObject Box {
                                       size 0.28 0.03 0.024
@@ -377,7 +352,7 @@ DEF UnitreeH1 Robot {
     }
     HingeJoint {
       jointParameters HingeJointParameters {
-        position 1.081355141777013e-07
+        position 1.1955949006146595e-07
         axis 0 0 1
         anchor 0 -0.0875 -0.1742
       }
@@ -394,8 +369,8 @@ DEF UnitreeH1 Robot {
         }
       ]
       endPoint Solid {
-        translation -1.110223527644119e-16 -0.08749999999999947 -0.17419999999999947
-        rotation 0 0 1 1.0745380149674385e-07
+        translation -1.1102235878883781e-16 -0.08749999999999947 -0.17419999999999947
+        rotation 0 0 1 1.1920928955078128e-07
         children [
           DEF right_hip_yaw_link_visual CadShape {
             url [
@@ -404,7 +379,7 @@ DEF UnitreeH1 Robot {
           }
           HingeJoint {
             jointParameters HingeJointParameters {
-              position -1.9807509188732992e-06
+              position -2.2715820291788886e-06
               anchor 0.039468 0 0
             }
             device [
@@ -420,8 +395,8 @@ DEF UnitreeH1 Robot {
               }
             ]
             endPoint Solid {
-              translation 0.03946800000000001 2.7754256170411936e-17 -6.661338697507583e-16
-              rotation -1 0 0 1.980677681960337e-06
+              translation 0.03946800000000001 2.775406243795752e-17 -6.661338778225267e-16
+              rotation -0.9999999999999999 0 0 2.2716330290032063e-06
               children [
                 DEF right_hip_roll_link_visual CadShape {
                   url [
@@ -430,7 +405,7 @@ DEF UnitreeH1 Robot {
                 }
                 HingeJoint {
                   jointParameters HingeJointParameters {
-                    position -0.29999984157535203
+                    position -0.29999987794392596
                     axis 0 1 0
                     anchor 0 -0.11536 0
                   }
@@ -447,8 +422,8 @@ DEF UnitreeH1 Robot {
                     }
                   ]
                   endPoint Solid {
-                    translation -5.55111448731193e-16 -0.11535999999999635 6.66133867759546e-16
-                    rotation 0 -1 0 0.2999998415753526
+                    translation -5.551114729575224e-16 -0.11535999999999635 6.66133847570923e-16
+                    rotation 0 -1 0 0.29999987794392646
                     children [
                       DEF right_hip_pitch_link_visual CadShape {
                         url [
@@ -457,7 +432,7 @@ DEF UnitreeH1 Robot {
                       }
                       HingeJoint {
                         jointParameters HingeJointParameters {
-                          position 0.800029740510243
+                          position 0.8000300571874766
                           axis 0 1 0
                           anchor 0 0 -0.4
                         }
@@ -474,8 +449,8 @@ DEF UnitreeH1 Robot {
                           }
                         ]
                         endPoint Solid {
-                          translation 3.04393211535733e-17 -3.552713678800502e-15 -0.40000000000000013
-                          rotation 0 1 0 0.8000297405102431
+                          translation 3.043927663393971e-17 -3.552713678800464e-15 -0.40000000000000013
+                          rotation 0 1 0 0.8000300571874766
                           children [
                             DEF right_knee_link_visual CadShape {
                               url [
@@ -484,7 +459,7 @@ DEF UnitreeH1 Robot {
                             }
                             HingeJoint {
                               jointParameters HingeJointParameters {
-                                position -0.4610992696569234
+                                position -0.46109946357557563
                                 axis 0 1 0
                                 anchor 0 0 -0.4
                               }
@@ -501,12 +476,12 @@ DEF UnitreeH1 Robot {
                                 }
                               ]
                               endPoint DEF RightFootSole Solid {
-                                translation 0.07202194188654579 1.7763568394003045e-15 -0.4199208405167079
-                                rotation 0 -1 0 0.46109926965692366
+                                translation 0.07202194574956697 1.7763568394003045e-15 -0.41992082655030966
+                                rotation 0 -1 0 0.46109946357557585
                                 children [
                                   TouchSensor {
-                                    translation -7.665455048488923e-09 8.588080468996395e-09 3.043884009585468e-07
-                                    rotation -0.1881972449582229 0.9819447748993326 -0.019137816961018614 6.31573075458993e-09
+                                    translation -7.664363810278019e-09 8.599821299526411e-09 3.22817270838327e-07
+                                    rotation -0.2043099994125644 0.978707635407844 -0.019717721329416574 6.126901065334184e-09
                                     name "right_foot_sole_touch_sensor_3d"
                                     boundingObject Box {
                                       size 0.28 0.03 0.024
@@ -659,7 +634,7 @@ DEF UnitreeH1 Robot {
     }
     HingeJoint {
       jointParameters HingeJointParameters {
-        position 1.0098116110301495e-08
+        position 6.448771397313632e-09
         axis 0 0 1
       }
       device [
@@ -675,8 +650,8 @@ DEF UnitreeH1 Robot {
         }
       ]
       endPoint Solid {
-        translation -4.666503609144861e-05 6.134766268892577e-05 -0.001146357235751073
-        rotation -0.9186816608689417 0.3855150299910779 0.08603585086498176 0.00012238171920069037
+        translation -4.6665035867570166e-05 6.134766285922258e-05 -0.001146357235751073
+        rotation -0.918684016674146 0.38551602055127343 0.0860062521318511 0.0001223814071302193
         children [
           DEF torso_link_visual CadShape {
             url [
@@ -685,7 +660,7 @@ DEF UnitreeH1 Robot {
           }
           HingeJoint {
             jointParameters HingeJointParameters {
-              position -7.7606196378497e-07
+              position -6.274116507377407e-07
               axis 0 0.906309 0.422616
               anchor 0.0055 0.15535 0.42999
             }
@@ -703,7 +678,7 @@ DEF UnitreeH1 Robot {
             ]
             endPoint Solid {
               translation 0.005500000000000171 0.15535000000000299 0.42999000000000054
-              rotation 0.9999999999983612 -1.7674709646446674e-06 -3.918362725744752e-07 0.43633000000061756
+              rotation 0.9999999999989239 -1.432209995648495e-06 -3.175111996836098e-07 0.43633000000033134
               children [
                 DEF left_shoulder_pitch_link_visual CadShape {
                   url [
@@ -712,7 +687,7 @@ DEF UnitreeH1 Robot {
                 }
                 HingeJoint {
                   jointParameters HingeJointParameters {
-                    position 0.007754562233274758
+                    position 0.007754606932086572
                     anchor -0.0055 0.0565 -0.0165
                   }
                   device [
@@ -729,7 +704,7 @@ DEF UnitreeH1 Robot {
                   ]
                   endPoint Solid {
                     translation -0.0055000000000002824 0.05649999999999977 -0.01649999999999974
-                    rotation -1 -7.121826971713701e-18 -4.156227751096392e-18 0.42857556665777613
+                    rotation -1 -7.121827610199941e-18 -4.1562283370884435e-18 0.4285755219589399
                     children [
                       DEF left_shoulder_roll_link_visual CadShape {
                         url [
@@ -738,7 +713,7 @@ DEF UnitreeH1 Robot {
                       }
                       HingeJoint {
                         jointParameters HingeJointParameters {
-                          position 2.612255358572166e-06
+                          position 2.6278954129041147e-06
                           axis 0 0 1
                           anchor 0 0 -0.1343
                         }
@@ -755,8 +730,8 @@ DEF UnitreeH1 Robot {
                           }
                         ]
                         endPoint Solid {
-                          translation 3.3306925490769385e-16 -8.881775393765262e-16 -0.1342999999999992
-                          rotation 0 0 0.9999999999999999 2.6122547346223785e-06
+                          translation 3.3306926879884345e-16 -8.881775341673142e-16 -0.1342999999999992
+                          rotation 0 0 1 2.627848399959455e-06
                           children [
                             DEF left_shoulder_yaw_link_visual CadShape {
                               url [
@@ -765,7 +740,7 @@ DEF UnitreeH1 Robot {
                             }
                             HingeJoint {
                               jointParameters HingeJointParameters {
-                                position 3.854819074523254e-05
+                                position 3.8687718939661294e-05
                                 axis 0 1 0
                                 anchor 0.0185 0 -0.198
                               }
@@ -782,12 +757,12 @@ DEF UnitreeH1 Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation 0.018499999964552424 -1.4921397450961884e-13 -0.19800000088529532
-                                rotation 0 0.9999999999999999 0 3.8548195190068465e-05
+                                translation 0.0184999999645523 -1.4921397450961882e-13 -0.19800000088529532
+                                rotation 0 0.9999999999999999 0 3.868771925532066e-05
                                 children [
                                   TouchSensor {
-                                    translation 0.2700000054839389 5.378115730536592e-08 -0.020000027554529565
-                                    rotation -0.12866100319213622 0.9186185367333001 0.3736125402439855 8.3285603553775e-10
+                                    translation 0.27000000524200884 5.450213524937908e-08 -0.020000033444848464
+                                    rotation -0.004445106049588746 0.9275549612833971 0.3736603201181033 8.19860426138122e-10
                                     children [
                                       DEF Cone Pose {
                                         translation 0 -0.024 0
@@ -925,7 +900,7 @@ DEF UnitreeH1 Robot {
           }
           HingeJoint {
             jointParameters HingeJointParameters {
-              position 6.627829193019997e-06
+              position 6.787803116444811e-06
               axis 0 0.906309 -0.422616
               anchor 0.0055 -0.15535 0.42999
             }
@@ -943,7 +918,7 @@ DEF UnitreeH1 Robot {
             ]
             endPoint Solid {
               translation 0.005499999999999949 -0.15534999999999766 0.4299900000000001
-              rotation -0.999999999883054 1.4931018136266098e-05 -3.310105007625171e-06 0.43633000004934275
+              rotation -0.9999999998773338 1.529181799913681e-05 -3.390091879306683e-06 0.4363300000517116
               children [
                 DEF right_shoulder_pitch_link_visual CadShape {
                   url [
@@ -952,7 +927,7 @@ DEF UnitreeH1 Robot {
                 }
                 HingeJoint {
                   jointParameters HingeJointParameters {
-                    position -0.000536029839329091
+                    position -0.0005360771995129534
                     anchor -0.0055 -0.0565 -0.0165
                   }
                   device [
@@ -969,7 +944,7 @@ DEF UnitreeH1 Robot {
                   ]
                   endPoint Solid {
                     translation -0.005499999999999838 -0.05649999999999977 -0.01649999999999929
-                    rotation 1 -2.5575927215618834e-17 8.74257069762131e-18 0.4357941508222274
+                    rotation 0.9999999999999999 -2.5575929743944175e-17 8.742572238281206e-18 0.4357941034619949
                     children [
                       DEF right_shoulder_roll_link_visual CadShape {
                         url [
@@ -978,7 +953,7 @@ DEF UnitreeH1 Robot {
                       }
                       HingeJoint {
                         jointParameters HingeJointParameters {
-                          position -5.283952278043708e-06
+                          position -5.3009548125351475e-06
                           axis 0 0 1
                           anchor 0 0 -0.1343
                         }
@@ -995,8 +970,8 @@ DEF UnitreeH1 Robot {
                           }
                         ]
                         endPoint Solid {
-                          translation 1.1102230246095185e-16 -5.901385848155783e-22 -0.13430000000000097
-                          rotation 0 0 -1 5.28392738626201e-06
+                          translation 1.110223024609418e-16 -5.920262453424896e-22 -0.13430000000000097
+                          rotation 0 0 -1 5.300961124408386e-06
                           children [
                             DEF right_shoulder_yaw_link_visual CadShape {
                               url [
@@ -1005,7 +980,7 @@ DEF UnitreeH1 Robot {
                             }
                             HingeJoint {
                               jointParameters HingeJointParameters {
-                                position 4.2174687489687276e-05
+                                position 4.2325890173013534e-05
                                 axis 0 1 0
                                 anchor 0.0185 0 -0.198
                               }
@@ -1022,12 +997,12 @@ DEF UnitreeH1 Robot {
                                 }
                               ]
                               endPoint Solid {
-                                translation 0.018499999890114017 -4.67181848762264e-13 -0.19800000274411048
-                                rotation 0 1 0 4.217468784744506e-05
+                                translation 0.018499999890113604 -4.67181848762264e-13 -0.19800000274411048
+                                rotation 0 1 0 4.232588736928934e-05
                                 children [
                                   TouchSensor {
-                                    translation 0.26999999237226213 -5.398257574285026e-08 -0.02000002986406635
-                                    rotation -0.05234621438928029 0.29769435031414837 0.9532250246558513 1.873755724344098e-09
+                                    translation 0.26999999212667636 -5.474798925320101e-08 -0.020000036240551244
+                                    rotation -0.10423975457703367 0.30188740356884103 0.947627600448712 1.886712668844099e-09
                                     children [
                                       DEF Cone Pose {
                                         translation 0 0.02 0
@@ -1263,8 +1238,8 @@ DEF UnitreeH1 Robot {
   supervisor TRUE
 }
 Solid {
-  translation -0.6639775936542994 -5.062483577780707 0.9463333572731994
-  rotation -0.12033703037704142 -0.8580212165928971 0.49931812604438836 0.0076084
+  translation -0.6638894420135798 -5.062519684830152 0.9462416173854264
+  rotation -0.156693740969179 -0.8769410012623974 0.45433638622279415 0.00837240486098032
   children [
     Pose {
       children [
