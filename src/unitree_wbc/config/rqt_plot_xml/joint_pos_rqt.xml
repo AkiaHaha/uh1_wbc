@@ -64,7 +64,7 @@
                             <style>
                                 <lines_interpolate>true</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -115,7 +115,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -166,7 +166,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>4</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -217,7 +217,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>4</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -268,7 +268,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>4</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -317,7 +317,7 @@
                                     <type>std_msgs/Float64MultiArray</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>data/5</field>
+                                    <field>data/2</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -342,7 +342,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -393,7 +393,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -444,7 +444,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -495,7 +495,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -546,7 +546,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -622,7 +622,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -673,7 +673,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -724,7 +724,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -775,7 +775,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -849,7 +849,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -900,7 +900,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -951,7 +951,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -1002,7 +1002,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>5</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
