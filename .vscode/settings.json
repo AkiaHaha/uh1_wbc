@@ -124,5 +124,5 @@
     "/home/ukia/ustc_ws/devel/lib/python3/dist-packages",
     "/opt/ros/noetic/lib/python3/dist-packages"
   ],
-  "cmake.sourceDirectory": "/home/ukia/ws_uh1/src/unitree_wbc"
+  "cmake.sourceDirectory": "/home/ukia/test/uh1_wbc/src/unitree_wbc"
 }

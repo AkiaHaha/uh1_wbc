@@ -98,7 +98,7 @@ DEF UnitreeH1 Robot {
               }
             ]
             endPoint Solid {
-              translation 0.039467999999999975 5.551121467856528e-17 -6.661338094878226e-16
+              translation 0.039467999999999975 5.551121467856529e-17 -6.661338094878227e-16
               rotation 1 0 0 9.424321830774485e-08
               children [
                 DEF left_hip_roll_link_visual CadShape {
@@ -152,7 +152,7 @@ DEF UnitreeH1 Robot {
                           }
                         ]
                         endPoint Solid {
-                          translation 6.088694553922317e-17 2.7755575615628507e-17 -0.40000000000000024
+                          translation 6.088694553868315e-17 2.7755575615628494e-17 -0.40000000000000024
                           rotation 0 1 0 0.8000002098358139
                           children [
                             DEF left_knee_link_visual CadShape {
@@ -359,7 +359,7 @@ DEF UnitreeH1 Robot {
               }
             ]
             endPoint Solid {
-              translation 0.03946800000000001 2.7755506405204693e-17 -6.661338176588626e-16
+              translation 0.03946800000000001 2.7755506405204693e-17 -6.661338176588627e-16
               rotation -1 0 0 1.032382731180714e-07
               children [
                 DEF right_hip_roll_link_visual CadShape {
@@ -440,7 +440,7 @@ DEF UnitreeH1 Robot {
                                 }
                               ]
                               endPoint DEF RightFootSole Solid {
-                                translation 0.07200000119461814 -5.551115123125744e-17 -0.4199999956993785
+                                translation 0.07200000119461814 -5.5511151231257426e-17 -0.4199999956993785
                                 rotation 0 -1 0 0.4600000721202856
                                 children [
                                   DEF right_ankle_torque_sensor HingeJoint {
