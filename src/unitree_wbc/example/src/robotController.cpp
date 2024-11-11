@@ -100,8 +100,8 @@ bool RobotController::update(double timeCtrlSys, webotsState& robotStateSim){
     stateEstimation(robotStateSim);
     // motionPlan1();
     // motionPlan2();
-    motionPlan3();
-    // motionPlan4();///> Lifting box;
+    // motionPlan3();
+    motionPlan4();///> Lifting box;
     taskControl();
     return true;
 }

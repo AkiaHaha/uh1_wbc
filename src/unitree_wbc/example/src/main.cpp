@@ -69,11 +69,13 @@ bool runWebots(Publishers& pubs){
     pos_msg.data.resize(NJ);
     toq_msg.data.resize(NJ);
 
+int publish_rate = 100; // 设置一个发布频率
+int publish_counter = 0; 
+
     while (bipedWebots.robot->step(TIME_STEP) != -1)
     {
         simTime = bipedWebots.robot->getTime();
         bipedWebots.readData(simTime, robotStateSim);
-        ros::Rate loop_rate(1000);
 
         if (simCnt < goStandCnt){
             standPosCmd << 0, 0, -0.3, 0.8, -0.46, 
@@ -94,26 +96,27 @@ bool runWebots(Publishers& pubs){
         if (simTime > simStopTime){
             break;
         }
-        simCnt++;
 
         //=========================================================//
         // Set data for ROS topic
+        if (simCnt % publish_rate == 0) {
             for (size_t i = 0; i < NJ; i++){
                 // pos_msg.data[i] = 10;
                 // pos_msg.data[i] = jointPosAcc[i];
-                // pos_msg.data[i] = jointToqCmd[i];
+                // pos_msg.data[i] = jointToqCmd[i];                
                 pos_msg.data[i] = robotStateSim.jointPosAct[i];
                 toq_msg.data[i] = jointToqCmd[i];
             }
-            sim_time_msg_float.data = simTime-goStandTime;
-            cout << "sim_time_msg_float.data: " << sim_time_msg_float.data << endl;
+            sim_time_msg_float.data = simTime - goStandTime;
             motor_data_msg.positions = pos_msg;
             motor_data_msg.torques = toq_msg;
             motor_data_msg.time_float = sim_time_msg_float;
             pubs.motor_data_pub.publish(motor_data_msg);
             ros::spinOnce();
-            loop_rate.sleep();            
-        //=========================================================//
+        }
+        simCnt++;
+        publish_counter++;         
+        //=========================================================//        
     };        
 
 //==========================================================================================//
