@@ -1,4 +1,5 @@
 #include <ros/ros.h>
+#include <unitree_wbc/MotorData.h>
 #include <std_msgs/Float64MultiArray.h>
 #include "std_msgs/Float64.h"
 #include "std_msgs/Time.h"
@@ -19,10 +20,7 @@
 using namespace std;
 
 struct Publishers {
-    ros::Publisher jnt_pos_pub;
-    ros::Publisher sim_info_pub;
-    ros::Publisher sim_time_pub;
-    ros::Publisher jnt_toq_pub;
+    ros::Publisher motor_data_pub;
 };
 
 bool runWebots(Publishers& pubs);
@@ -37,10 +35,7 @@ int main(int argc, char **argv) {
     ros::init(argc, argv, "webots_controller");
     ros::NodeHandle nh;
     Publishers pubs;
-    pubs.jnt_pos_pub = nh.advertise<std_msgs::Float64MultiArray>("jnt_pos", 20);
-    pubs.jnt_toq_pub = nh.advertise<std_msgs::Float64MultiArray>("jnt_toq", 20);
-    pubs.sim_info_pub = nh.advertise<std_msgs::Float64MultiArray>("sim_info", 20);
-    pubs.sim_time_pub = nh.advertise<std_msgs::Time>("sim_time", 20);
+    pubs.motor_data_pub = nh.advertise<unitree_wbc::MotorData>("sim/motor_data", 20);
     runWebots(pubs);
     return 0;
 }
@@ -67,20 +62,18 @@ bool runWebots(Publishers& pubs){
     Eigen::VectorXd jointPosAtStartCtrl = Eigen::VectorXd::Zero(NJ);
     
 
-    std_msgs::Time sim_time_msg;
-    std_msgs::Float64MultiArray jnt_pos_msg;
-    std_msgs::Float64MultiArray sim_info_msg;
-    std_msgs::Float64MultiArray jnt_toq_msg;
-    jnt_pos_msg.data.resize(NJ);
-    jnt_toq_msg.data.resize(NJ);
-    sim_info_msg.data.resize(1);
+    std_msgs::Float64 sim_time_msg_float;
+    std_msgs::Float64MultiArray pos_msg;
+    std_msgs::Float64MultiArray toq_msg;
+    unitree_wbc::MotorData motor_data_msg;
+    pos_msg.data.resize(NJ);
+    toq_msg.data.resize(NJ);
 
     while (bipedWebots.robot->step(TIME_STEP) != -1)
     {
         simTime = bipedWebots.robot->getTime();
         bipedWebots.readData(simTime, robotStateSim);
         ros::Rate loop_rate(1000);
-        sim_time_msg.data = ros::Time::now();
 
         if (simCnt < goStandCnt){
             standPosCmd << 0, 0, -0.3, 0.8, -0.46, 
@@ -106,17 +99,18 @@ bool runWebots(Publishers& pubs){
         //=========================================================//
         // Set data for ROS topic
             for (size_t i = 0; i < NJ; i++){
-                // jnt_pos_msg.data[i] = 10;
-                // jnt_pos_msg.data[i] = jointPosAcc[i];
-                // jnt_pos_msg.data[i] = jointToqCmd[i];
-                jnt_pos_msg.data[i] = robotStateSim.jointPosAct[i];
-                jnt_toq_msg.data[i] = jointToqCmd[i];
+                // pos_msg.data[i] = 10;
+                // pos_msg.data[i] = jointPosAcc[i];
+                // pos_msg.data[i] = jointToqCmd[i];
+                pos_msg.data[i] = robotStateSim.jointPosAct[i];
+                toq_msg.data[i] = jointToqCmd[i];
             }
-            sim_info_msg.data[0] = simTime;
-            pubs.sim_time_pub.publish(sim_time_msg);
-            pubs.sim_info_pub.publish(sim_info_msg);
-            pubs.jnt_pos_pub.publish(jnt_pos_msg);
-            pubs.jnt_toq_pub.publish(jnt_toq_msg);
+            sim_time_msg_float.data = simTime-goStandTime;
+            cout << "sim_time_msg_float.data: " << sim_time_msg_float.data << endl;
+            motor_data_msg.positions = pos_msg;
+            motor_data_msg.torques = toq_msg;
+            motor_data_msg.time_float = sim_time_msg_float;
+            pubs.motor_data_pub.publish(motor_data_msg);
             ros::spinOnce();
             loop_rate.sleep();            
         //=========================================================//

@@ -26,20 +26,7 @@
                         <curve_0>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/0</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -48,8 +35,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/0</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -62,9 +62,9 @@
                                 <type>0</type>
                             </data>
                             <style>
-                                <lines_interpolate>true</lines_interpolate>
+                                <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -77,20 +77,7 @@
                         <curve_1>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/6</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -99,8 +86,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/1</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -115,7 +115,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -123,25 +123,12 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>HIP-ROW</title>
+                            <title>HIP-PITCH</title>
                         </curve_1>
                         <curve_2>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/2</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -150,8 +137,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/2</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -165,8 +165,8 @@
                             </data>
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
-                                <pen_style>4</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_style>3</pen_style>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -174,25 +174,12 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>HIPT-PITCH</title>
+                            <title>PITCH-ROLL</title>
                         </curve_2>
                         <curve_3>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/3</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -201,8 +188,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/3</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -216,8 +216,8 @@
                             </data>
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
-                                <pen_style>4</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_style>3</pen_style>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -230,20 +230,7 @@
                         <curve_4>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/4</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -252,8 +239,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/4</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -267,8 +267,8 @@
                             </data>
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
-                                <pen_style>4</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_style>3</pen_style>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -276,14 +276,14 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>Ankle</title>
+                            <title>ANKLE</title>
                         </curve_4>
                     </curves>
                     <legend>
                         <visible>true</visible>
                     </legend>
                     <plot_rate>30</plot_rate>
-                    <title>Left_Leg_Joint_Position vs. Time</title>
+                    <title>Left_Leg_Position vs. Time</title>
                 </column_0>
                 <column_1>
                     <axes>
@@ -304,20 +304,7 @@
                         <curve_0>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/5</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -326,8 +313,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/2</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -342,7 +342,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -355,20 +355,7 @@
                         <curve_1>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/6</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -377,8 +364,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/6</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -393,58 +393,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
-                                <render_antialias>false</render_antialias>
-                                <steps_invert>false</steps_invert>
-                                <sticks_baseline>0</sticks_baseline>
-                                <sticks_orientation>2</sticks_orientation>
-                                <type>0</type>
-                            </style>
-                            <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>HIP-ROLL</title>
-                        </curve_1>
-                        <curve_2>
-                            <axes>
-                                <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/7</field>
-                                    <field_type>0</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </y_axis>
-                            </axes>
-                            <color>
-                                <custom_color>#000000</custom_color>
-                                <type>0</type>
-                            </color>
-                            <data>
-                                <circular_buffer_capacity>1000</circular_buffer_capacity>
-                                <time_frame_length>10</time_frame_length>
-                                <type>0</type>
-                            </data>
-                            <style>
-                                <lines_interpolate>false</lines_interpolate>
-                                <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -453,24 +402,11 @@
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
                             <title>HIP-PITCH</title>
-                        </curve_2>
-                        <curve_3>
+                        </curve_1>
+                        <curve_2>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/8</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -479,8 +415,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/7</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -495,7 +444,58 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_width>2</pen_width>
+                                <render_antialias>false</render_antialias>
+                                <steps_invert>false</steps_invert>
+                                <sticks_baseline>0</sticks_baseline>
+                                <sticks_orientation>2</sticks_orientation>
+                                <type>0</type>
+                            </style>
+                            <subscriber_queue_size>100</subscriber_queue_size>
+                            <title>HIP-ROLL</title>
+                        </curve_2>
+                        <curve_3>
+                            <axes>
+                                <x_axis>
+                                    <field>time_float/data</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/8</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </y_axis>
+                            </axes>
+                            <color>
+                                <custom_color>#000000</custom_color>
+                                <type>0</type>
+                            </color>
+                            <data>
+                                <circular_buffer_capacity>1000</circular_buffer_capacity>
+                                <time_frame_length>10</time_frame_length>
+                                <type>0</type>
+                            </data>
+                            <style>
+                                <lines_interpolate>false</lines_interpolate>
+                                <pen_style>3</pen_style>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -508,20 +508,7 @@
                         <curve_4>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/9</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -530,8 +517,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/9</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -546,7 +546,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -561,7 +561,7 @@
                         <visible>true</visible>
                     </legend>
                     <plot_rate>30</plot_rate>
-                    <title>Right_Leg_Joint_Position vs. Time</title>
+                    <title>Right_Leg_Position vs. Time</title>
                 </column_1>
             </row_0>
             <row_1>
@@ -584,20 +584,7 @@
                         <curve_0>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/11</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -606,12 +593,25 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/11</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
-                                <custom_color>#ff00ff</custom_color>
+                                <custom_color>#ff55ff</custom_color>
                                 <type>1</type>
                             </color>
                             <data>
@@ -622,7 +622,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -635,20 +635,7 @@
                         <curve_1>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/12</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -657,8 +644,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/12</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -673,7 +673,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -686,20 +686,7 @@
                         <curve_2>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/13</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -708,8 +695,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/13</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -724,7 +724,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -737,20 +737,7 @@
                         <curve_3>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/14</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -759,8 +746,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/14</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -775,7 +775,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -811,20 +811,7 @@
                         <curve_0>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/15</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -833,8 +820,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/15</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -849,7 +849,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -862,20 +862,7 @@
                         <curve_1>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/16</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -884,8 +871,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/16</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -900,7 +900,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -913,20 +913,7 @@
                         <curve_2>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/17</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -935,8 +922,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/17</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -951,7 +951,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -964,20 +964,7 @@
                         <curve_3>
                             <axes>
                                 <x_axis>
-                                    <field></field>
-                                    <field_type>1</field_type>
-                                    <scale>
-                                        <absolute_maximum>1000</absolute_maximum>
-                                        <absolute_minimum>0</absolute_minimum>
-                                        <relative_maximum>0</relative_maximum>
-                                        <relative_minimum>-1000</relative_minimum>
-                                        <type>0</type>
-                                    </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
-                                </x_axis>
-                                <y_axis>
-                                    <field>data/18</field>
+                                    <field>time_float/data</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -986,8 +973,21 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/jnt_pos</topic>
-                                    <type>std_msgs/Float64MultiArray</type>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/18</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -1002,7 +1002,7 @@
                             <style>
                                 <lines_interpolate>false</lines_interpolate>
                                 <pen_style>3</pen_style>
-                                <pen_width>3</pen_width>
+                                <pen_width>2</pen_width>
                                 <render_antialias>false</render_antialias>
                                 <steps_invert>false</steps_invert>
                                 <sticks_baseline>0</sticks_baseline>
@@ -1012,12 +1012,63 @@
                             <subscriber_queue_size>100</subscriber_queue_size>
                             <title>ELBOW</title>
                         </curve_3>
+                        <curve_4>
+                            <axes>
+                                <x_axis>
+                                    <field>time_float/data</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </x_axis>
+                                <y_axis>
+                                    <field>positions/data/10</field>
+                                    <field_type>0</field_type>
+                                    <scale>
+                                        <absolute_maximum>1000</absolute_maximum>
+                                        <absolute_minimum>0</absolute_minimum>
+                                        <relative_maximum>0</relative_maximum>
+                                        <relative_minimum>-1000</relative_minimum>
+                                        <type>0</type>
+                                    </scale>
+                                    <topic>/sim/motor_data</topic>
+                                    <type>unitree_wbc/MotorData</type>
+                                </y_axis>
+                            </axes>
+                            <color>
+                                <custom_color>#ff0000</custom_color>
+                                <type>1</type>
+                            </color>
+                            <data>
+                                <circular_buffer_capacity>1000</circular_buffer_capacity>
+                                <time_frame_length>10</time_frame_length>
+                                <type>0</type>
+                            </data>
+                            <style>
+                                <lines_interpolate>false</lines_interpolate>
+                                <pen_style>1</pen_style>
+                                <pen_width>2</pen_width>
+                                <render_antialias>false</render_antialias>
+                                <steps_invert>false</steps_invert>
+                                <sticks_baseline>0</sticks_baseline>
+                                <sticks_orientation>2</sticks_orientation>
+                                <type>0</type>
+                            </style>
+                            <subscriber_queue_size>100</subscriber_queue_size>
+                            <title>Torso</title>
+                        </curve_4>
                     </curves>
                     <legend>
                         <visible>true</visible>
                     </legend>
                     <plot_rate>30</plot_rate>
-                    <title>Right_Arm_Positions vs. Time</title>
+                    <title>Right_Arm_Position vs. Time</title>
                 </column_1>
             </row_1>
         </plots>

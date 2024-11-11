@@ -13,6 +13,18 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  message_generation #used for generating self-defined messages
+)
+
+# Generate messages defined in the 'msg' folder
+add_message_files(
+  FILES
+  MotorData.msg
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
 )
 
 # Eigen3
@@ -27,7 +39,7 @@ find_library(QPOASES_LIBRARY NAMES qpOASES PATHS /usr/local/lib)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp rospy std_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
   DEPENDS EIGEN3
 )
 
