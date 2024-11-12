@@ -875,7 +875,7 @@ bool RobotController::motionPlan5(){
     xyzDotFootTgt[1] = Eigen::Vector3d::Zero();
     rpyDotFootTgt[1] = Eigen::Vector3d::Zero();   
 
-    if(time < 1.0){
+    if(time < 1.0){// Squat down;
         mPlan = 0.5*sin((pms.motionFrq*time-0.5)*PI)+0.5;
         mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*time-0.5)*PI);
     
@@ -912,7 +912,7 @@ bool RobotController::motionPlan5(){
         xyzDotArmTgt[1](2) = xyzDotArmInit[1](2)+pms.armUpDown_R*mPlanDot;
 
     }
-    else if(time >= 1.0 && time < 2.0){
+    else if(time >= 1.0 && time < 2.0){// Grip the box
         timeS12 = time;
         mPlan = 0.5*sin((pms.motionFrq*timeS12-0.5)*PI)+0.5;
         mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS12-0.5)*PI);
@@ -929,7 +929,7 @@ bool RobotController::motionPlan5(){
         xyzArmTgt[1](1) = xyzArmInit[1](1)+pms.armAside_R*mPlan;
         xyzDotArmTgt[1](1) = xyzDotArmInit[1](1)+pms.armAside_R*mPlanDot;        
     }
-    else if (time >= 2.0 && time < 3.0){
+    else if (time >= 2.0 && time < 3.0){// Stand up;
         timeS23 = time-1;
         mPlan = 0.5*sin((pms.motionFrq*timeS23-0.5)*PI)+0.5;
         mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS23-0.5)*PI);
@@ -952,7 +952,7 @@ bool RobotController::motionPlan5(){
         xyzDotArmTgt[1](0) = xyzDotArmInit[1](0)+pms.armForward_R*mPlanDot;
         xyzDotArmTgt[1](2) = xyzDotArmInit[1](2)+pms.armUpDown_R*mPlanDot;        
     }
-    else if (time >= 3.0 && time < 4.0){
+    else if (time >= 3.0 && time < 4.0){// Up lift the box higher than table of 1 meter;
         timeS34 = time - 3.0;
         mPlan = 0.5*sin((pms.motionFrq*timeS34-0.5)*PI)+0.5;
         mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS34-0.5)*PI);
@@ -964,7 +964,7 @@ bool RobotController::motionPlan5(){
         xyzArmTgt[1](2) = xyzArmInit[1](2)+pms.armUpDown_R_Lift*mPlan;
         xyzDotArmTgt[1](2) = xyzDotArmInit[1](2)+pms.armUpDown_R_Lift*mPlanDot;    
     }
-    else if (time >= 4.0 && time < 5.0){
+    else if (time >= 4.0 && time < 5.0){// Push forward the box;
         timeS34 = time - 4.0;
         mPlan = 0.5*sin((pms.motionFrq*timeS34-0.5)*PI)+0.5;
         mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS34-0.5)*PI);
@@ -982,12 +982,18 @@ bool RobotController::motionPlan5(){
         rpyTorsoTgt(1) = rpyTorsoInit(1)+pms.pitchApt_Lift*mPlan;
         rpyDotTorsoTgt(1) = pms.pitchApt_Lift*mPlanDot;
     }
-    else if(time >= 5.0 && time < 6.0){
+    else if(time >= 5.0 && time < 6.0){// Add a down motion for better place; 0.5s
         if(!flag1){
+            xyzArmInitOrigin[0] = xyzArmInit[0];
+            xyzArmInitOrigin[1] = xyzArmInit[1];
+            xyzDotArmInitOrigin[0] = xyzDotArmInit[0];
+            xyzDotArmInitOrigin[1] = xyzDotArmInit[1];
+
             xyzArmInit[0] = xyzArmTgt[0];
             xyzDotArmInit[0] = xyzDotArmTgt[0];
             xyzArmInit[1] = xyzArmTgt[1];
             xyzDotArmInit[1] = xyzDotArmTgt[1];
+
             flag1 = true;
         }
         timeS34 = time - 5.0;
@@ -1001,7 +1007,7 @@ bool RobotController::motionPlan5(){
         xyzArmTgt[1](2) = xyzArmInit[1](2)+pms.pelvisAside_Lift*mPlan;
         xyzDotArmTgt[1](2) = xyzDotArmInit[1](2)+pms.pelvisAside_Lift*mPlanDot;  
     }
-    else if(time >= 6.0 && time < 7.0){
+    else if(time >= 6.0 && time < 7.0){// Open arms to place down the box;
         timeS45 = time - 6.0;
         mPlan = 0.5*sin((pms.motionFrq*timeS45-0.5)*PI)+0.5;
         mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS45-0.5)*PI);
@@ -1018,28 +1024,53 @@ bool RobotController::motionPlan5(){
         xyzArmTgt[1](1) = xyzArmInit[1](1)+pms.armAside_R_Lift*mPlan;
         xyzDotArmTgt[1](1) = xyzDotArmInit[1](1)+pms.armAside_R_Lift*mPlanDot;
     }
-    else if(time >= 7.0 && time < 8.0){
+    else if(time >= 7.0 && time < 8.0){// Revert the forward motion;
         timeS56 = time-6.0;
         mPlan = 0.5*sin((pms.motionFrq*timeS56-0.5)*PI)+0.5;
         mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS56-0.5)*PI);
     
         // LeftArm
-        xyzArmTgt[0](0) = xyzArmInit[0](0)+pms.armForward_L_Lift*mPlan;
-        xyzArmTgt[0](1) = xyzArmInit[0](1)+pms.armAside_L_Lift*mPlan;
-        xyzArmTgt[0](2) = xyzArmInit[0](2)+pms.armUpDown_L_Lift*mPlan;
-        xyzDotArmTgt[0](0) = xyzDotArmInit[0](0)+pms.armForward_L_Lift*mPlanDot;
-        xyzDotArmTgt[0](1) = xyzDotArmInit[0](1)+pms.armAside_L_Lift*mPlanDot;
-        xyzDotArmTgt[0](2) = xyzDotArmInit[0](2)+pms.armUpDown_L_Lift*mPlanDot;
+        xyzArmTgt[0](0) = xyzArmInitOrigin[0](0)+pms.armForward_L_Lift*mPlan;
+        xyzDotArmTgt[0](0) = xyzDotArmInitOrigin[0](0)+pms.armForward_L_Lift*mPlanDot;
         // RightArm
-        xyzArmTgt[1](0) = xyzArmInit[1](0)+pms.armForward_R_Lift*mPlan;
-        xyzArmTgt[1](1) = xyzArmInit[1](1)+pms.armAside_R_Lift*mPlan;
-        xyzArmTgt[1](2) = xyzArmInit[1](2)+pms.armUpDown_R_Lift*mPlan;
-        xyzDotArmTgt[1](0) = xyzDotArmInit[1](0)+pms.armForward_R_Lift*mPlanDot;
-        xyzDotArmTgt[1](1) = xyzDotArmInit[1](1)+pms.armAside_R_Lift*mPlanDot;
-        xyzDotArmTgt[1](2) = xyzDotArmInit[1](2)+pms.armUpDown_R_Lift*mPlanDot;
-    }else{
-        
+        xyzArmTgt[1](0) = xyzArmInitOrigin[1](0)+pms.armForward_R_Lift*mPlan;
+        xyzDotArmTgt[1](0) = xyzDotArmInitOrigin[1](0)+pms.armForward_R_Lift*mPlanDot;
+
+        // Pelvis&Torso
+        xyzPelvisTgt(0) = xyzPelvisInit(0)+pms.pelvisForward_Lift*mPlan;
+        xyzDotPelvisTgt(0) = pms.pelvisForward_Lift*mPlanDot;
+        rpyTorsoTgt(1) = rpyTorsoInit(1)+pms.pitchApt_Lift*mPlan;
+        rpyDotTorsoTgt(1) = pms.pitchApt_Lift*mPlanDot;
     }
+    // else if(time >= 8.0 && time < 9.0){// Revert the donwn motion to go back to the initial position;
+
+    //     timeS34 = time - 7.0;
+    //     mPlan = 0.5*sin((pms.motionFrq*timeS34-0.5)*PI)+0.5;
+    //     mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS34-0.5)*PI);
+    
+    //     // LeftArm
+    //     xyzArmTgt[0](2) = xyzArmInit[0](2)+pms.pelvisAside_Lift*mPlan;
+    //     xyzDotArmTgt[0](2) = xyzDotArmInit[0](2)+pms.pelvisAside_Lift*mPlanDot;
+    //     // RightArm
+    //     xyzArmTgt[1](2) = xyzArmInit[1](2)+pms.pelvisAside_Lift*mPlan;
+    //     xyzDotArmTgt[1](2) = xyzDotArmInit[1](2)+pms.pelvisAside_Lift*mPlanDot; 
+    // }
+    // else if(time >= 9.0 && time < 10.0){// All reset to init;
+    //     timeS56 = time-8.0;
+    //     mPlan = 0.5*sin((pms.motionFrq*timeS56-0.5)*PI)+0.5;
+    //     mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS56-0.5)*PI);
+    
+    //     // LeftArm
+    //     xyzArmTgt[0](1) = xyzArmInitOrigin[0](1)+pms.armAside_L_Lift*mPlan;
+    //     xyzArmTgt[0](2) = xyzArmInitOrigin[0](2)+pms.armUpDown_L_Lift*mPlan;
+    //     xyzDotArmTgt[0](1) = xyzDotArmInitOrigin[0](1)+pms.armAside_L_Lift*mPlanDot;
+    //     xyzDotArmTgt[0](2) = xyzDotArmInitOrigin[0](2)+pms.armUpDown_L_Lift*mPlanDot;
+    //     // RightArm
+    //     xyzArmTgt[1](1) = xyzArmInitOrigin[1](1)+pms.armAside_R_Lift*mPlan;
+    //     xyzArmTgt[1](2) = xyzArmInitOrigin[1](2)+pms.armUpDown_R_Lift*mPlan;
+    //     xyzDotArmTgt[1](1) = xyzDotArmInitOrigin[1](1)+pms.armAside_R_Lift*mPlanDot;
+    //     xyzDotArmTgt[1](2) = xyzDotArmInitOrigin[1](2)+pms.armUpDown_R_Lift*mPlanDot;
+    // }
 
     return true;
 }
