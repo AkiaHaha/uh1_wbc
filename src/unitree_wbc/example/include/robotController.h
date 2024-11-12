@@ -49,13 +49,14 @@ public:
     bool getValueQdd(Eigen::VectorXd & Qdd);
 
 private:
-    ConfigParams configParams;
+    ConfigParams pms;
     webotsState robotStateSim;
     bool stateEstimation(webotsState & robotStateSim);                         
     bool motionPlan1();
     bool motionPlan2();
     bool motionPlan3();
     bool motionPlan4();
+    bool motionPlan5();
     bool taskControl();
     RobotDynamics * robotDynamics;
     AGIROBOT::Wbc * myWbc;

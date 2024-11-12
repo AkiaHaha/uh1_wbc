@@ -32,10 +32,13 @@ struct ConfigParams {
     double weightTorsoX, weightTorsoYY, weightTorsoZ, weightTorsoR, weightTorsoP, weightTorsoY;
 
     // Params for motion plan
-    double pelvisUpDown, pelvisForward, pelvisAside, pitchApt, rollApt, yawApt;
     double motionFrq, sFreq;
+    double pelvisUpDown, pelvisForward, pelvisAside, pitchApt, rollApt, yawApt;
+    double pelvisUpDown_Lift, pelvisForward_Lift, pelvisAside_Lift, pitchApt_Lift, rollApt_Lift, yawApt_Lift;
     double armForward_L, armUpDown_L, armAside_L, armRoll_L, armPitch_L, armYaw_L;
+    double armForward_L_Lift, armUpDown_L_Lift, armAside_L_Lift, armRoll_L_Lift, armPitch_L_Lift, armYaw_L_Lift;
     double armForward_R, armUpDown_R, armAside_R, armRoll_R, armPitch_R, armYaw_R;
+    double armForward_R_Lift, armUpDown_R_Lift, armAside_R_Lift, armRoll_R_Lift, armPitch_R_Lift, armYaw_R_Lift;
     double footForward, footAside, footUpDown, footRoll, footPitch, footYaw;
 
     // PD gains
@@ -281,14 +284,14 @@ struct ConfigParams {
         weightGVLimitation(4) = weightGVLAnkle;
         weightGVLimitation(9) = weightGVLAnkle;
 
+        motionFrq = jsonData["motionFrq"];
+        sFreq = jsonData["sFreq"];
         pelvisUpDown = jsonData["pelvisUpDown"];
         pelvisForward = jsonData["pelvisForward"];
         pelvisAside = jsonData["pelvisAside"];
         pitchApt = jsonData["pitchApt"];
         rollApt = jsonData["rollApt"];
         yawApt = jsonData["yawApt"];
-        motionFrq = jsonData["motionFrq"];
-        sFreq = jsonData["sFreq"];
         armForward_L = jsonData["armForward_L"];
         armUpDown_L = jsonData["armUpDown_L"];
         armAside_L = jsonData["armAside_L"];
@@ -307,6 +310,25 @@ struct ConfigParams {
         footPitch = jsonData["footPitch"];
         footRoll = jsonData["footRoll"];
         footYaw = jsonData["footYaw"];
+
+        pelvisUpDown_Lift = jsonData["pelvisUpDown_Lift"];
+        pelvisForward_Lift = jsonData["pelvisForward_Lift"];
+        pelvisAside_Lift = jsonData["pelvisAside_Lift"];
+        pitchApt_Lift = jsonData["pitchApt_Lift"];
+        rollApt_Lift = jsonData["rollApt_Lift"];
+        yawApt_Lift = jsonData["yawApt_Lift"];
+        armForward_L_Lift = jsonData["armForward_L_Lift"];
+        armUpDown_L_Lift = jsonData["armUpDown_L_Lift"];
+        armAside_L_Lift = jsonData["armAside_L_Lift"];
+        armPitch_L_Lift = jsonData["armPitch_L_Lift"];
+        armRoll_L_Lift = jsonData["armRoll_L_Lift"];
+        armYaw_L_Lift = jsonData["armYaw_L_Lift"];
+        armForward_R_Lift = jsonData["armForward_R_Lift"];
+        armUpDown_R_Lift = jsonData["armUpDown_R_Lift"];
+        armAside_R_Lift = jsonData["armAside_R_Lift"];
+        armPitch_R_Lift = jsonData["armPitch_R_Lift"];
+        armRoll_R_Lift = jsonData["armRoll_R_Lift"];
+        armYaw_R_Lift = jsonData["armYaw_R_Lift"];            
 
         standingCnt = jsonData["standingCnt"];
     }

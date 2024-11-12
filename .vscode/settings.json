@@ -140,5 +140,6 @@
   "Codegeex.CompletionDelay": 0.2,
   "Codegeex.Chat.LanguagePreference": "English",
   "Codegeex.Comment.LanguagePreference": "English",
-  "Codegeex.CommitMessage.LanguagePreference": "English"
+  "Codegeex.CommitMessage.LanguagePreference": "English",
+  "C_Cpp.default.compilerPath": "/usr/bin/g++-9"
 }

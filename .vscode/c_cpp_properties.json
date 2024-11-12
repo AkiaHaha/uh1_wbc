@@ -10,7 +10,7 @@
                 "/usr/local/webots/include/controller/cpp",
                 "/usr/include/eigen3"
             ],
-            "compilerPath": "/usr/bin/gcc",
+            "compilerPath": "/usr/bin/g++-9",
             "cStandard": "${default}",
             "cppStandard": "${default}",
             "intelliSenseMode": "linux-gcc-x64",
