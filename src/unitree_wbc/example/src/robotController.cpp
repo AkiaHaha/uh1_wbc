@@ -819,9 +819,7 @@ bool RobotController::motionPlan4(){
             xyzDotArmTgt[1](1) = xyzDotArmInit[1](1)+yyyR*mPlanDot;
             xyzDotArmTgt[1](2) = xyzDotArmInit[1](2)+pms.armUpDown_R*mPlanDot;
         }
-        
     }
-
 
     if(time >= 1.0 && time < 2.0){
         timeS1 = time;
@@ -912,9 +910,9 @@ bool RobotController::motionPlan5(){
         xyzDotArmTgt[1](0) = xyzDotArmInit[1](0)+pms.armForward_R*mPlanDot;
         xyzDotArmTgt[1](1) = xyzDotArmInit[1](1)+pms.armUpDown_R*mPlanDot;        
         xyzDotArmTgt[1](2) = xyzDotArmInit[1](2)+pms.armUpDown_R*mPlanDot;
-     
 
-    }else if(time >= 1.0 && time < 2.0){
+    }
+    else if(time >= 1.0 && time < 2.0){
         timeS12 = time;
         mPlan = 0.5*sin((pms.motionFrq*timeS12-0.5)*PI)+0.5;
         mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS12-0.5)*PI);
@@ -930,7 +928,8 @@ bool RobotController::motionPlan5(){
         rpyDotArmTgt[1](0) = rpyDotArmInit[1](0)+pms.armRoll_R*mPlanDot;
         xyzArmTgt[1](1) = xyzArmInit[1](1)+pms.armAside_R*mPlan;
         xyzDotArmTgt[1](1) = xyzDotArmInit[1](1)+pms.armAside_R*mPlanDot;        
-    }else if (time >= 2.0 && time < 3.0){
+    }
+    else if (time >= 2.0 && time < 3.0){
         timeS23 = time-1;
         mPlan = 0.5*sin((pms.motionFrq*timeS23-0.5)*PI)+0.5;
         mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS23-0.5)*PI);
@@ -963,51 +962,64 @@ bool RobotController::motionPlan5(){
         xyzDotArmTgt[0](2) = xyzDotArmInit[0](2)+pms.armUpDown_L_Lift*mPlanDot;
         // RightArm
         xyzArmTgt[1](2) = xyzArmInit[1](2)+pms.armUpDown_R_Lift*mPlan;
-        xyzDotArmTgt[1](2) = xyzDotArmInit[1](2)+pms.armUpDown_R_Lift*mPlanDot;
+        xyzDotArmTgt[1](2) = xyzDotArmInit[1](2)+pms.armUpDown_R_Lift*mPlanDot;    
+    }
+    else if (time >= 4.0 && time < 5.0){
+        timeS34 = time - 4.0;
+        mPlan = 0.5*sin((pms.motionFrq*timeS34-0.5)*PI)+0.5;
+        mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS34-0.5)*PI);
+    
         // LeftArm
         xyzArmTgt[0](0) = xyzArmInit[0](0)+pms.armForward_L_Lift*mPlan;
         xyzDotArmTgt[0](0) = xyzDotArmInit[0](0)+pms.armForward_L_Lift*mPlanDot;
         // RightArm
         xyzArmTgt[1](0) = xyzArmInit[1](0)+pms.armForward_R_Lift*mPlan;
-        xyzDotArmTgt[1](0) = xyzDotArmInit[1](0)+pms.armForward_R_Lift*mPlanDot;        
+        xyzDotArmTgt[1](0) = xyzDotArmInit[1](0)+pms.armForward_R_Lift*mPlanDot;
+        
+        // Pelvis&Torso
+        xyzPelvisTgt(0) = xyzPelvisInit(0)+pms.pelvisForward_Lift*mPlan;
+        xyzDotPelvisTgt(0) = pms.pelvisForward_Lift*mPlanDot;
+        rpyTorsoTgt(1) = rpyTorsoInit(1)+pms.pitchApt_Lift*mPlan;
+        rpyDotTorsoTgt(1) = pms.pitchApt_Lift*mPlanDot;
     }
-    // else if (time >= 4.0 && time < 5.0){
-    //     timeS34 = time - 4.0;
-    //     mPlan = 0.5*sin((pms.motionFrq*timeS34-0.5)*PI)+0.5;
-    //     mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS34-0.5)*PI);
+    else if(time >= 5.0 && time < 6.0){
+        if(!flag1){
+            xyzArmInit[0] = xyzArmTgt[0];
+            xyzDotArmInit[0] = xyzDotArmTgt[0];
+            xyzArmInit[1] = xyzArmTgt[1];
+            xyzDotArmInit[1] = xyzDotArmTgt[1];
+            flag1 = true;
+        }
+        timeS34 = time - 5.0;
+        mPlan = 0.5*sin((pms.motionFrq*timeS34-0.5)*PI)+0.5;
+        mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS34-0.5)*PI);
     
-    //     // LeftArm
-    //     xyzArmTgt[0](0) = xyzArmInit[0](0)+pms.armForward_L_Lift*mPlan;
-    //     xyzDotArmTgt[0](0) = xyzDotArmInit[0](0)+pms.armForward_L_Lift*mPlanDot;
-    //     // RightArm
-    //     xyzArmTgt[1](0) = xyzArmInit[1](0)+pms.armForward_R_Lift*mPlan;
-    //     xyzDotArmTgt[1](0) = xyzDotArmInit[1](0)+pms.armForward_R_Lift*mPlanDot;
-
-    //     // Pelvis&Torso
-    //     xyzPelvisTgt(0) = xyzPelvisInit(0)+pms.pelvisForward_Lift*mPlan;
-    //     xyzDotPelvisTgt(0) = pms.pelvisForward_Lift*mPlanDot;
-    //     rpyTorsoTgt(1) = rpyTorsoInit(1)+pms.pitchApt_Lift*mPlan;
-    //     rpyDotTorsoTgt(1) = pms.pitchApt_Lift*mPlanDot;
-    // }
-    else if(time >= 4.0 && time < 5.0){
-        timeS45 = time - 4.0;
+        // LeftArm
+        xyzArmTgt[0](2) = xyzArmInit[0](2)+pms.pelvisAside_Lift*mPlan;
+        xyzDotArmTgt[0](2) = xyzDotArmInit[0](2)+pms.pelvisAside_Lift*mPlanDot;
+        // RightArm
+        xyzArmTgt[1](2) = xyzArmInit[1](2)+pms.pelvisAside_Lift*mPlan;
+        xyzDotArmTgt[1](2) = xyzDotArmInit[1](2)+pms.pelvisAside_Lift*mPlanDot;  
+    }
+    else if(time >= 6.0 && time < 7.0){
+        timeS45 = time - 6.0;
         mPlan = 0.5*sin((pms.motionFrq*timeS45-0.5)*PI)+0.5;
         mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS45-0.5)*PI);
 
         // LeftArm
-        rpyArmTgt[0](0) = rpyArmInit[0](0)+pms.armRoll_L*mPlan;
-        rpyDotArmTgt[0](0) = rpyDotArmInit[0](0)+pms.armRoll_L*mPlanDot, 
-        xyzArmTgt[0](1) = xyzArmInit[0](1)+pms.armAside_L*mPlan;
-        xyzDotArmTgt[0](1) = xyzDotArmInit[0](1)+pms.armAside_L*mPlanDot;
+        rpyArmTgt[0](0) = rpyArmInit[0](0)+pms.armRoll_L_Lift*mPlan;
+        rpyDotArmTgt[0](0) = rpyDotArmInit[0](0)+pms.armRoll_L_Lift*mPlanDot, 
+        xyzArmTgt[0](1) = xyzArmInit[0](1)+pms.armAside_L_Lift*mPlan;
+        xyzDotArmTgt[0](1) = xyzDotArmInit[0](1)+pms.armAside_L_Lift*mPlanDot;
 
         // RightArm
-        rpyArmTgt[1](0) = rpyArmInit[1](0)+pms.armRoll_R*mPlan;
-        rpyDotArmTgt[1](0) = rpyDotArmInit[1](0)+pms.armRoll_R*mPlanDot;
-        xyzArmTgt[1](1) = xyzArmInit[1](1)+pms.armAside_R*mPlan;
-        xyzDotArmTgt[1](1) = xyzDotArmInit[1](1)+pms.armAside_R*mPlanDot;
+        rpyArmTgt[1](0) = rpyArmInit[1](0)+pms.armRoll_R_Lift*mPlan;
+        rpyDotArmTgt[1](0) = rpyDotArmInit[1](0)+pms.armRoll_R_Lift*mPlanDot;
+        xyzArmTgt[1](1) = xyzArmInit[1](1)+pms.armAside_R_Lift*mPlan;
+        xyzDotArmTgt[1](1) = xyzDotArmInit[1](1)+pms.armAside_R_Lift*mPlanDot;
     }
-    else if(time >= 5.0 && time < 6.0){
-        timeS56 = time-4.0;
+    else if(time >= 7.0 && time < 8.0){
+        timeS56 = time-6.0;
         mPlan = 0.5*sin((pms.motionFrq*timeS56-0.5)*PI)+0.5;
         mPlanDot = 0.5*pms.motionFrq*cos((pms.motionFrq*timeS56-0.5)*PI);
     

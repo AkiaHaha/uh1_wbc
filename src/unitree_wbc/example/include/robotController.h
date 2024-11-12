@@ -75,6 +75,7 @@ private:
     double mPlanDot{};
     double sPlan{};
     double sPlanDot{};
+    bool flag1{false};
     
     Eigen::VectorXd biFootForce6D = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd biWristForce6D = Eigen::VectorXd::Zero(6);
@@ -156,6 +157,9 @@ private:
     Eigen::Vector3d xyzDotArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
     Eigen::Vector3d rpyDotArmInit[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+
+    Eigen::Vector3d xyzArmInitOrigin[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
+    Eigen::Vector3d xyzDotArmInitOrigin[2] = {Eigen::Vector3d::Zero(), Eigen::Vector3d::Zero()};
 
     Eigen::Vector3d comPosInit{}, comVelInit{};
 #endif
