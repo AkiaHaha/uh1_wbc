@@ -146,7 +146,7 @@ xOpt [6(Floating Base Degree), 19(Joints), 6(Left Foot Intact Wrench{Torque, For
     "footPitch": 0.0,
     "footYaw": 0.0,
 
-- Large sacle squating and lifting onto the desk
+- Large sacle squating and lifting onto the desk (motionPlan5)/ lifting & squatting(motionPlan4)
 ```json
     "pelvisUpDown": -0.65,
     "pelvisForward": -0.08,

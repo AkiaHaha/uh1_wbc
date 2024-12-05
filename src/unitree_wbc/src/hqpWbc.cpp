@@ -126,7 +126,6 @@ bool HqpWbc::setParametersDouble(const std::vector<double> &parameters){
 }
 
 bool HqpWbc::getAuxiliaryDataInt(std::vector<int> &auxiliaryData){
-
     auxiliaryData.resize(2 * nLevel);
     std::vector<int> NwsrData(nLevel, -1);
     std::vector<int> SimpleStatusData(nLevel, -1);
@@ -140,7 +139,6 @@ bool HqpWbc::getAuxiliaryDataInt(std::vector<int> &auxiliaryData){
 }
 
 bool HqpWbc::getAuxiliaryDataDouble(std::vector<double> &auxiliaryData){
-
     auxiliaryData.resize(2 * nLevel);
     std::vector<double> CostData(nLevel, -1);
     getOptCost(CostData);
@@ -538,27 +536,6 @@ bool HqpWbc::hqpSolveLeveln(const int & iLevel){
         }else {
             initDone.at(iLevel) = true;
         }
-        // cout << "------Hessian Matrix------" << endl;
-        // cout << hessianMat.at(iLevel).transpose() << endl;
-
-        // cout << "------gradient Vector------" << endl;
-        // cout << gradientVec.at(iLevel).transpose() << endl;
-
-        // cout << "------cstr Mat AllTrans------" << endl;
-        // cout << cstrMatAllTrans.at(iLevel).transpose() << endl;
-
-        // cout << "------lower Bound Vec------" << endl;
-        // cout << lowerBoundVec.at(iLevel).transpose() << endl;
-
-        // cout << "------upper Bound Vec------" << endl;
-        // cout << upperBoundVec.at(iLevel).transpose() << endl;
-
-        // cout << "------lb CstrAll------" << endl;
-        // cout << lbCstrAll.at(iLevel).transpose() << endl;
-
-        // cout << "------ub CstrAll------" << endl;
-        // cout << ubCstrAll.at(iLevel).transpose() << endl;
-
     }else {
         nWSR.at(iLevel) = nWSRDes.at(iLevel);
         * cpuTimePtr.at(iLevel) = cpuTimeDes.at(iLevel);

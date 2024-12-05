@@ -2,7 +2,7 @@
 
 using namespace std;
 using json = nlohmann::json;
-// #define USING_HQP
+#define USING_HQP
 //=======================================================
 // Initialization of classes
 //=======================================================
@@ -18,6 +18,7 @@ RobotController::RobotController(){
     AGIROBOT::Task * ptrForce4 = new QuadSoleForce("Force4", NFCC4, nV);
     AGIROBOT::Task * ptrPosition = new QuadSolePosition("Position", NFCC4, nV);
     AGIROBOT::Task * ptrGblVelLimits = new GVLimitation("GVLimitation", 19, nV); 
+    // AGIROBOT::Task * ptrDynamic = new Dynamic("Dynamic", 6, nV);
     AGIROBOT::Constraint * ptrDynamicConsistency = new DynamicConsistency("DynamicConsistency", 6, nV);
     AGIROBOT::Constraint * ptrFrictionCone = new FrictionCone("FrictionCone", 8, nV);
     AGIROBOT::Constraint * ptrJointTorqueSaturation = new JointTorqueSaturation("JointTorqueSaturation", NJ, nV);
@@ -34,13 +35,11 @@ RobotController::RobotController(){
     // Hqp
 #ifdef USING_HQP
     myWbc = new AGIROBOT::HqpWbc(nV, robotDynamics);
+    myWbc->addTask(ptrPelvisPosXyz, 0);
+    myWbc->addTask(ptrTorsoPosRpy, 0);
     myWbc->addTask(ptrForce4, 0);
     myWbc->addTask(ptrPosition, 0);
-    myWbc->addTask(ptrPelvisPosRpy, 0);
-    myWbc->addTask(ptrPelvisPosXyz, 0);
     myWbc->addTask(ptrGblVelLimits, 0);
-    myWbc->addTask(ptrTorsoPosXyz, 0);
-    myWbc->addTask(ptrTorsoPosRpy, 0);
     myWbc->addConstraint(ptrDynamicConsistency, 0);
     myWbc->addConstraint(ptrFrictionCone, 0);
     myWbc->addConstraint(ptrCenterOfPressure, 0);
@@ -98,12 +97,14 @@ bool RobotController::getValuePosCurrent(Eigen::VectorXd &jntPosCur){
 bool RobotController::update(double timeCtrlSys, webotsState& robotStateSim){
     time += DT;
     stateEstimation(robotStateSim);
-    motionPlan1();
+    //===========================//
+    // motionPlan1();
     // motionPlan2();
     // motionPlan3();
-    // motionPlan4();///> Lifting box;
-    motionPlan5();///> Lifting box and Large scale;
-    // taskControl();
+    // motionPlan4();///> Lifting box and squating;
+    motionPlan5();///> Lifting box onto table;
+    //===========================//
+    taskControl();
     return true;
 }
 
@@ -181,10 +182,10 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     xyzDotArmEst[1] = armStateTemp1.tail(3);
 
     robotDynamics->estComPosVel(comPosEst, comVelEst);
-    cout << "comPosEst:     " << comPosEst.transpose() << endl;
-    cout << "xyzFootEst[0]  " << xyzFootEst[0].transpose() << endl;
-    cout << "xyzFootEst[1]  " << xyzFootEst[1].transpose() << endl;
-    cout << "xyzPelvisEst   " << xyzPelvisEst.transpose() << endl;
+    // cout << "comPosEst:     " << comPosEst.transpose() << endl;
+    // cout << "xyzFootEst[0]  " << xyzFootEst[0].transpose() << endl;
+    // cout << "xyzFootEst[1]  " << xyzFootEst[1].transpose() << endl;
+    // cout << "xyzPelvisEst   " << xyzPelvisEst.transpose() << endl;
 #endif
 
 
@@ -465,9 +466,9 @@ bool RobotController::taskControl(){
     footArmForceRef.segment(21,3) = biWristForce6D.segment(3,3);
     // cout << "!!! without force feedback !!!" << endl;
 
-    cout << endl;
-    cout << "Data of biWrist force=========================================" << endl;
-    cout << biWristForce6D.transpose() << endl;
+    // cout << endl;
+    // cout << "Data of biWrist force=========================================" << endl;
+    // cout << biWristForce6D.transpose() << endl;
     // cout << "Data of biFoot force=========================================" << endl;
     // cout << biFootForce6D.transpose() << endl;
     // cout << "==============================================================" << endl;
@@ -514,6 +515,7 @@ bool RobotController::taskControl(){
         qDDotOpt = varOpt.head(nJg);
         forceOpt = varOpt.tail(nFc);
         tauOpt = robotDynamics->eqCstrMatTau * varOpt + robotDynamics->eqCstrMatTauBias;
+        cout << "tauOpt at timeCs: " << cpuTimeRes << endl;
     }else{
         std::cerr << "QP failed; Exiting the program at time of: " << timeCs 
                     << "  simpleStatus: " << simpleStatus << std::endl; 

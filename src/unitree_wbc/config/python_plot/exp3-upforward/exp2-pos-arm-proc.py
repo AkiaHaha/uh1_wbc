@@ -6,8 +6,8 @@ import scienceplots
 # 使用 scienceplots 风格
 plt.style.use('science')
 
-# 设置字体为 Times New Roman，并加大字号，加粗
-plt.rcParams['font.family'] = 'Times New Roman'
+# 设置字体为 DejaVu Sans，并加大字号，加粗
+plt.rcParams['font.family'] = 'DejaVu Sans'
 plt.rcParams['font.size'] = 14  # 可以调整为需要的字号
 plt.rcParams['font.weight'] = 'bold'  # 设置字体加粗
 

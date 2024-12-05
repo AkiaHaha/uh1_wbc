@@ -6,8 +6,8 @@ import scienceplots
 # scienceplots style
 plt.style.use('science')
 
-# Set font as Times New Roman
-plt.rcParams['font.family'] = 'Times New Roman'
+# Set font as DejaVu Sans
+plt.rcParams['font.family'] = 'DejaVu Sans'
 plt.rcParams['font.size'] = 14  
 plt.rcParams['font.weight'] = 'bold'  # Bold font
 

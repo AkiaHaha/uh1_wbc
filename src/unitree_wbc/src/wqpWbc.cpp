@@ -132,14 +132,12 @@ bool WqpWbc::createNewQP(){
     QP->setOptions(qpOption);
 
     cpuTimePtr = new double(cpuTimeDes);
-
     primalOptPtr = new qpOASES::real_t[nV];
     dualOptPtr = new qpOASES::real_t[nV + nC];
 
     nOChange = false;
     nCChange = false;
     nVChange = false;
-
     initDone = false;
 
     return true;
