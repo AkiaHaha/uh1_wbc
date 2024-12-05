@@ -2,7 +2,7 @@
 
 using namespace std;
 using json = nlohmann::json;
-#define USING_HQP
+// #define USING_HQP
 //=======================================================
 // Initialization of classes
 //=======================================================
