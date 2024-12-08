@@ -65,11 +65,23 @@ bool runWebots(Publishers& pubs){
     std_msgs::Float64 sim_time_msg_float;
     std_msgs::Float64MultiArray pos_msg;
     std_msgs::Float64MultiArray toq_msg;
+    std_msgs::Float64MultiArray la_xyz_act_msg;
+    std_msgs::Float64MultiArray ra_xyz_act_msg;
+    std_msgs::Float64MultiArray la_xyz_des_msg;
+    std_msgs::Float64MultiArray ra_xyz_des_msg;
+    std_msgs::Float64MultiArray la_xyz_err_msg;
+    std_msgs::Float64MultiArray ra_xyz_err_msg;
     unitree_wbc::MotorData motor_data_msg;
     pos_msg.data.resize(NJ);
     toq_msg.data.resize(NJ);
+    la_xyz_act_msg.data.resize(3);
+    ra_xyz_act_msg.data.resize(3);
+    la_xyz_des_msg.data.resize(3);
+    ra_xyz_des_msg.data.resize(3);
+    la_xyz_err_msg.data.resize(3);
+    ra_xyz_err_msg.data.resize(3);
 
-int publish_rate = 100; // 设置一个发布频率
+int publish_rate = 100; // Set the publish rate to 100 Hz
 int publish_counter = 0; 
 
     while (bipedWebots.robot->step(TIME_STEP) != -1)
@@ -107,10 +119,25 @@ int publish_counter = 0;
                 pos_msg.data[i] = robotStateSim.jointPosAct[i];
                 toq_msg.data[i] = jointToqCmd[i];
             }
+            for (size_t i = 0; i < 3; i++){           
+                la_xyz_act_msg.data[i] = robotStateSim.LeftArmHandXyzRpyAct[i+3];
+                ra_xyz_act_msg.data[i] = robotStateSim.RightArmHandXyzRpyAct[i+3];
+                la_xyz_des_msg.data[i] = robotStateSim.LeftWristXyzRpyDes[i+3];
+                ra_xyz_des_msg.data[i] = robotStateSim.RightWristXyzRpyDes[i+3];
+                la_xyz_err_msg.data[i] = robotStateSim.LeftWristXyzRpyDes[i+3] - robotStateSim.LeftArmHandXyzRpyAct[i+3];
+                ra_xyz_err_msg.data[i] = robotStateSim.RightWristXyzRpyDes[i+3] - robotStateSim.RightArmHandXyzRpyAct[i+3];
+            }
+
             sim_time_msg_float.data = simTime - goStandTime;
             motor_data_msg.positions = pos_msg;
             motor_data_msg.torques = toq_msg;
             motor_data_msg.time_float = sim_time_msg_float;
+            motor_data_msg.la_xyz_act = la_xyz_act_msg;
+            motor_data_msg.ra_xyz_act = ra_xyz_act_msg;
+            motor_data_msg.la_xyz_des = la_xyz_des_msg;
+            motor_data_msg.ra_xyz_des = ra_xyz_des_msg;
+            motor_data_msg.la_xyz_err = la_xyz_err_msg;
+            motor_data_msg.ra_xyz_err = ra_xyz_err_msg;
             pubs.motor_data_pub.publish(motor_data_msg);
             ros::spinOnce();
         }

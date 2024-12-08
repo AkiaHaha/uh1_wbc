@@ -2,3 +2,15 @@ std_msgs/Time time
 std_msgs/Float64 time_float      
 std_msgs/Float64MultiArray positions  
 std_msgs/Float64MultiArray torques    
+std_msgs/Float64MultiArray la_xyz_act
+std_msgs/Float64MultiArray ra_xyz_act
+std_msgs/Float64MultiArray ll_xyz_act
+std_msgs/Float64MultiArray rl_xyz_act
+std_msgs/Float64MultiArray la_xyz_des
+std_msgs/Float64MultiArray ra_xyz_des
+std_msgs/Float64MultiArray ll_xyz_des
+std_msgs/Float64MultiArray rl_xyz_des
+std_msgs/Float64MultiArray la_xyz_err
+std_msgs/Float64MultiArray ra_xyz_err
+std_msgs/Float64MultiArray ll_xyz_err
+std_msgs/Float64MultiArray rl_xyz_err

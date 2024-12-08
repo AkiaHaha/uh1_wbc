@@ -100,11 +100,11 @@ bool RobotController::update(double timeCtrlSys, webotsState& robotStateSim){
     //===========================//
     // motionPlan1();
     // motionPlan2();
-    // motionPlan3();
+    motionPlan3();
     // motionPlan4();///> Lifting box and squating;
-    motionPlan5();///> Lifting box onto table;
+    // motionPlan5();///> Lifting box onto table;
     //===========================//
-    taskControl();
+    taskControl(robotStateSim);
     return true;
 }
 
@@ -182,10 +182,13 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     xyzDotArmEst[1] = armStateTemp1.tail(3);
 
     robotDynamics->estComPosVel(comPosEst, comVelEst);
-    // cout << "comPosEst:     " << comPosEst.transpose() << endl;
-    // cout << "xyzFootEst[0]  " << xyzFootEst[0].transpose() << endl;
-    // cout << "xyzFootEst[1]  " << xyzFootEst[1].transpose() << endl;
-    // cout << "xyzPelvisEst   " << xyzPelvisEst.transpose() << endl;
+
+    robotStateSim.LeftArmHandXyzRpyAct = armStateTemp0;
+    robotStateSim.RightArmHandXyzRpyAct = armStateTemp1;
+    cout << "LeftArmHandXyzRpyAct: " << robotStateSim.LeftArmHandXyzRpyAct.segment(3,3).transpose() << endl;
+    cout << "RightArmHandXyzRpyAct: " << robotStateSim.RightArmHandXyzRpyAct.segment(3,3).transpose() << endl;
+
+
 #endif
 
 
@@ -236,7 +239,11 @@ bool RobotController::stateEstimation(webotsState & robotStateSim){
     //===============================================================
     biFootForce6D = robotStateSim.footGrfAct;
     biWristForce6D = robotStateSim.wristItaAct;
-
+    if((robotStateSim.wristItaAct[0] == 0) && (time >= 0.01) && (flag2 == false)){
+        cout << "Stop Time: " << time << " ----------------------------------------------------" << endl;
+        cout << "Left Arm: " << robotStateSim.wristItaAct.transpose() << endl;
+        flag2 = true;
+    }
     //_____________________________________________________________//
     return true;
 }
@@ -373,7 +380,6 @@ bool RobotController::motionPlan1(){// @Daniel240523
         xyzArmTgt[1](1) = xyzArmInit[1](1)+pms.armAside_R*mPlan;
         xyzDotArmTgt[1](1) = xyzDotArmInit[1](1)+pms.armAside_R*mPlanDot;
     }
-
 #endif
     return true;
 }
@@ -381,8 +387,13 @@ bool RobotController::motionPlan1(){// @Daniel240523
 //==================================================================
 // The main control function to execute QP calcalation and set solutions
 //==================================================================
-bool RobotController::taskControl(){ 
+bool RobotController::taskControl(webotsState & robotStateSim){ 
     myWbc->updateRobotDynamics(qGen, qDotGen); //# Update Robot Dynamics
+
+    robotStateSim.LeftWristXyzRpyDes.head(3) = rpyArmTgt[0];
+    robotStateSim.LeftWristXyzRpyDes.segment(3,3) = xyzArmTgt[0];
+    robotStateSim.RightWristXyzRpyDes.head(3) = rpyArmTgt[1];
+    robotStateSim.RightWristXyzRpyDes.segment(3,3) = xyzArmTgt[1];
 
 #ifdef USING_TWIST //# Calculate References
     Eigen::VectorXd pelvisTwistErr = Eigen::VectorXd::Zero(12);
@@ -458,12 +469,12 @@ bool RobotController::taskControl(){
     //============================================================
     // @todo wrench feedback for interaction @Danny241022
     //============================================================
-    footArmForceRef = forceOpt; ///< LFtorque, LFforce, RFtorque, RFforce, LWtorque, LWforce, RWtorque, RWforce (8x3)
+    // footArmForceRef = forceOpt; ///< LFtorque, LFforce, RFtorque, RFforce, LWtorque, LWforce, RWtorque, RWforce (8x3)
 
-    footArmForceRef.segment(3,3) = biFootForce6D.segment(0,3);
-    footArmForceRef.segment(9,3) = biFootForce6D.segment(3,3);
-    footArmForceRef.segment(15,3) = biWristForce6D.segment(0,3);
-    footArmForceRef.segment(21,3) = biWristForce6D.segment(3,3);
+    // footArmForceRef.segment(3,3) = biFootForce6D.segment(0,3);
+    // footArmForceRef.segment(9,3) = biFootForce6D.segment(3,3);
+    // footArmForceRef.segment(15,3) = biWristForce6D.segment(0,3);
+    // footArmForceRef.segment(21,3) = biWristForce6D.segment(3,3);
     // cout << "!!! without force feedback !!!" << endl;
 
     // cout << endl;

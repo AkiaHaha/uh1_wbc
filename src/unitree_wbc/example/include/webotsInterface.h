@@ -82,8 +82,11 @@ struct webotsState
     Eigen::VectorXd pelvisXyzDXyzAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd LeftSoleXyzRpyAct = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd RightSoleXyzRpyAct = Eigen::VectorXd::Zero(6);
-    // Eigen::VectorXd LeftArmHandXyzRpyAct = Eigen::VectorXd::Zero(6);
-    // Eigen::VectorXd RightArmHandXyzRpyAct = Eigen::VectorXd::Zero(6);
+    Eigen::VectorXd LeftArmHandXyzRpyAct = Eigen::VectorXd::Zero(6);
+    Eigen::VectorXd RightArmHandXyzRpyAct = Eigen::VectorXd::Zero(6);
+
+    Eigen::VectorXd LeftWristXyzRpyDes = Eigen::VectorXd::Zero(6);
+    Eigen::VectorXd RightWristXyzRpyDes = Eigen::VectorXd::Zero(6);
 };
 
 /**

@@ -57,7 +57,7 @@ private:
     bool motionPlan3();
     bool motionPlan4();
     bool motionPlan5();
-    bool taskControl();
+    bool taskControl(webotsState & robotStateSim);
     RobotDynamics * robotDynamics;
     AGIROBOT::Wbc * myWbc;
 
@@ -76,6 +76,7 @@ private:
     double sPlan{};
     double sPlanDot{};
     bool flag1{false};
+    bool flag2{false};
     
     Eigen::VectorXd biFootForce6D = Eigen::VectorXd::Zero(6);
     Eigen::VectorXd biWristForce6D = Eigen::VectorXd::Zero(6);
