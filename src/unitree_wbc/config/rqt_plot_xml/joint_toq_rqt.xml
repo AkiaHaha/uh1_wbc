@@ -72,7 +72,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>HIP-YAW</title>
+                            <title>HR</title>
                         </curve_0>
                         <curve_1>
                             <axes>
@@ -123,7 +123,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>HIP-PITCH</title>
+                            <title>HR</title>
                         </curve_1>
                         <curve_2>
                             <axes>
@@ -225,7 +225,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>KNEE</title>
+                            <title>K</title>
                         </curve_3>
                         <curve_4>
                             <axes>
@@ -276,7 +276,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>ANKLE</title>
+                            <title>A</title>
                         </curve_4>
                     </curves>
                     <legend>
@@ -352,7 +352,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>SHOULDER-PITCH</title>
+                            <title>SP</title>
                         </curve_0>
                         <curve_1>
                             <axes>
@@ -403,7 +403,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>SHOULDER-ROLL</title>
+                            <title>SR</title>
                         </curve_1>
                         <curve_2>
                             <axes>
@@ -454,7 +454,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>SHOULDER-YAW</title>
+                            <title>SY</title>
                         </curve_2>
                         <curve_3>
                             <axes>
@@ -505,7 +505,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>ELBOW</title>
+                            <title>E</title>
                         </curve_3>
                     </curves>
                     <legend>

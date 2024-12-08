@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
 import scienceplots
+from matplotlib.lines import Line2D  # 导入 Line2D 用于调整图例线条
 
 # 使用 scienceplots 风格
 plt.style.use('science')
@@ -41,7 +42,7 @@ time_data = data[:, 0::2]
 torque_data = data[:, 1::2]
 
 # 定义标签列表
-labels = ['HIP-YAW', 'HIP-PITCH', 'HIP-ROLL', 'KNEE', 'ANKLE']
+labels = ['HY', 'HP', 'HR', 'K', 'A']
 
 # 定义插值后的时间轴
 time_interp = np.linspace(time_data.min(), time_data.max(), 500)  # 更高密度的时间点
@@ -56,11 +57,22 @@ for motor_idx in range(num_motors):
     # 绘制插值后的曲线
     plt.plot(time_interp, torque_interp, label=labels[motor_idx])
 
+# 自定义图例的线条粗细和颜色
+legend_handles = [
+    Line2D([0], [0], color='blue', lw=2),  # 第一根线，颜色为蓝色，粗细为2
+    Line2D([0], [0], color='green', lw=2),  # 第二根线，颜色为绿色，粗细为2
+    Line2D([0], [0], color='orange', lw=2), # 第三根线，颜色为橙色，粗细为2
+    Line2D([0], [0], color='red', lw=2),    # 第四根线，颜色为红色，粗细为2
+    Line2D([0], [0], color='purple', lw=2)  # 第五根线，颜色为紫色，粗细为2
+]
+
 # 添加图例、标题和标签
-plt.title("Leg Motor Torques vs Time")
+plt.title("Leg Motor Torques")
 plt.xlabel("Time (s)")
 plt.ylabel("Torque (Nm)")
-plt.legend()
+
+# 通过 handles 设置图例条目的线条样式
+plt.legend(handles=legend_handles, labels=labels, ncol=5, loc='best', fontsize=12)
 plt.grid(True)
 
 # 保存和展示

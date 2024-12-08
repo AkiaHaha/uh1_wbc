@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
 import scienceplots
+from matplotlib.lines import Line2D  # 导入 Line2D 用于调整图例线条
 
 # scienceplots style
 plt.style.use('science')
@@ -41,7 +42,7 @@ time_data = data[:, 0::2]
 torque_data = data[:, 1::2]
 
 # Define labels for each motor
-labels = ['SHOULDER-PITCH', 'SHOULDER-ROLL', 'SHOULDER-YAW', 'ELBOW']
+labels = ['SP', 'SR', 'SY', 'E']
 
 # Define interpolation function
 time_interp = np.linspace(time_data.min(), time_data.max(), 500)  # Interpolate torque data
@@ -53,11 +54,19 @@ for motor_idx in range(num_motors):
     torque_interp = interp_func(time_interp)
     plt.plot(time_interp, torque_interp, label=labels[motor_idx])
 
+# 自定义图例的线条粗细和颜色
+legend_handles = [
+    Line2D([0], [0], color='blue', lw=2),  # 第一根线，颜色为蓝色，粗细为2
+    Line2D([0], [0], color='green', lw=2),  # 第二根线，颜色为绿色，粗细为2
+    Line2D([0], [0], color='orange', lw=2), # 第三根线，颜色为橙色，粗细为2
+    Line2D([0], [0], color='red', lw=2),    # 第四根线，颜色为红色，粗细为2
+]
+
 # Add title, labels, and legend
-plt.title("Arm Motor Torques vs Time")
+plt.title("Arm Motor Torques")
 plt.xlabel("Time (s)")
 plt.ylabel("Torque (Nm)")
-plt.legend()
+plt.legend(handles=legend_handles, labels=labels, ncol=1, loc='best', fontsize=12)
 plt.grid(True)
 
 # Save and show the plot
